@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace GuitarStore.Identity.Jwt;
 
@@ -24,7 +26,7 @@ public class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
             Subject = new ClaimsIdentity(
             [
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email.ToString())
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             ]),
             SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256),
             Issuer = _jwtOptions.Issuer,
@@ -79,6 +81,32 @@ public class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
             .RemoveAll(x => x.ExpiredAt < DateTime.UtcNow);
 
         return _dbContext.SaveChangesAsync();
+    }
+
+    public ClaimsPrincipal GetPrincipalFromToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = _jwtOptions.Issuer,
+            IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+            ValidateLifetime = false,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var principal = tokenHandler.ValidateToken(
+            token,
+            tokenValidationParameters,
+            out SecurityToken securityToken);
+
+        if (securityToken == null) throw new SecurityTokenException("Invalid access token");
+
+        return principal;
     }
 
 }

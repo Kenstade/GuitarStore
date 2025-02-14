@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using GuitarStore.Common.Extensions;
 using GuitarStore.Identity.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GuitarStore.Identity.Extensions;
@@ -17,7 +18,8 @@ public static class IdentityExtensions
 
         if (jwtOptions == null) throw new ArgumentNullException(nameof(jwtOptions));
 
-        services.AddAuthentication()
+        services.AddAuthentication(options =>
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new()
@@ -27,17 +29,19 @@ public static class IdentityExtensions
                     ValidateIssuer = true,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
                     ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                 };
 
-                options.MapInboundClaims = false;
+                //options.MapInboundClaims = false;
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
+               
             });
 
         services.AddAuthorization();
 
         return services;
-    }
+    }    
 }

@@ -1,18 +1,28 @@
-﻿using System.Reflection;
-using GuitarStore.Catalogs.Models;
+﻿using GuitarStore.Catalogs.Models;
 using GuitarStore.Customers.Models;
 using GuitarStore.Identity.Models;
 using GuitarStore.Orders.Models;
 using GuitarStore.ShoppingCart.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Data;
 
-public class AppDbContext(DbContextOptions options) : DbContext(options)
+public class AppDbContext(DbContextOptions options) 
+    : IdentityDbContext<
+        User, 
+        Role, 
+        Guid, 
+        IdentityUserClaim<Guid>, 
+        UserRole, 
+        IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>,
+        IdentityUserToken<Guid>
+    >(options)
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
@@ -23,7 +33,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     { 
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
         base.OnModelCreating(modelBuilder);
     }
