@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using FluentValidation;
+﻿using FluentValidation;
 using GuitarStore.Common;
-using GuitarStore.Common.Extensions;
 using GuitarStore.Common.Interfaces;
 using GuitarStore.Customers.Models;
 using GuitarStore.Data;
@@ -18,7 +16,7 @@ public class AddAddress : IEndpoint
     private static async Task<IResult> HandleAsync(AddAddressRequest request,AppDbContext dbContext, 
         IUserContextProvider userContext, IValidator<AddAddressRequest> validator)
     {
-        var result = await validator.ValidateAsync(request);
+        var result = validator.Validate(request);
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var userId = userContext.GetUserId();

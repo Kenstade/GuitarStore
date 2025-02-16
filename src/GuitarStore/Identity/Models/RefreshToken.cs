@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Identity.Models;
 
-public class RefreshToken
+public class RefreshToken 
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
@@ -20,8 +20,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 
         builder.Property(rt => rt.Token).HasMaxLength(200);
 
-        builder.HasIndex(rt => new { rt.UserId, rt.Token })
-            .IsUnique();
+        builder.HasIndex(rt => new { rt.UserId, rt.Token }).IsUnique();
 
         builder.HasOne(rt => rt.User)
             .WithMany(u => u.RefreshTokens)

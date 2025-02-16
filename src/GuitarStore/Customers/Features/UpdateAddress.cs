@@ -15,7 +15,7 @@ public class UpdateAddress : IEndpoint
     private static async Task<IResult> HandleAsync(UpdateAddressRequest request, AppDbContext dbContext,
         IUserContextProvider userContext, IValidator<UpdateAddressRequest> validator)
     {
-        var result = await validator.ValidateAsync(request);
+        var result = validator.Validate(request);
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var userId = userContext.GetUserId();

@@ -4,13 +4,9 @@ using GuitarStore.Data;
 namespace GuitarStore.Identity.Events;
 
 public record UserCreatedEvent(Guid Id, string Email);
-public class UserEventHandler
+public class UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
 {
-    private readonly UserCreatedEventHandler _userCreatedEventHandler;
-    public UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
-    {
-        _userCreatedEventHandler = userCreatedEventHandler;
-    }
+    private readonly UserCreatedEventHandler _userCreatedEventHandler = userCreatedEventHandler;
 
     public Task Handle(UserCreatedEvent userCreatedEvent)
     {

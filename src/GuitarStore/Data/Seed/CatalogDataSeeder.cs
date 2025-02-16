@@ -1,21 +1,20 @@
 ﻿using GuitarStore.Catalogs.Models;
+using GuitarStore.Data.Interfaces;
 
-namespace GuitarStore.Data;
+namespace GuitarStore.Data.Seed;
 
-public static class AppDbContextSeed
+public class CatalogDataSeeder(AppDbContext dbContext) : IDataSeeder
 {
-    // переделать и добавить логер
-    public static async Task SeedDataAsync(this IApplicationBuilder app)
+    private readonly AppDbContext _dbContext = dbContext;
+    public async Task SeedAllAsync()
     {
-        using var scope = app.ApplicationServices.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        await SeedCategoriesAsync(db);
-        await SeedProductsAsync(db);
+        await SeedCategoriesAsync();
+        await SeedProductsAsync();
     }
-    private static async Task SeedCategoriesAsync(AppDbContext db)
+
+    private async Task SeedCategoriesAsync()
     {
-        if (!db.Categories.Any())
+        if (!_dbContext.Categories.Any())
         {
             var categories = new List<Category>()
             {
@@ -23,13 +22,14 @@ public static class AppDbContextSeed
                 new() { Name = "Acoustic guitars"},
             };
 
-            await db.Categories.AddRangeAsync(categories);
-            await db.SaveChangesAsync();
+            await _dbContext.Categories.AddRangeAsync(categories);
+            await _dbContext.SaveChangesAsync();
         }
     }
-    private static async Task SeedProductsAsync(AppDbContext db)
+
+    private async Task SeedProductsAsync()
     {
-        if (!db.Products.Any())
+        if (!_dbContext.Products.Any())
         {
             var categories = new List<Product>()
             {
@@ -40,8 +40,8 @@ public static class AppDbContextSeed
                 new() { Name = "IBANEZ GRX70QA-TRB", Description = "text", Image = "url", Price = 309.99M, Stock = 10, IsAvailable = true, CategoryId = 1}
             };
 
-            await db.Products.AddRangeAsync(categories);
-            await db.SaveChangesAsync();
+            await _dbContext.Products.AddRangeAsync(categories);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

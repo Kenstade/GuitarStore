@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace GuitarStore.Identity.Jwt;
 
@@ -14,18 +16,23 @@ public class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
     private readonly AppDbContext _dbContext = dbContext;
-    public string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user, IReadOnlyList<string>? roles = null)
     {
+        var jwtClaims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email)
+        };
+
+        if(roles != null)
+        jwtClaims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var handler = new JsonWebTokenHandler();
 
         var token = handler.CreateToken(new SecurityTokenDescriptor()
         {
-            Subject = new ClaimsIdentity(
-            [
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email.ToString())
-            ]),
+            Subject = new ClaimsIdentity(jwtClaims),
             SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256),
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
@@ -79,6 +86,32 @@ public class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
             .RemoveAll(x => x.ExpiredAt < DateTime.UtcNow);
 
         return _dbContext.SaveChangesAsync();
+    }
+
+    public ClaimsPrincipal GetPrincipalFromToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = _jwtOptions.Issuer,
+            IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+            ValidateLifetime = false,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var principal = tokenHandler.ValidateToken(
+            token,
+            tokenValidationParameters,
+            out SecurityToken securityToken);
+
+        if (securityToken == null) throw new SecurityTokenException("Invalid access token");
+
+        return principal;
     }
 
 }

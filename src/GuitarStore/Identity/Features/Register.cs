@@ -2,8 +2,8 @@
 using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
 using GuitarStore.Identity.Events;
-using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Identity.Features;
@@ -16,8 +16,8 @@ public class Register : IEndpoint
         .AllowAnonymous();
 
     private static async Task<IResult> HandleAsync(RegisterRequest request,AppDbContext dbContext,
-        IValidator<RegisterRequest> validator, JwtService jwtService, UserEventHandler eventHandler,
-        PasswordHasher passwordHasher)
+        IValidator<RegisterRequest> validator, UserEventHandler eventHandler,
+        UserManager<User> userManager)
     {
         var result = await validator.ValidateAsync(request);
         if (!result.IsValid)
@@ -26,11 +26,17 @@ public class Register : IEndpoint
         var user = new User
         {
             Email = request.Email,
-            PasswordHash = passwordHasher.Generate(request.Password)
+            UserName = request.Email,
+            CreatedAt = DateTime.Now,
         };
 
-        await dbContext.AddAsync(user);
-        await dbContext.SaveChangesAsync();
+        var identityResult = await userManager.CreateAsync(user, request.Password);
+        if (!identityResult.Succeeded) 
+            return TypedResults.BadRequest(identityResult.Errors.Select(e => e.Description));
+
+        var roleResult = await userManager.AddToRoleAsync(user, Constants.Role.User);
+        if (!roleResult.Succeeded) 
+            return TypedResults.BadRequest(roleResult.Errors.Select(e => e.Description));
 
         await eventHandler.Handle(new UserCreatedEvent(user.Id, user.Email));
      
@@ -47,6 +53,6 @@ public class RegisterRequestValidation : AbstractValidator<RegisterRequest>
             return !await dbContext.Users.AsNoTracking().AnyAsync(u => u.Email == email);
         }).WithMessage("This email is already exist");
 
-        RuleFor(x => x.ConfirmPassword).NotEmpty().Equal(x => x.Password).WithMessage("passwords do not match");
+        RuleFor(x => x.ConfirmPassword).NotEmpty().Equal(x => x.Password).WithMessage("Passwords do not match");
     }
 }

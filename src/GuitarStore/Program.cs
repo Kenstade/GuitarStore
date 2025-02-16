@@ -3,9 +3,7 @@ using GuitarStore;
 using GuitarStore.Common;
 using GuitarStore.Common.Extensions;
 using GuitarStore.Common.Interfaces;
-using GuitarStore.Data;
 using GuitarStore.Data.Extensions;
-using GuitarStore.Identity;
 using GuitarStore.Identity.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,15 +12,13 @@ builder.Services.AddPostgresDbContext(builder.Configuration);
 
 builder.Services.AddJwtConfiguration(builder.Configuration);
 
-builder.Services.AddSingleton<PasswordHasher>();
-
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
-builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
+builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 //event handlers registration
 foreach (var type in typeof(Program).Assembly.GetTypes()
@@ -45,7 +41,8 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
-await app.SeedDataAsync();
+
+app.UseDataSeeders().GetAwaiter().GetResult();
 
 app.MapEndpoints(); 
 

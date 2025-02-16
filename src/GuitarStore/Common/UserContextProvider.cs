@@ -5,7 +5,6 @@ namespace GuitarStore.Common;
 public interface IUserContextProvider
 {
     public Guid GetUserId();
-    public bool IsAuthenticated();
 }
 
 public class UserContextProvider(IHttpContextAccessor accessor) : IUserContextProvider
@@ -19,10 +18,5 @@ public class UserContextProvider(IHttpContextAccessor accessor) : IUserContextPr
         Guid.TryParse(nameIndentifier, out var userId);
 
         return userId;
-    }
-
-    public bool IsAuthenticated()
-    {
-        return _accessor.HttpContext.User.Identity.IsAuthenticated;
     }
 }

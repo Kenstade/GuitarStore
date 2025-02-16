@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Identity.Models;
 
-public class User
+public class User : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+    //TODO: add first name and last name ?
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = default!;
+    public virtual ICollection<UserRole> UserRoles { get; set; } = default!;
+    public DateTime CreatedAt { get; set; }
 }
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
@@ -17,7 +18,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
 
-        builder.HasIndex(u => u.Email)
-            .IsUnique();
+        builder.Property(u => u.UserName).HasMaxLength(50).IsRequired();
+        builder.Property(u => u.Email).HasMaxLength(50).IsRequired();
+        builder.Property(u => u.PhoneNumber).HasMaxLength(15).IsRequired(false);
+
+        builder.HasIndex(u => u.Email).IsUnique();
+
+        builder.HasMany(u => u.UserRoles)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
+            .IsRequired();
     }
 }
