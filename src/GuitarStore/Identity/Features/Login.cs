@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Collections.Immutable;
+using FluentValidation;
 using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
 using GuitarStore.Identity.Jwt;
@@ -28,9 +29,10 @@ public class Login : IEndpoint
         if(!signinResult.Succeeded) 
             return TypedResults.BadRequest("Incorrect E-Mail or Password");
 
-        var accessToken = jwtService.GenerateJwtToken(user);
-
         var refreshToken = await jwtService.GenerateRefreshToken(user.Id);
+
+        var roles = await userManager.GetRolesAsync(user);
+        var accessToken = jwtService.GenerateJwtToken(user, roles.ToImmutableList());
        
         return TypedResults.Ok(new LoginResponse(accessToken, refreshToken));
     }

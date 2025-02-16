@@ -18,7 +18,7 @@ builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
-builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
+builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 //event handlers registration
 foreach (var type in typeof(Program).Assembly.GetTypes()

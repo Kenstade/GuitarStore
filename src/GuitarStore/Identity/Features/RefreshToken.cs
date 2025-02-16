@@ -17,7 +17,7 @@ public class RefreshToken : IEndpoint
     private static async Task<IResult> HandleAsync(RefreshTokenRequest request,JwtService jwtService, 
         UserManager<User> userManager, IValidator<RefreshTokenRequest> validator)
     {
-        var result = await validator.ValidateAsync(request);
+        var result = validator.Validate(request);
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var principal = jwtService.GetPrincipalFromToken(request.AccessToken);

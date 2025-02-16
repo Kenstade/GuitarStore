@@ -2,7 +2,6 @@
 using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
 using GuitarStore.Identity.Events;
-using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ public class Register : IEndpoint
         .AllowAnonymous();
 
     private static async Task<IResult> HandleAsync(RegisterRequest request,AppDbContext dbContext,
-        IValidator<RegisterRequest> validator, JwtService jwtService, UserEventHandler eventHandler,
+        IValidator<RegisterRequest> validator, UserEventHandler eventHandler,
         UserManager<User> userManager)
     {
         var result = await validator.ValidateAsync(request);

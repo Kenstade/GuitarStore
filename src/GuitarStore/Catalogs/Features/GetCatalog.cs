@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Catalogs.Features;
 
-public sealed record GetCatalogRequest(string? SearchTerm, int PageNumber = 1, int PageSize = 10);
+public record GetCatalogRequest(string? SearchTerm, int PageNumber = 1, int PageSize = 10);
 public class GetCatalog : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
