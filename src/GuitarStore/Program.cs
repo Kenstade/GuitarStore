@@ -13,6 +13,7 @@ builder.Services.AddPostgresDbContext(builder.Configuration);
 builder.Services.AddJwtConfiguration(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
+//builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 

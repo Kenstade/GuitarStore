@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Catalogs.Features;
 
-public record GetCatalogRequest(string? SearchTerm, int PageNumber = 1, int PageSize = 10);
-public class GetCatalog : IEndpoint
+public sealed record GetCatalogRequest(string? SearchTerm, int PageNumber = 1, int PageSize = 10);
+internal sealed class GetCatalog : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("", HandleAsync)
@@ -38,12 +38,12 @@ public class GetCatalog : IEndpoint
         return TypedResults.Ok(new GetCatalogResponse(products, total, request.PageNumber, request.PageSize));
     }
 }
-public record GetCatalogResponse(
+public sealed record GetCatalogResponse(
     ICollection<ProductPartialResponse> Products, 
     int TotalResults, 
     int PageNumber, 
     int PageSize);
-public record ProductPartialResponse(
+public sealed record ProductPartialResponse(
     string Name, 
     string Image, 
     decimal Price, 

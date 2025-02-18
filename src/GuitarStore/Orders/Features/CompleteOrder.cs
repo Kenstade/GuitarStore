@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Orders.Features;
 
-public class CompleteOrder : IEndpoint
+internal sealed class CompleteOrder : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/complete", HandleAsync)

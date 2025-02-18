@@ -1,6 +1,6 @@
 ﻿namespace GuitarStore.Data.Interfaces;
 
-public interface IDataSeeder
+internal interface IDataSeeder
 {
     Task SeedAllAsync();
 }

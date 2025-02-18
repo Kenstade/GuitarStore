@@ -3,8 +3,8 @@ using GuitarStore.Data;
 
 namespace GuitarStore.Identity.Events;
 
-public record UserCreatedEvent(Guid Id, string Email);
-public class UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
+public sealed record UserCreatedEvent(Guid Id, string Email);
+internal sealed class UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
 {
     private readonly UserCreatedEventHandler _userCreatedEventHandler = userCreatedEventHandler;
 
@@ -14,7 +14,7 @@ public class UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
     }
 }
 
-public class UserCreatedEventHandler
+internal sealed class UserCreatedEventHandler
 {
     private readonly AppDbContext _dbContext;
     private readonly ILogger<UserCreatedEvent> _logger;

@@ -1,6 +1,6 @@
 ﻿namespace GuitarStore.Common.Extensions;
 
-public static class ConfigurationExtensions
+internal static class ConfigurationExtensions
 {
     internal static TModel? GetOptions<TModel>(this IConfiguration configuration, string section)
        where TModel : new()

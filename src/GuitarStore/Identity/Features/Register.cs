@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Identity.Features;
 
-public record RegisterRequest(string Email, string Password, string ConfirmPassword);
-public class Register : IEndpoint
+public sealed record RegisterRequest(string Email, string Password, string ConfirmPassword);
+internal sealed class Register : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/SignUp", HandleAsync)

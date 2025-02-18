@@ -9,7 +9,7 @@ namespace GuitarStore.Identity.Features;
 
 public sealed record RefreshTokenRequest( string AccessToken, string RefreshToken);
 public sealed record RefreshTokenResponse(string AccessToken, string RefreshToken);
-public class RefreshToken : IEndpoint
+internal sealed class RefreshToken : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/refresh-token", HandleAsync)

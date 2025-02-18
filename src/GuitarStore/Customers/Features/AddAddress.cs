@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Customers.Features;
 
-public record AddAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
-public class AddAddress : IEndpoint
+public sealed record AddAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
+internal sealed class AddAddress : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/add-address", HandleAsync)

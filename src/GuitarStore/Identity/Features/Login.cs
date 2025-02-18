@@ -10,7 +10,7 @@ namespace GuitarStore.Identity.Features;
 
 public sealed record LoginRequest(string Email, string Password);
 public sealed record LoginResponse(string AccessToken, string RefreshToken);
-public class Login : IEndpoint
+internal sealed class Login : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/login", HandleAsync)

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Data.Extensions;
 
-public static class EfCoreExtensions
+internal static class EfCoreExtensions
 {
     internal static IServiceCollection AddPostgresDbContext(this IServiceCollection services, 
         IConfiguration configuration)

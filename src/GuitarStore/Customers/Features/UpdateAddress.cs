@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Customers.Features;
 
-public record UpdateAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
-public class UpdateAddress : IEndpoint
+public sealed record UpdateAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
+internal sealed class UpdateAddress : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPut("/update-address", HandleAsync)

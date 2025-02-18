@@ -1,13 +1,11 @@
-﻿using System.Security.Claims;
-using GuitarStore.Common;
-using GuitarStore.Common.Extensions;
+﻿using GuitarStore.Common;
 using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.ShoppingCart.Features;
 
-public class GetCart : IEndpoint
+internal sealed class GetCart : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("", HandleAsync)

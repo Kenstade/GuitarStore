@@ -3,8 +3,8 @@ using GuitarStore.Data;
 
 namespace GuitarStore.Catalogs.Features;
 
-public record GetProductByIdRequest(int Id);
-public class GetProductById : IEndpoint
+public sealed record GetProductByIdRequest(int Id);
+internal sealed class GetProductById : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("/{id}", HandleAsync);
@@ -24,4 +24,4 @@ public class GetProductById : IEndpoint
         ));
     }
 }
-public record GetProductByIdResponse(string Name, string Description, string Image, decimal Price);
+public sealed record GetProductByIdResponse(string Name, string Description, string Image, decimal Price);

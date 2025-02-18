@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GuitarStore.Data.Seed;
 
-public class IdentityDataSeeder(
+internal sealed class IdentityDataSeeder(
     UserManager<User> userManager, 
     RoleManager<Role> roleManager, 
     UserEventHandler eventHandler) : IDataSeeder

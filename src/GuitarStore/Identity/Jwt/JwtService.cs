@@ -12,7 +12,7 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace GuitarStore.Identity.Jwt;
 
-public class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
+internal sealed class JwtService(IOptions<JwtOptions> jwtOptions, AppDbContext dbContext)
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
     private readonly AppDbContext _dbContext = dbContext;

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Orders.Features;
 
-public class GetOrders : IEndpoint
+internal sealed class GetOrders : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("/orders", HandleAsync)

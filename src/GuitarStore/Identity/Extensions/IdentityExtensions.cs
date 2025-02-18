@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GuitarStore.Identity.Extensions;
 
-public static class IdentityExtensions
+internal static class IdentityExtensions
 {
     internal static IServiceCollection AddJwtConfiguration(this IServiceCollection services,
         IConfiguration configuration)
