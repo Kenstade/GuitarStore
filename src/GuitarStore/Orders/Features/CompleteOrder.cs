@@ -49,7 +49,7 @@ internal sealed class CompleteOrder : IEndpoint
             Total = orderItems.Select(oi => oi.Price * oi.Quantity).Sum(),
             CustomerId = userId,
             OrderStatus = OrderStatus.Placed,
-            AddedAt = DateTime.UtcNow,   
+            CreatedAt = DateTime.UtcNow,   
             Items = orderItems,
             Address = new Address
             {

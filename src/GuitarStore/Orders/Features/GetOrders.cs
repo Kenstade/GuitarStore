@@ -10,21 +10,25 @@ internal sealed class GetOrders : IEndpoint
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("/orders", HandleAsync)
         .RequireAuthorization();
-    private static async Task<List<GetOrdersResponse>> HandleAsync(AppDbContext dbContext, 
+    private static async Task<IResult> HandleAsync(AppDbContext dbContext, 
         IUserContextProvider userContext)
     {
         var userId = userContext.GetUserId();
         
-        return await dbContext.Orders
+        var orders = await dbContext.Orders
             .Include(o => o.Items)
             .Where(o => o.CustomerId == userId)
             .Select(o => new GetOrdersResponse
             (
                 o.Total,
                 o.OrderStatus.ToString(),
-                o.AddedAt,
+                o.CreatedAt,
                 o.Items.Select(i => i.Image).ToList()
             )).ToListAsync();
+
+        if (orders == null) return TypedResults.NotFound("Your order list is empty");
+
+        return TypedResults.Ok(orders);
 
     }
 }

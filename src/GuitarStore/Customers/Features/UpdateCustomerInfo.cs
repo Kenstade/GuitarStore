@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 //    {
 //        var userId = userContext.GetUserId();
 //        var customer = await dbContext.Customers
-//            .SingleOrDefaultAsync(c => c.Id == userId);
+//            .FirstOrDefaultAsync(c => c.Id == userId);
 
 
 

@@ -9,7 +9,7 @@ public class Order
     public decimal Total { get; set; }
     public Guid CustomerId { get; set; }
     public OrderStatus OrderStatus { get; set; }
-    public DateTime AddedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
     public ICollection<OrderItem> Items { get; set; } = [];
     public Address Address { get; set; } = null!;
 

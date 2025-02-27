@@ -1,5 +1,6 @@
 ﻿using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Catalogs.Features;
 
@@ -8,20 +9,38 @@ internal sealed class GetProductById : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("/{id}", HandleAsync);
-    private static async Task<IResult> HandleAsync([AsParameters]GetProductByIdRequest request, AppDbContext dbContext)
+    private static async Task<IResult> HandleAsync([AsParameters]GetProductByIdRequest request, 
+        AppDbContext dbContext)
     {
         var product = await dbContext.Products
-            .FindAsync(request.Id);
+            .AsNoTracking()
+            .Where(p => p.Id == request.Id)
+            .Select(p => new GetProductByIdResponse
+            (
+                p.Name,
+                p.Description,
+                p.Image,
+                p.Price,
+                p.Category.Name,
+                p.Brand.Name,
+                p.ProductSpecifications
+                .Select(ps => new ProductSpecPartialResponse
+                (
+                    ps.SpecificationType.Name, 
+                    ps.Value
+                )).ToList()
+            )).FirstOrDefaultAsync();
 
-        if (product == null) return TypedResults.NotFound();
-
-        return TypedResults.Ok(new GetProductByIdResponse
-        (
-            product.Name, 
-            product.Description, 
-            product.Image,
-            product.Price
-        ));
+        return product is null ? TypedResults.NotFound() 
+                               : TypedResults.Ok(product);
     }
 }
-public sealed record GetProductByIdResponse(string Name, string Description, string Image, decimal Price);
+public sealed record GetProductByIdResponse(
+    string Name, 
+    string Description, 
+    string Image, 
+    decimal Price,
+    string Category,
+    string Brand,
+    ICollection<ProductSpecPartialResponse> Specs);
+public sealed record ProductSpecPartialResponse(string Type, string Value);

@@ -4,23 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Catalogs.Features;
 
-public sealed record GetCatalogRequest(string? SearchTerm, int PageNumber = 1, int PageSize = 10);
+public sealed record GetCatalogRequest(int? CategoryId = null)
+{
+    public int PageNumber = 1;
+    public int PageSize = 10;
+}
 internal sealed class GetCatalog : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("", HandleAsync)
         .AllowAnonymous();
     private static async Task<IResult> HandleAsync([AsParameters]GetCatalogRequest request, 
-        AppDbContext dbContext, HttpContext context)
+        AppDbContext dbContext)
     {
         var catalogQuery = dbContext.Products
-            .Include(p => p.Category)            
+            .Include(p => p.Category)
+            .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
             .AsQueryable();
 
         var products = await catalogQuery
             .AsNoTrackingWithIdentityResolution()
-            .Where(p => p.IsAvailable == true && EF.Functions.Like(p.Name, $"%{request.SearchTerm}%"))
-            .OrderBy(p => p.Name)
+            .OrderBy(p => p.CreatedAt)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .Select(p => new ProductPartialResponse
@@ -31,9 +35,7 @@ internal sealed class GetCatalog : IEndpoint
                 p.Category.Name
             )).ToListAsync();
 
-        var total = await catalogQuery.AsNoTrackingWithIdentityResolution()
-            .Where(p => p.IsAvailable && EF.Functions.Like(p.Name, $"%{request.SearchTerm}%"))
-            .CountAsync();
+        var total = await catalogQuery.AsNoTracking().CountAsync();
 
         return TypedResults.Ok(new GetCatalogResponse(products, total, request.PageNumber, request.PageSize));
     }
