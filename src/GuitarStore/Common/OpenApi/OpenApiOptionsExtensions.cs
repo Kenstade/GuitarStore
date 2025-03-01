@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace GuitarStore.Common.Extensions;
+namespace GuitarStore.Common.OpenApi;
 
 public static class OpenApiOptionsExtensions
 {

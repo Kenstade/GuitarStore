@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using GuitarStore.Common.Extensions;
+using GuitarStore.Common.Core;
 using GuitarStore.Identity.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

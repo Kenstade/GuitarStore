@@ -1,8 +1,9 @@
 using FluentValidation;
 using GuitarStore;
-using GuitarStore.Common;
-using GuitarStore.Common.Extensions;
-using GuitarStore.Common.Interfaces;
+using GuitarStore.Common.Caching;
+using GuitarStore.Common.Core;
+using GuitarStore.Common.OpenApi;
+using GuitarStore.Common.Web;
 using GuitarStore.Data.Extensions;
 using GuitarStore.Identity.Extensions;
 
@@ -14,12 +15,12 @@ builder.Services.AddJwtConfiguration(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
-
+builder.Services.AddScoped<ICacheProvider, MemoryCacheProvider>();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
+builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
-builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 //event handlers registration
 foreach (var type in typeof(Program).Assembly.GetTypes()

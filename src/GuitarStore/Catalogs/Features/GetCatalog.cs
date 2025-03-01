@@ -1,13 +1,14 @@
-﻿using GuitarStore.Common.Interfaces;
+﻿using GuitarStore.Common.Caching;
+using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Catalogs.Features;
 
-public sealed record GetCatalogRequest(int? CategoryId = null)
+public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1) 
+    : ICacheRequest
 {
-    public int PageNumber = 1;
-    public int PageSize = 10;
+    public string CacheKey => "GetCatalog";
 }
 internal sealed class GetCatalog : IEndpoint
 {
@@ -15,29 +16,34 @@ internal sealed class GetCatalog : IEndpoint
         .MapGet("", HandleAsync)
         .AllowAnonymous();
     private static async Task<IResult> HandleAsync([AsParameters]GetCatalogRequest request, 
-        AppDbContext dbContext)
+        AppDbContext dbContext, ICacheProvider cache)
     {
-        var catalogQuery = dbContext.Products
-            .Include(p => p.Category)
-            .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
-            .AsQueryable();
+        var catalog = await cache.GetOrCreateAsync(request, async () =>
+        {
+            var catalogQuery = dbContext.Products
+                .Include(p => p.Category)
+                .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
+                .AsQueryable();
 
-        var products = await catalogQuery
-            .AsNoTrackingWithIdentityResolution()
-            .OrderBy(p => p.CreatedAt)
-            .Skip((request.PageNumber - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .Select(p => new ProductPartialResponse
-            (
-                p.Name,
-                p.Image,
-                p.Price,
-                p.Category.Name
-            )).ToListAsync();
+            var products = await catalogQuery
+                .AsNoTrackingWithIdentityResolution()
+                .OrderBy(p => p.CreatedAt)
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(p => new ProductPartialResponse
+                (
+                    p.Name,
+                    p.Image,
+                    p.Price,
+                    p.Category.Name
+                )).ToListAsync();
 
-        var total = await catalogQuery.AsNoTracking().CountAsync();
+            var total = await catalogQuery.AsNoTracking().CountAsync();
 
-        return TypedResults.Ok(new GetCatalogResponse(products, total, request.PageNumber, request.PageSize));
+            return new GetCatalogResponse(products, total, request.PageNumber, request.PageSize);
+        });
+
+        return TypedResults.Ok(catalog);
     }
 }
 public sealed record GetCatalogResponse(

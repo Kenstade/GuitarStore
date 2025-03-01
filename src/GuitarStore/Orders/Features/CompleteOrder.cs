@@ -1,5 +1,4 @@
-﻿using GuitarStore.Common;
-using GuitarStore.Common.Interfaces;
+﻿using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using GuitarStore.Orders.Models;
 using Microsoft.EntityFrameworkCore;

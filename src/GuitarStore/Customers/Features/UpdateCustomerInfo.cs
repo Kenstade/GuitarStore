@@ -1,5 +1,4 @@
 ﻿using GuitarStore.Common;
-using GuitarStore.Common.Interfaces;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 

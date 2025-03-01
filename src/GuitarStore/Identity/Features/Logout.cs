@@ -1,4 +1,4 @@
-﻿using GuitarStore.Common.Interfaces;
+﻿using GuitarStore.Common.Web;
 using Microsoft.AspNetCore.Authentication;
 
 namespace GuitarStore.Identity.Features;

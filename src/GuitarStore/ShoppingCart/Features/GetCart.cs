@@ -1,5 +1,4 @@
-﻿using GuitarStore.Common;
-using GuitarStore.Common.Interfaces;
+﻿using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +9,7 @@ internal sealed class GetCart : IEndpoint
     public static void Map(IEndpointRouteBuilder app) => app
         .MapGet("", HandleAsync)
         .RequireAuthorization();
-    private static async Task<GetCartResponse> HandleAsync(AppDbContext dbContext, 
+    private static async Task<IResult> HandleAsync(AppDbContext dbContext, 
         IUserContextProvider userContext)
     {
         var userId = userContext.GetUserId();
@@ -20,7 +19,7 @@ internal sealed class GetCart : IEndpoint
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.CustomerId == userId);
 
-        if (cart == null) return new GetCartResponse(0, []);
+        if (cart == null) return TypedResults.Ok();
 
         var products = await dbContext.Products
             .AsNoTracking()
@@ -40,7 +39,7 @@ internal sealed class GetCart : IEndpoint
 
         var total = items.Select(i => i.Quantity * i.Price).Sum();
 
-        return new GetCartResponse(total, items);
+        return TypedResults.Ok(new GetCartResponse(total, items));
         //TODO: return with Stock if < 10
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GuitarStore.Common.Extensions;
+﻿namespace GuitarStore.Common.Core;
 
 internal static class ConfigurationExtensions
 {

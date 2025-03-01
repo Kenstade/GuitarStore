@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using FluentValidation;
-using GuitarStore.Common.Interfaces;
+using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;

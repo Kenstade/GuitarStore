@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using GuitarStore.Common;
-using GuitarStore.Common.Interfaces;
+using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 

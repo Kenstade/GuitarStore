@@ -1,5 +1,5 @@
 ﻿using GuitarStore.Catalogs.Features;
-using GuitarStore.Common.Interfaces;
+using GuitarStore.Common.Web;
 using GuitarStore.Customers.Features;
 using GuitarStore.Identity.Features;
 using GuitarStore.Orders.Features;

@@ -1,4 +1,4 @@
-﻿using GuitarStore.Common.Extensions;
+﻿using GuitarStore.Common.Core;
 using GuitarStore.Data.Interfaces;
 using GuitarStore.Data.Postgres;
 using GuitarStore.Data.Seed;

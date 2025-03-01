@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using FluentValidation;
-using GuitarStore.Common.Interfaces;
+using GuitarStore.Common.Web;
 using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace GuitarStore.Common.Interfaces;
+﻿namespace GuitarStore.Common.Web;
 
 public interface IEndpoint
 {
