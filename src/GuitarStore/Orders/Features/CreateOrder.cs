@@ -1,21 +1,23 @@
 ﻿using GuitarStore.Common.Web;
 using GuitarStore.Data;
+using GuitarStore.Orders.Events;
 using GuitarStore.Orders.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Orders.Features;
 
-internal sealed class CompleteOrder : IEndpoint
+internal sealed class CreateOrder : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
-        .MapPost("/complete", HandleAsync)
+        .MapPost("", HandleAsync)
         .RequireAuthorization();
-    private static async Task<IResult> HandleAsync(AppDbContext dbContext, IUserContextProvider userContext)
+    private static async Task<IResult> HandleAsync(AppDbContext dbContext, 
+        IUserContextProvider userContext, OrderEventHandler eventHandler)
     {
         var userId = userContext.GetUserId();
 
         var cart = await dbContext.Carts
-            .Include(c => c.Items)
+            .Select(c => new {c.Id, c.CustomerId, c.Items})
             .FirstOrDefaultAsync(c => c.CustomerId == userId);
         if (cart == null) return TypedResults.BadRequest();
 
@@ -23,16 +25,18 @@ internal sealed class CompleteOrder : IEndpoint
             .FirstOrDefaultAsync(a => a.CustomerId == userId);
         if (address == null) return TypedResults.BadRequest("Адрес не указан");
 
+        var cartItemsProductId = cart.Items.Select(c => c.ProductId).ToList();
+
         var products = await dbContext.Products
-            .Where(p => cart.Items.Select(c => c.ProductId).Contains(p.Id))
+            .Where(p => cartItemsProductId.Contains(p.Id))
             .ToListAsync();
 
         var orderItems = cart.Items
             .Select(cartItem =>
             {
                 var product = products.First(p => p.Id == cartItem.ProductId && p.IsAvailable);
-                product.Stock -= cartItem.Quantity;
-                dbContext.Update(product);
+                product.Stock -= cartItem.Quantity; //TODO: event
+                dbContext.Update(product); //TODO: event
                 return new OrderItem
                 {
                     ProductId = cartItem.ProductId,
@@ -59,8 +63,7 @@ internal sealed class CompleteOrder : IEndpoint
             }
 
         });
-
-        dbContext.Remove(cart);
+        await eventHandler.Handle(new OrderCreatedEvent(cart.Id));
 
         await dbContext.SaveChangesAsync();
 

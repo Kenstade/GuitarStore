@@ -17,8 +17,8 @@ internal sealed class UserEventHandler(UserCreatedEventHandler userCreatedEventH
 internal sealed class UserCreatedEventHandler
 {
     private readonly AppDbContext _dbContext;
-    private readonly ILogger<UserCreatedEvent> _logger;
-    public UserCreatedEventHandler(AppDbContext dbContext, ILogger<UserCreatedEvent> logger)
+    private readonly ILogger<UserCreatedEventHandler> _logger;
+    public UserCreatedEventHandler(AppDbContext dbContext, ILogger<UserCreatedEventHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -35,5 +35,7 @@ internal sealed class UserCreatedEventHandler
         });
 
         await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation($"{nameof(UserCreatedEvent)} completed");
     }
 }

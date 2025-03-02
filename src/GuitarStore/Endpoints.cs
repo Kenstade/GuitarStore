@@ -32,7 +32,7 @@ public static class Endpoints
            .WithTags("Checkout")
            .MapEndpoint<AddAddress>()
            .MapEndpoint<UpdateAddress>()
-           .MapEndpoint<CompleteOrder>();
+           .MapEndpoint<CreateOrder>();
 
         app.MapGroup("orders")
            .WithTags("Orders")

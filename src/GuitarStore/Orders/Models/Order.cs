@@ -39,5 +39,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             x.Property(a => a.Apartment)
                 .HasColumnName("RoomNumber");
         });
+
+        builder.Property(p => p.OrderStatus)
+            .HasMaxLength(25)
+            .HasConversion(p => p.ToString(), p => Enum.Parse<OrderStatus>(p));
     }
 }
