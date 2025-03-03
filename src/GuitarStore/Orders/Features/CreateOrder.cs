@@ -25,18 +25,15 @@ internal sealed class CreateOrder : IEndpoint
             .FirstOrDefaultAsync(a => a.CustomerId == userId);
         if (address == null) return TypedResults.BadRequest("Адрес не указан");
 
-        var cartItemsProductId = cart.Items.Select(c => c.ProductId).ToList();
-
         var products = await dbContext.Products
-            .Where(p => cartItemsProductId.Contains(p.Id))
+            .Where(p => cart.Items.Select(c => c.ProductId).Contains(p.Id) && p.IsAvailable)
+            .Select(p => new {p.Id, p.Name, p.Image})
             .ToListAsync();
 
         var orderItems = cart.Items
             .Select(cartItem =>
             {
-                var product = products.First(p => p.Id == cartItem.ProductId && p.IsAvailable);
-                product.Stock -= cartItem.Quantity; //TODO: event
-                dbContext.Update(product); //TODO: event
+                var product = products.First(p => p.Id == cartItem.ProductId);
                 return new OrderItem
                 {
                     ProductId = cartItem.ProductId,
@@ -61,9 +58,8 @@ internal sealed class CreateOrder : IEndpoint
                 BuildingNumber = address.BuildingNumber,
                 Apartment = address.Apartment,
             }
-
         });
-        await eventHandler.Handle(new OrderCreatedEvent(cart.Id));
+        await eventHandler.Handle(new OrderCreatedEvent(cart.Id, orderItems.ToDictionary(x => x.ProductId, x => x.Quantity)));
 
         await dbContext.SaveChangesAsync();
 

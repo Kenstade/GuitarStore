@@ -22,7 +22,7 @@ internal sealed class GetOrders : IEndpoint
                 o.Total,
                 o.OrderStatus.ToString(),
                 o.CreatedAt,
-                o.Items.Select(i => i.Image).ToList()
+                o.Items.Select(i => new OrderItemsPartialResponse(i.Name, i.Image)).ToList()
             )).ToListAsync();
 
         if (orders == null) return TypedResults.NotFound("Your order list is empty");
@@ -31,4 +31,9 @@ internal sealed class GetOrders : IEndpoint
 
     }
 }
-public record GetOrdersResponse(decimal Total, string Status, DateTime AddedAt, ICollection<string> Images);
+public record GetOrdersResponse(
+    decimal Total, 
+    string Status, 
+    DateTime CreatedAt,
+    ICollection<OrderItemsPartialResponse> Items);
+public record OrderItemsPartialResponse(string Name, string Image);
