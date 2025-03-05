@@ -1,4 +1,5 @@
-﻿using GuitarStore.Data.Interfaces;
+﻿using GuitarStore.Common.Events;
+using GuitarStore.Data.Interfaces;
 using GuitarStore.Identity;
 using GuitarStore.Identity.Events;
 using GuitarStore.Identity.Models;
@@ -9,11 +10,11 @@ namespace GuitarStore.Data.Seed;
 internal sealed class IdentityDataSeeder(
     UserManager<User> userManager, 
     RoleManager<Role> roleManager, 
-    UserEventHandler eventHandler) : IDataSeeder
+    INotifier notifier) : IDataSeeder
 {
     private readonly UserManager<User> _userManager = userManager;
     private readonly RoleManager<Role> _roleManager = roleManager;
-    private readonly UserEventHandler _eventHandler = eventHandler;
+    private readonly INotifier _notifier = notifier;
 
     public async Task SeedAllAsync()
     {
@@ -51,7 +52,7 @@ internal sealed class IdentityDataSeeder(
                 await _userManager.AddToRoleAsync(user, Constants.Role.User);
             }
 
-            await _eventHandler.Handle(new UserCreatedEvent(user.Id, user.Email));
+            await _notifier.Send(new UserCreatedEvent(user.Id, user.Email));
         }
 
         if (await _userManager.FindByEmailAsync("admin@test") == null)
@@ -70,7 +71,7 @@ internal sealed class IdentityDataSeeder(
                 await _userManager.AddToRoleAsync(user, Constants.Role.Admin);
             }
 
-            await _eventHandler.Handle(new UserCreatedEvent(user.Id, user.Email));
+            await _notifier.Send(new UserCreatedEvent(user.Id, user.Email));
         }
     }
 }

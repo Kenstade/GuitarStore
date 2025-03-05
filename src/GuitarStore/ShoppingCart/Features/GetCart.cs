@@ -43,5 +43,10 @@ internal sealed class GetCart : IEndpoint
         //TODO: return with Stock if < 10
     }
 }
-public record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);
-public record CartItemPartialResponse(string Name, string Image, decimal Price, int Quantity, string Message);
+public sealed record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);
+public sealed record CartItemPartialResponse(
+    string Name, 
+    string Image, 
+    decimal Price, 
+    int Quantity, 
+    string Message);

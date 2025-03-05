@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using GuitarStore.Common.Events;
 using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using GuitarStore.Identity.Events;
@@ -16,7 +17,7 @@ internal sealed class Register : IEndpoint
         .AllowAnonymous();
 
     private static async Task<IResult> HandleAsync(RegisterRequest request,AppDbContext dbContext,
-        IValidator<RegisterRequest> validator, UserEventHandler eventHandler,
+        IValidator<RegisterRequest> validator, INotifier notifier,
         UserManager<User> userManager)
     {
         var result = await validator.ValidateAsync(request);
@@ -38,7 +39,7 @@ internal sealed class Register : IEndpoint
         if (!roleResult.Succeeded) 
             return TypedResults.BadRequest(roleResult.Errors.Select(e => e.Description));
 
-        await eventHandler.Handle(new UserCreatedEvent(user.Id, user.Email));
+        await notifier.Send(new UserCreatedEvent(user.Id, user.Email));
      
         return TypedResults.Ok();
     }

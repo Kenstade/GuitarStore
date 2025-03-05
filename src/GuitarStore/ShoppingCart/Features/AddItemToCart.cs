@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.ShoppingCart.Features;
 
-public record AddItemRequest(int ProductId);
+public sealed record AddItemRequest(int ProductId);
 internal sealed class AddItemToCart : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app

@@ -1,20 +1,12 @@
-﻿using GuitarStore.Customers.Models;
+﻿using GuitarStore.Common.Events;
+using GuitarStore.Customers.Models;
 using GuitarStore.Data;
 
 namespace GuitarStore.Identity.Events;
 
-public sealed record UserCreatedEvent(Guid Id, string Email);
-internal sealed class UserEventHandler(UserCreatedEventHandler userCreatedEventHandler)
-{
-    private readonly UserCreatedEventHandler _userCreatedEventHandler = userCreatedEventHandler;
+public sealed record UserCreatedEvent(Guid Id, string Email) : INotification;
 
-    public Task Handle(UserCreatedEvent userCreatedEvent)
-    {
-        return _userCreatedEventHandler.Hanlde(userCreatedEvent);
-    }
-}
-
-internal sealed class UserCreatedEventHandler
+internal sealed class UserCreatedEventHandler : INotificationHandler<UserCreatedEvent>
 {
     private readonly AppDbContext _dbContext;
     private readonly ILogger<UserCreatedEventHandler> _logger;
@@ -24,14 +16,14 @@ internal sealed class UserCreatedEventHandler
         _logger = logger;
     }
 
-    public async Task Hanlde(UserCreatedEvent userCreatedEvent)
+    public async Task Handle(UserCreatedEvent notification)
     {
         _logger.LogInformation($"Handling {nameof(UserCreatedEvent)}");
 
-        await _dbContext.Customers.AddAsync(new Customer 
-        { 
-            Id = userCreatedEvent.Id,
-            Email = userCreatedEvent.Email 
+        await _dbContext.Customers.AddAsync(new Customer
+        {
+            Id = notification.Id,
+            Email = notification.Email
         });
 
         await _dbContext.SaveChangesAsync();

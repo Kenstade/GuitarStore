@@ -2,6 +2,7 @@ using FluentValidation;
 using GuitarStore;
 using GuitarStore.Common.Caching;
 using GuitarStore.Common.Core;
+using GuitarStore.Common.Events;
 using GuitarStore.Common.OpenApi;
 using GuitarStore.Common.Web;
 using GuitarStore.Data.Extensions;
@@ -17,6 +18,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ICacheProvider, MemoryCacheProvider>();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
+builder.Services.AddTransient<INotifier, Notifier>();
 builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
@@ -24,9 +26,11 @@ builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
 //event handlers registration
 foreach (var type in typeof(Program).Assembly.GetTypes()
-    .Where(x => x.Name.EndsWith("EventHandler") && !x.IsAbstract && !x.IsInterface))
+    .Where(x => x.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() 
+    == typeof(INotificationHandler<>)) && !x.IsAbstract && !x.IsInterface))
 {
-    builder.Services.AddTransient(type);
+    builder.Services.AddTransient(type.GetInterfaces().First(x => x.GetGenericTypeDefinition() 
+    == typeof(INotificationHandler<>)), type);
 }
 
 var app = builder.Build();

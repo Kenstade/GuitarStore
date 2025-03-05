@@ -15,7 +15,6 @@ internal sealed class GetOrders : IEndpoint
         var userId = userContext.GetUserId();
         
         var orders = await dbContext.Orders
-            .Include(o => o.Items)
             .Where(o => o.CustomerId == userId)
             .Select(o => new GetOrdersResponse
             (
@@ -31,9 +30,9 @@ internal sealed class GetOrders : IEndpoint
 
     }
 }
-public record GetOrdersResponse(
+public sealed record GetOrdersResponse(
     decimal Total, 
     string Status, 
     DateTime CreatedAt,
     ICollection<OrderItemsPartialResponse> Items);
-public record OrderItemsPartialResponse(string Name, string Image);
+public sealed record OrderItemsPartialResponse(string Name, string Image);

@@ -1,27 +1,16 @@
-﻿using GuitarStore.Data;
+﻿using GuitarStore.Common.Events;
+using GuitarStore.Data;
 
 namespace GuitarStore.Orders.Events;
+public sealed record OrderCreatedEvent(Guid CartId, IDictionary<int, int> Items) : INotification;
 
-public sealed record OrderCreatedEvent(Guid CartId, IDictionary<int, int> Items);
-internal sealed class OrderEventHandler(OrderCreatedEventHandler orderCreatedEventHandler)
+internal sealed class OrderCreatedEventHandler(AppDbContext dbContext, ILogger<OrderCreatedEventHandler> logger)
+    : INotificationHandler<OrderCreatedEvent>
 {
-    private readonly OrderCreatedEventHandler _orderCreatedEventHandler = orderCreatedEventHandler;
-    public Task Handle(OrderCreatedEvent orderCreatedEvent)
-    { 
-        return _orderCreatedEventHandler.Handle(orderCreatedEvent);
-    }
-}
+    private readonly AppDbContext _dbContext = dbContext;
+    private readonly ILogger<OrderCreatedEventHandler> _logger = logger;
 
-internal class OrderCreatedEventHandler
-{
-    private readonly AppDbContext _dbContext;
-    private readonly ILogger<OrderCreatedEventHandler> _logger;
-    public OrderCreatedEventHandler(AppDbContext dbContext, ILogger<OrderCreatedEventHandler> logger)
-    {
-        _dbContext = dbContext;
-        _logger = logger;
-    }
-    public async Task Handle(OrderCreatedEvent message)
+    public async Task Handle(OrderCreatedEvent message) 
     {
         _logger.LogInformation($"Handling {nameof(OrderCreatedEvent)}");
         //await _dbContext.Carts.Where(c => c.Id == orderCreatedEvent.CartId).ExecuteDeleteAsync()
@@ -33,6 +22,7 @@ internal class OrderCreatedEventHandler
             await _dbContext.SaveChangesAsync();
         }
 
+        //TODO: вынести в отдельный метод?
         var products = _dbContext.Products
             .Where(p => message.Items.Keys.Contains(p.Id));
 
