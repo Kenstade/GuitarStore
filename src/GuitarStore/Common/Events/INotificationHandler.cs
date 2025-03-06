@@ -1,6 +1,6 @@
 ﻿namespace GuitarStore.Common.Events;
 
-public interface INotificationHandler<T> where T : INotification
+public interface INotificationHandler<TMessage> where TMessage : INotification
 {
-    Task Handle(T notification);
+    Task Handle(TMessage message);
 }

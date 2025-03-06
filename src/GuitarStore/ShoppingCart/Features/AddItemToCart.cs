@@ -15,7 +15,7 @@ internal sealed class AddItemToCart : IEndpoint
         IUserContextProvider userContext)
     {
         var product = await dbContext.Products
-            .FirstOrDefaultAsync(p => p.Id == request.ProductId);  
+            .FirstOrDefaultAsync(p => p.Id == request.ProductId && p.IsAvailable);  
         if (product == null) return TypedResults.BadRequest("Item not found");
 
         var userId = userContext.GetUserId();

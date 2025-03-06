@@ -31,7 +31,7 @@ internal sealed class CreateOrder : IEndpoint
         var products = await dbContext.Products
             .AsNoTracking()
             .Where(p => cart.Items.Select(c => c.ProductId).Contains(p.Id) && p.IsAvailable)
-            .Select(p => new {p.Id, p.Name, p.Image})
+            .Select(p => new {p.Id, p.Name, p.Image, p.Stock})
             .ToListAsync();
 
         var orderItems = cart.Items
@@ -64,11 +64,11 @@ internal sealed class CreateOrder : IEndpoint
             }
         });
 
+        await dbContext.SaveChangesAsync();
+
         await notifier.Send(new OrderCreatedEvent(
             cart.Id, 
             orderItems.ToDictionary(x => x.ProductId, x => x.Quantity)));
-
-        await dbContext.SaveChangesAsync();
 
         return TypedResults.Ok();
     }

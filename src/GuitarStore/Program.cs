@@ -16,14 +16,13 @@ builder.Services.AddJwtConfiguration(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<ICacheProvider, MemoryCacheProvider>();
+builder.Services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
-builder.Services.AddTransient<INotifier, Notifier>();
 builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(includeInternalTypes: true);
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
-
+builder.Services.AddTransient<INotifier, Notifier>();
 //event handlers registration
 foreach (var type in typeof(Program).Assembly.GetTypes()
     .Where(x => x.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() 
