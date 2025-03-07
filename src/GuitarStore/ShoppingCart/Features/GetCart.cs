@@ -15,15 +15,15 @@ internal sealed class GetCart : IEndpoint
         var userId = userContext.GetUserId();
 
         var cart = await dbContext.Carts
-            .Include(c => c.Items)
             .AsNoTracking()
+            .Select(c => new {c.CustomerId, c.Items})            
             .FirstOrDefaultAsync(c => c.CustomerId == userId);
 
-        if (cart == null) return TypedResults.Ok();
+        if (cart == null) return TypedResults.Ok("Your cart is empty");
 
         var products = await dbContext.Products
             .AsNoTracking()
-            .Where(p => cart.Items.Select(c => c.ProductId).Contains(p.Id))
+            .Where(p => cart.Items.Select(c => c.ProductId).Contains(p.Id) && p.IsAvailable)
             .ToListAsync();
 
        string message = string.Empty;
@@ -31,8 +31,8 @@ internal sealed class GetCart : IEndpoint
             .Select(cartItem =>
             {
                 var product = products.First(p => p.Id == cartItem.ProductId);
-
-                if(product.Stock == 0) message = "Out of stock";
+                //TODO: переделать?
+                if(product.Stock < cartItem.Quantity) message = "Out of stock";
                 
                 return new CartItemPartialResponse(product.Name, product.Image, cartItem.Price, cartItem.Quantity, message);
             }).ToList();
@@ -40,7 +40,6 @@ internal sealed class GetCart : IEndpoint
         var total = items.Select(i => i.Quantity * i.Price).Sum();
 
         return TypedResults.Ok(new GetCartResponse(total, items));
-        //TODO: return with Stock if < 10
     }
 }
 public sealed record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);

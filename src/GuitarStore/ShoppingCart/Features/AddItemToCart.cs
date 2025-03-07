@@ -31,7 +31,11 @@ internal sealed class AddItemToCart : IEndpoint
         }
 
         cart.AddItem(request.ProductId, product.Price);
-        dbContext.Update(cart.Items.First(x => x.ProductId == request.ProductId));
+
+        var cartItem = cart.Items.First(x => x.ProductId == request.ProductId);
+        if (cartItem.Quantity > product.Stock) return TypedResults.BadRequest("Out of stock");
+
+        dbContext.Update(cartItem);
 
         await dbContext.SaveChangesAsync();
 

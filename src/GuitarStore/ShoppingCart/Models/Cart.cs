@@ -22,7 +22,7 @@ public class Cart
     }
 }
 
-public class CartConfiguration : IEntityTypeConfiguration<Cart>
+internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {

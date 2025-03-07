@@ -34,6 +34,12 @@ internal sealed class CreateOrder : IEndpoint
             .Select(p => new {p.Id, p.Name, p.Image, p.Stock})
             .ToListAsync();
 
+        await notifier.Send(new OrderDoneEvent
+        (
+            cart.Id,
+            cart.Items.ToDictionary(x => x.ProductId, x => x.Quantity))
+        );
+
         var orderItems = cart.Items
             .Select(cartItem =>
             {
@@ -65,10 +71,6 @@ internal sealed class CreateOrder : IEndpoint
         });
 
         await dbContext.SaveChangesAsync();
-
-        await notifier.Send(new OrderCreatedEvent(
-            cart.Id, 
-            orderItems.ToDictionary(x => x.ProductId, x => x.Quantity)));
 
         return TypedResults.Ok();
     }
