@@ -2,7 +2,6 @@
 using GuitarStore.Common.Web;
 using GuitarStore.Customers.Models;
 using GuitarStore.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Customers.Features;
 
@@ -17,11 +16,8 @@ internal sealed class AddAddress : IEndpoint
     {
         var result = validator.Validate(request);
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
-
+         
         var userId = userContext.GetUserId();
-
-        if (await dbContext.Addresses.AnyAsync(a => a.CustomerId == userId))
-            return TypedResults.BadRequest("Your already have an address");
 
         await dbContext.Addresses.AddAsync(new Address
         {
@@ -35,6 +31,7 @@ internal sealed class AddAddress : IEndpoint
         await dbContext.SaveChangesAsync();
 
         return TypedResults.Ok();
+
     }
 }
 

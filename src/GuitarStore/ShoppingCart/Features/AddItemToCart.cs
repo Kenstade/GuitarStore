@@ -14,7 +14,7 @@ internal sealed class AddItemToCart : IEndpoint
     private static async Task<IResult> HandleAsync(AddItemRequest request, AppDbContext dbContext,
         IUserContextProvider userContext)
     {
-        var product = await dbContext.Products
+        var product = await dbContext.Products //TODO: throw exception?
             .FirstOrDefaultAsync(p => p.Id == request.ProductId && p.IsAvailable);  
         if (product == null) return TypedResults.BadRequest("Item not found");
 
@@ -32,7 +32,7 @@ internal sealed class AddItemToCart : IEndpoint
 
         cart.AddItem(request.ProductId, product.Price);
 
-        var cartItem = cart.Items.First(x => x.ProductId == request.ProductId);
+        var cartItem = cart.Items.First(x => x.ProductId == request.ProductId); //throw?
         if (cartItem.Quantity > product.Stock) return TypedResults.BadRequest("Out of stock");
 
         dbContext.Update(cartItem);

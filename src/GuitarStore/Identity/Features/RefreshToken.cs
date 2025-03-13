@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using FluentValidation;
 using GuitarStore.Common.Web;
+using GuitarStore.Identity.Errors;
 using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ internal sealed class RefreshToken : IEndpoint
         var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var user = await userManager.FindByIdAsync(userId);
-        if (user == null) return TypedResults.NotFound();
+        if (user == null) return TypedResults.Problem(new UserNotFoundError(userId)); 
 
         string accessToken = jwtService.GenerateJwtToken(user);
         string refreshToken = await jwtService.GenerateRefreshToken(user.Id, request.RefreshToken);

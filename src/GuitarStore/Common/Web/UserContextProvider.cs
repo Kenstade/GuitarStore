@@ -15,8 +15,8 @@ public class UserContextProvider(IHttpContextAccessor accessor) : IUserContextPr
     {
         var nameIndentifier = _accessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        Guid.TryParse(nameIndentifier, out var userId);
-
-        return userId;
+        return Guid.TryParse(nameIndentifier, out var userId) 
+            ? userId 
+            : Guid.Empty;
     }
 }

@@ -1,4 +1,4 @@
 ﻿namespace GuitarStore.Common.Events;
 
-public interface INotification
+public interface IEvent
 {}

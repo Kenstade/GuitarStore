@@ -24,9 +24,8 @@ internal sealed class GetOrders : IEndpoint
                 o.Items.Select(i => new OrderItemsPartialResponse(i.Name, i.Image)).ToList()
             )).ToListAsync();
 
-        if (orders == null) return TypedResults.NotFound("Your order list is empty");
-
-        return TypedResults.Ok(orders);
+        return orders != null ? TypedResults.Ok(orders)
+                              : TypedResults.Ok("Your order list is empty");
 
     }
 }

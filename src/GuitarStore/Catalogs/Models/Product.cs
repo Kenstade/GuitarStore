@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GuitarStore.Catalogs.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Catalogs.Models;
@@ -19,6 +20,22 @@ public class Product
     public Category Category { get; set; } = default!;
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = default!;
+
+    internal int RemoveStock(int quantity)
+    {
+        if (Stock < quantity)
+        {
+            throw new InsufficientStockException(
+                $"Empty stock, product item '{Name}' with quantity {quantity} is not available.");
+        }
+        int removed = Math.Min(quantity, Stock);
+
+        Stock -= removed;
+        //нужно ли делать товар недоступным при нулевом стоке?
+        if(Stock == 0) IsAvailable = false;
+        
+        return removed;
+    }
 }
 
 public class ProductConfiguration : IEntityTypeConfiguration<Product>

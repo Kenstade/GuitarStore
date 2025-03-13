@@ -2,6 +2,7 @@
 using FluentValidation;
 using GuitarStore.Common.Web;
 using GuitarStore.Data;
+using GuitarStore.Identity.Errors;
 using GuitarStore.Identity.Jwt;
 using GuitarStore.Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -23,11 +24,10 @@ internal sealed class Login : IEndpoint
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var user = await userManager.FindByEmailAsync(request.Email);
-        if (user == null) return TypedResults.BadRequest("Incorrect E-mail or Password");
+        if (user == null) return TypedResults.Problem(new InvalidCredentialsError());
         
         var signinResult = await signinManager.CheckPasswordSignInAsync(user, request.Password, false);
-        if(!signinResult.Succeeded) 
-            return TypedResults.BadRequest("Incorrect E-Mail or Password");
+        if(!signinResult.Succeeded) return TypedResults.Problem(new InvalidCredentialsError());
 
         var refreshToken = await jwtService.GenerateRefreshToken(user.Id);
 
@@ -38,11 +38,13 @@ internal sealed class Login : IEndpoint
     }
 }
 
-public class LoginRequestValidation : AbstractValidator<LoginRequest>
+
+
+public sealed class LoginRequestValidation : AbstractValidator<LoginRequest>
 {
     public LoginRequestValidation()
     {
-        RuleFor(x => x.Email).NotEmpty();
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
         RuleFor(x => x.Password).NotEmpty();
     }
 }

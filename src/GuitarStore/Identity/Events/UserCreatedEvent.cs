@@ -4,8 +4,8 @@ using GuitarStore.Data;
 
 namespace GuitarStore.Identity.Events;
 
-public sealed record UserCreatedEvent(Guid Id, string Email) : INotification;
-internal sealed class UserCreatedEventHandler(AppDbContext dbContext) : INotificationHandler<UserCreatedEvent>
+public sealed record UserCreatedEvent(Guid Id, string Email) : IEvent;
+internal sealed class UserCreatedEventHandler(AppDbContext dbContext) : IEventHandler<UserCreatedEvent>
 {
     private readonly AppDbContext _dbContext = dbContext;
 

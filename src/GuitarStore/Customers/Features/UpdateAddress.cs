@@ -1,5 +1,7 @@
-﻿using FluentValidation;
+﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using GuitarStore.Common.Web;
+using GuitarStore.Customers.Errors;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,18 +11,18 @@ public sealed record UpdateAddressRequest(string City, string Street, string Bui
 internal sealed class UpdateAddress : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
-        .MapPut("/update-address", HandleAsync)
+        .MapPut("/update", HandleAsync)
         .RequireAuthorization();
-    private static async Task<IResult> HandleAsync(UpdateAddressRequest request, AppDbContext dbContext,
-        IUserContextProvider userContext, IValidator<UpdateAddressRequest> validator)
+    private static async Task<IResult> HandleAsync(UpdateAddressRequest request,AppDbContext dbContext, 
+        UserContextProvider userContext, IValidator<UpdateAddressRequest> validator)
     {
         var result = validator.Validate(request);
         if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var userId = userContext.GetUserId();
 
-        var address = await dbContext.Addresses.SingleOrDefaultAsync(a => a.CustomerId == userId);
-        if (address == null) return TypedResults.NotFound("Address not found");
+        var address = await dbContext.Addresses.FirstOrDefaultAsync(a => a.CustomerId == userId);
+        if (address == null) return TypedResults.Problem(new AddressNotFoundError());
 
         address.City = request.City;
         address.Street = request.Street;

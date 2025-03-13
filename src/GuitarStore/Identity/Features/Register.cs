@@ -21,8 +21,7 @@ internal sealed class Register : IEndpoint
         UserManager<User> userManager)
     {
         var result = await validator.ValidateAsync(request);
-        if (!result.IsValid)
-            return TypedResults.ValidationProblem(result.ToDictionary());
+        if (!result.IsValid) return TypedResults.ValidationProblem(result.ToDictionary());
 
         var user = new User
         {
@@ -32,11 +31,11 @@ internal sealed class Register : IEndpoint
         };
 
         var identityResult = await userManager.CreateAsync(user, request.Password);
-        if (!identityResult.Succeeded) 
+        if (!identityResult.Succeeded) //TODO: throw exception
             return TypedResults.BadRequest(identityResult.Errors.Select(e => e.Description));
 
         var roleResult = await userManager.AddToRoleAsync(user, Constants.Role.User);
-        if (!roleResult.Succeeded) 
+        if (!roleResult.Succeeded) //TODO: throw exception
             return TypedResults.BadRequest(roleResult.Errors.Select(e => e.Description));
 
         await notifier.Send(new UserCreatedEvent(user.Id, user.Email));

@@ -2,5 +2,5 @@
 
 public interface INotifier
 {
-    Task Send<T>(T Notification) where T : INotification;
+    Task Send<TEvent>(TEvent message) where TEvent : IEvent;
 }

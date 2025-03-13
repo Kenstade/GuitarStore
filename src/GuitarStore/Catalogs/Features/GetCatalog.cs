@@ -43,7 +43,8 @@ internal sealed class GetCatalog : IEndpoint
             return new GetCatalogResponse(products, total, request.PageNumber, request.PageSize);
         });
 
-        return TypedResults.Ok(catalog);
+        return catalog != null ? TypedResults.Ok(catalog)
+                               : TypedResults.Ok("Catalog is empty");
     }
 }
 public sealed record GetCatalogResponse(

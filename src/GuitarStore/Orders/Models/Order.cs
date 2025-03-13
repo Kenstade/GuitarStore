@@ -12,6 +12,7 @@ public class Order
     public DateTime CreatedAt { get; set; }
     public ICollection<OrderItem> Items { get; set; } = [];
     public Address Address { get; set; } = null!;
+    //TODO: customerInfo entity?
 
 }
 

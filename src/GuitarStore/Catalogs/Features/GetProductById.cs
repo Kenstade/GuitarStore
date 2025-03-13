@@ -1,4 +1,5 @@
-﻿using GuitarStore.Common.Caching;
+﻿using GuitarStore.Catalogs.Errors;
+using GuitarStore.Common.Caching;
 using GuitarStore.Common.Web;
 using GuitarStore.Data;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,8 @@ internal sealed class GetProductById : IEndpoint
                 )).ToList()
             )).FirstOrDefaultAsync();
 
-        return product is null ? TypedResults.NotFound() 
-                               : TypedResults.Ok(product);
+        return product != null ? TypedResults.Ok(product)
+                               : TypedResults.Problem(new ProductNotFoundError(request.Id));
     }
 }
 public sealed record GetProductByIdResponse(

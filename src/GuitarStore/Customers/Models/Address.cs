@@ -14,15 +14,13 @@ public class Address
     public Customer Customer { get; set; } = null!;
 }
 
-public class AddressConfiguration : IEntityTypeConfiguration<Address>
+internal sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
-        builder.HasKey(a => a.Id);
-
         builder.Property(c => c.City)
-               .IsRequired()
-               .HasColumnType("varchar(100)");
+            .IsRequired()
+            .HasColumnType("varchar(100)");
 
         builder.Property(c => c.Street)
             .IsRequired()

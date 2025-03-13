@@ -1,6 +1,7 @@
 ﻿using GuitarStore.Common.Events;
 using GuitarStore.Common.Web;
 using GuitarStore.Data;
+using GuitarStore.Orders.Errors;
 using GuitarStore.Orders.Events;
 using GuitarStore.Orders.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +21,13 @@ internal sealed class CreateOrder : IEndpoint
         var cart = await dbContext.Carts
             .AsNoTracking()
             .Select(c => new {c.Id, c.CustomerId, c.Items})
-            .FirstOrDefaultAsync(c => c.CustomerId == userId);
-        if (cart == null) return TypedResults.BadRequest();
+            .FirstOrDefaultAsync(c => c.CustomerId == userId); //TODO: throw?
+        if (cart == null) return TypedResults.Problem(new CartNotFoundError(userId));
 
         var address = await dbContext.Addresses
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.CustomerId == userId);
-        if (address == null) return TypedResults.BadRequest("Адрес не указан");
+        if (address == null) return TypedResults.Problem(new UnspecifiedAddressError());
 
         var products = await dbContext.Products
             .AsNoTracking()
