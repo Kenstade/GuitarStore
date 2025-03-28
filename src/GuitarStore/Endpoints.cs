@@ -1,4 +1,5 @@
 ﻿using GuitarStore.Catalogs.Features;
+using GuitarStore.Checkout.Features;
 using GuitarStore.Common.Web;
 using GuitarStore.Customers.Features;
 using GuitarStore.Identity.Features;
@@ -15,13 +16,14 @@ public static class Endpoints
            .WithTags("Account")
            .MapEndpoint<Register>()
            .MapEndpoint<Login>()
+           .MapEndpoint<UpdateCustomer>()
            .MapEndpoint<RefreshToken>()
            .MapEndpoint<Logout>();
 
         app.MapGroup("catalog")
            .WithTags("Catalog")
            .MapEndpoint<GetCatalog>()
-           .MapEndpoint<GetProductById>();
+           .MapEndpoint<GetProductDetails>();
 
         app.MapGroup("cart")
             .WithTags("ShoppingCart")
@@ -31,12 +33,12 @@ public static class Endpoints
         app.MapGroup("checkout")
            .WithTags("Checkout")
            .MapEndpoint<AddAddress>()
-           .MapEndpoint<UpdateCustomer>()
            .MapEndpoint<CreateOrder>();
 
         app.MapGroup("orders")
            .WithTags("Orders")
-           .MapEndpoint<GetOrders>();
+           .MapEndpoint<GetOrders>()
+           .MapEndpoint<GetOrderDetails>();
     }
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
         where TEndpoint : IEndpoint

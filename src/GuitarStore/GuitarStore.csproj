@@ -7,6 +7,84 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalogs\Errors\**" />
+    <Compile Remove="Catalogs\Exceptions\**" />
+    <Compile Remove="Catalogs\Models\**" />
+    <Compile Remove="Common\Caching\**" />
+    <Compile Remove="Common\Core\**" />
+    <Compile Remove="Common\EFCore\**" />
+    <Compile Remove="Common\OpenApi\**" />
+    <Compile Remove="Common\Web\Errors\**" />
+    <Compile Remove="Customers\Errors\**" />
+    <Compile Remove="Customers\Models\**" />
+    <Compile Remove="Data\Interfaces\**" />
+    <Compile Remove="Data\Seed\**" />
+    <Compile Remove="Identity\Errors\**" />
+    <Compile Remove="Identity\Models\**" />
+    <Compile Remove="Orders\Errors\**" />
+    <Compile Remove="Orders\Models\**" />
+    <Compile Remove="ShoppingCart\Models\**" />
+    <Content Remove="Catalogs\Errors\**" />
+    <Content Remove="Catalogs\Exceptions\**" />
+    <Content Remove="Catalogs\Models\**" />
+    <Content Remove="Common\Caching\**" />
+    <Content Remove="Common\Core\**" />
+    <Content Remove="Common\EFCore\**" />
+    <Content Remove="Common\OpenApi\**" />
+    <Content Remove="Common\Web\Errors\**" />
+    <Content Remove="Customers\Errors\**" />
+    <Content Remove="Customers\Models\**" />
+    <Content Remove="Data\Interfaces\**" />
+    <Content Remove="Data\Seed\**" />
+    <Content Remove="Identity\Errors\**" />
+    <Content Remove="Identity\Models\**" />
+    <Content Remove="Orders\Errors\**" />
+    <Content Remove="Orders\Models\**" />
+    <Content Remove="ShoppingCart\Models\**" />
+    <EmbeddedResource Remove="Catalogs\Errors\**" />
+    <EmbeddedResource Remove="Catalogs\Exceptions\**" />
+    <EmbeddedResource Remove="Catalogs\Models\**" />
+    <EmbeddedResource Remove="Common\Caching\**" />
+    <EmbeddedResource Remove="Common\Core\**" />
+    <EmbeddedResource Remove="Common\EFCore\**" />
+    <EmbeddedResource Remove="Common\OpenApi\**" />
+    <EmbeddedResource Remove="Common\Web\Errors\**" />
+    <EmbeddedResource Remove="Customers\Errors\**" />
+    <EmbeddedResource Remove="Customers\Models\**" />
+    <EmbeddedResource Remove="Data\Interfaces\**" />
+    <EmbeddedResource Remove="Data\Seed\**" />
+    <EmbeddedResource Remove="Identity\Errors\**" />
+    <EmbeddedResource Remove="Identity\Models\**" />
+    <EmbeddedResource Remove="Orders\Errors\**" />
+    <EmbeddedResource Remove="Orders\Models\**" />
+    <EmbeddedResource Remove="ShoppingCart\Models\**" />
+    <None Remove="Catalogs\Errors\**" />
+    <None Remove="Catalogs\Exceptions\**" />
+    <None Remove="Catalogs\Models\**" />
+    <None Remove="Common\Caching\**" />
+    <None Remove="Common\Core\**" />
+    <None Remove="Common\EFCore\**" />
+    <None Remove="Common\OpenApi\**" />
+    <None Remove="Common\Web\Errors\**" />
+    <None Remove="Customers\Errors\**" />
+    <None Remove="Customers\Models\**" />
+    <None Remove="Data\Interfaces\**" />
+    <None Remove="Data\Seed\**" />
+    <None Remove="Identity\Errors\**" />
+    <None Remove="Identity\Models\**" />
+    <None Remove="Orders\Errors\**" />
+    <None Remove="Orders\Models\**" />
+    <None Remove="ShoppingCart\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\Web\UserContextProvider.cs" />
+    <Compile Remove="Data\AppDbContext.cs" />
+    <Compile Remove="Identity\Constants.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.415.18" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.1" />

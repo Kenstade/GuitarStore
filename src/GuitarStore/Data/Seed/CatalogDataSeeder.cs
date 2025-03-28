@@ -1,6 +1,5 @@
 ﻿using GuitarStore.Catalogs.Models;
 using GuitarStore.Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Data.Seed;
 
@@ -38,7 +37,6 @@ internal sealed class CatalogDataSeeder(AppDbContext dbContext) : IDataSeeder
         {
             var brands = new List<Brand>()
             {
-                new() { Name = "Schecter"},
                 new() { Name = "IBANEZ"},
                 new() { Name = "FENDER"},
                 new() { Name = "EART"},
@@ -81,7 +79,6 @@ internal sealed class CatalogDataSeeder(AppDbContext dbContext) : IDataSeeder
         {
             var categories = new List<Product>()
             {
-                new() { Name = "Schecter SGR AVENGER M BLK", Description = "text", Image = "url", Price = 299.50M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 1},
                 new() { Name = "IBANEZ GRGR131EX-BKF", Description = "text", Image = "url", Price = 319.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
                 new() { Name = "IBANEZ GRX70QA-TRB", Description = "text", Image = "url", Price = 309.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
                 new() { Name = "IBANEZ GRGR221PA-AQB", Description = "text", Image = "url", Price = 409.95M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},

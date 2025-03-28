@@ -8,8 +8,8 @@ internal sealed class MemoryCacheProvider(IMemoryCache cache, ILogger<MemoryCach
     private readonly ILogger<MemoryCacheProvider> _logger = logger;
     private readonly SemaphoreSlim Semaphore = new(1,1);
 
-    private readonly TimeSpan defaultAbsoluteExpiration = TimeSpan.FromMinutes(10);
-    private readonly TimeSpan defaultSlidingExpiration = TimeSpan.FromMinutes(2);
+    private readonly TimeSpan defaultAbsoluteExpiration = TimeSpan.FromMinutes(30);
+    private readonly TimeSpan defaultSlidingExpiration = TimeSpan.FromMinutes(5);
 
     public async Task<TResponse> GetOrCreateAsync<TResponse>(ICacheRequest request, Func<Task<TResponse>> factory)
     {
