@@ -9,6 +9,7 @@ using BuildingBlocks.Web;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.EFCore;
+using BuildingBlocks.Core.Exceptions;
 using BuildingBlocks.Core.Messaging;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
@@ -31,7 +32,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
 
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -54,11 +55,9 @@ builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
 var app = builder.Build();
 
-app.UseBackgroundJobs(builder.Configuration);
-
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    // app.UseDeveloperExceptionPage();
     app.MapOpenApi();
 
     app.MapScalarApiReference(options =>
@@ -73,13 +72,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 app.UseRouting();
+app.UseExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseExceptionHandler();
-app.UseStatusCodePages();
-
+app.UseBackgroundJobs(builder.Configuration);
 app.UseCatalogModule();
+
 
 app.Run();

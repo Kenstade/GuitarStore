@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.Caching;
+using BuildingBlocks.Web.EndpointFilters;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.Catalog.Data;
 using Microsoft.AspNetCore.Builder;
@@ -13,27 +14,32 @@ public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10
 {
     public string CacheKey => "GetCatalog";
 }
-public sealed class GetCatalog : IEndpoint
+public sealed class GetCatalog(CatalogDbContext dbContext, ICacheProvider cache) : IEndpoint
 {
+    private readonly CatalogDbContext _dbContext = dbContext;
+    private readonly ICacheProvider _cache = cache; 
+    
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/catalog",
-            async ([AsParameters] GetCatalogRequest request, CatalogDbContext dbContext, ICacheProvider cache) =>
-                await Handle(request, dbContext, cache))
-            .WithName("GetCatalog");
+        builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, CancellationToken ct) =>
+        {
+            return await Handle(request, ct);
+        })
+        .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>()    
+        .WithName("GetCatalog");
 
         return builder;
     }
 
-    private async Task<IResult> Handle(GetCatalogRequest request, CatalogDbContext dbContext, ICacheProvider cache)
+    private async Task<IResult> Handle(GetCatalogRequest request, CancellationToken ct)
     {
-        var catalog = await cache.GetOrCreateAsync(request, async () =>
+        var catalog = await _cache.GetOrCreateAsync(request, async () =>
         {
-            var catalogQuery = dbContext.Products
+            var catalogQuery = _dbContext.Products
                 .Include(p => p.Category)
                 .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
                 .AsQueryable();
-
+                
             var products = await catalogQuery
                 .AsNoTrackingWithIdentityResolution()
                 .OrderBy(p => p.CreatedAt)
@@ -44,23 +50,22 @@ public sealed class GetCatalog : IEndpoint
                     p.Name,
                     p.Price,
                     p.Category.Name
-                )).ToListAsync();
+                )).ToListAsync(ct);
 
-            var total = await catalogQuery.AsNoTracking().CountAsync();
+            var total = await catalogQuery.AsNoTracking().CountAsync(ct);
 
-            return new GetCatalogResponse(products, total, request.PageNumber, request.PageSize);
+            return new GetCatalogResponse(products, total, request.PageNumber);
         });
 
-        return catalog != null ? TypedResults.Ok(catalog)
-                               : TypedResults.Ok("Catalog is empty");
+        return catalog.Products.Any() ? TypedResults.Ok(catalog)
+                                      : TypedResults.Ok("Catalog is empty");
     }
 }
 
 public sealed record GetCatalogResponse(
     ICollection<ProductPartialResponse> Products,
     int TotalResults,
-    int PageNumber,
-    int PageSize);
+    int PageNumber);
 public sealed record ProductPartialResponse(
     string Name,
     decimal Price,
