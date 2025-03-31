@@ -118,8 +118,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
-            .HasConversion(pId => pId.Value, value => new(value))
+            .HasConversion(pId => pId.Value, value => new ProductId(value))
             .ValueGeneratedNever();
+
+        builder.Property(p => p.Name)
+            .HasColumnType("varchar(50)")
+            .IsRequired();
+        
+        builder.Property(p => p.Description)
+            .HasColumnType("varchar(500)")
+            .IsRequired(false);
 
         builder.HasOne(p => p.Category)
             .WithMany()
@@ -136,7 +144,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasMany(p => p.Images)
             .WithOne(i => i.Product)
-            .HasForeignKey(i => i.ProductId);
+            .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(p => p.Color)
             .HasDefaultValue(ProductColor.Unspecified)
