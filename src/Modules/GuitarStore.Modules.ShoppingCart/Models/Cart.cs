@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.ShoppingCart.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GuitarStore.Modules.ShoppingCarts.Models;
+namespace GuitarStore.Modules.ShoppingCart.Models;
 
-public class Cart
+public class Cart : Aggregate<CartId>
 {
-    public Guid Id { get; set; }
     public Guid CustomerId { get; set; }
     public List<CartItem> Items { get; set; } = [];
 
@@ -27,6 +28,9 @@ internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
         builder.HasKey(c => c.Id);
+        builder.Property(c => c.Id)
+            .HasConversion(c => c.Value, c => new CartId(c))
+            .ValueGeneratedNever();
 
         builder.HasMany(c => c.Items)
             .WithOne()
