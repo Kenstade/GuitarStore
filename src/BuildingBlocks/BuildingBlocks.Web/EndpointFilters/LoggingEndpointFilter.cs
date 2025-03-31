@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Web.EndpointFilters;
@@ -15,11 +16,18 @@ public class LoggingEndpointFilter<TRequest> : IEndpointFilter
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         const string prefix = nameof(LoggingEndpointFilter<TRequest>);
-        _logger.LogInformation("[{prefix}] Handling {request}", prefix ,typeof(TRequest).Name);
+        _logger.LogInformation("[{prefix}] Processing {request}", prefix ,typeof(TRequest).Name);
         
         var result = await next(context);
-        
-        _logger.LogInformation("[{prefix}] Finished handling {request}", prefix ,typeof(TRequest).Name);
+        if (context.HttpContext.Response.StatusCode == 200)
+        {
+            _logger.LogInformation("[{prefix}] Completed {request}", prefix ,typeof(TRequest).Name);
+        }
+        else
+        {
+            _logger.LogError("[{prefix}] Completed {request} with {Error}", 
+                prefix, typeof(TRequest).Name, context.HttpContext.Response.StatusCode);
+        }
         
         return result;
     }
