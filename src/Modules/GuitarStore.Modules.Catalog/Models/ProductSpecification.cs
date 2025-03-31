@@ -1,18 +1,17 @@
-﻿using GuitarStore.Modules.Catalog.Data;
-using GuitarStore.Modules.Catalog.ValueObjects;
+﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.Catalog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public sealed class ProductSpecification
+public sealed class ProductSpecification : Entity<int>
 {
-    public int Id { get; set; }
-    public string Value { get; set; } = string.Empty;
-    public int SpecificationTypeId { get; set; }
-    public SpecificationType SpecificationType { get; set; } = default!;
-    public ProductId ProductId { get; set; }
-    public Product Product { get; set; } = default!;
+    public string Value { get; private set; } = string.Empty;
+    public int SpecificationTypeId { get; private set; }
+    public SpecificationType SpecificationType { get; private set; } = default!;
+    public Guid ProductId { get; private set; }
+    public Product Product { get; private set; } = default!;
 }
 
 public sealed class ProductSpecificationConfiguration : IEntityTypeConfiguration<ProductSpecification>
@@ -20,5 +19,10 @@ public sealed class ProductSpecificationConfiguration : IEntityTypeConfiguration
     public void Configure(EntityTypeBuilder<ProductSpecification> builder)
     {
         builder.ToTable("product_specifications", CatalogDbContext.DefaultSchema);
+        
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Value)
+            .HasColumnType("varchar(50)");
     }
 }

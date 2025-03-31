@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Errors\" />
+    <Folder Include="Events\" />
   </ItemGroup>
 
   <ItemGroup>

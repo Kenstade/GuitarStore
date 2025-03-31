@@ -1,18 +1,34 @@
-﻿using GuitarStore.Modules.Catalog.ValueObjects;
+﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.Catalog.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
-public sealed class ProductImage
+public sealed class ProductImage : Entity<int>
 {
-    public ProductImage(string imageUrl, bool isMain, ProductId productId)
+    internal ProductImage(string imageUrl, bool isMain, Guid productId)
     {
         ImageUrl = imageUrl;
         IsMain = isMain;
         ProductId = productId;
     }
-    private ProductImage() { }
-    public int Id { get; private set; }
-    public string ImageUrl { get; private set; } = default!;
+    
+    public string ImageUrl { get; private set; }
     public bool IsMain { get; private set; }
-    public ProductId ProductId { get; private set; }
+    public Guid ProductId { get; private set; }
     public Product Product { get; private set; } = null!;
+}
+
+public sealed class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
+{
+    public void Configure(EntityTypeBuilder<ProductImage> builder)
+    {
+        builder.ToTable("product_image", CatalogDbContext.DefaultSchema);
+        
+        builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.ImageUrl)
+            .HasColumnType("varchar(255)")
+            .IsRequired();
+    }
 }

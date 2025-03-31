@@ -4,20 +4,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public class SpecificationType
+public sealed class SpecificationType
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public ICollection<ProductSpecification> ProductSpecifications { get; set; } = default!;
-    public int CategoryId { get; set; }
-    public Category Category { get; set; } = default!;
+    internal SpecificationType(string name, int categoryId)
+    {
+        Name = name;
+        CategoryId = categoryId;
+    }
+    
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public ICollection<ProductSpecification> ProductSpecifications { get; private set; } = default!;
+    public int CategoryId { get; private set; }
+    public Category Category { get; private set; } = default!;
 }
 
-public class SpecificationTypeConfiguration : IEntityTypeConfiguration<SpecificationType>
+public sealed class SpecificationTypeConfiguration : IEntityTypeConfiguration<SpecificationType>
 {
     public void Configure(EntityTypeBuilder<SpecificationType> builder)
     {
         builder.ToTable("specification_type", CatalogDbContext.DefaultSchema);
+        
+        builder.HasKey(x => x.Id);
+
+        builder.Property(s => s.Name)
+            .HasColumnType("varchar(50)");
 
         builder.HasMany(s => s.ProductSpecifications)
             .WithOne(ps => ps.SpecificationType)

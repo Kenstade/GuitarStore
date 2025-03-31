@@ -1,15 +1,12 @@
 ﻿using BuildingBlocks.Core.Domain;
 using GuitarStore.Modules.Catalog.Data;
-using GuitarStore.Modules.Catalog.Events;
 using GuitarStore.Modules.Catalog.Exceptions;
-using GuitarStore.Modules.Catalog.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-//https://www.youtube.com/watch?v=MJcaxi3bOO8&t=426s strongly typed ids
-public sealed class Product : Aggregate<ProductId>
+public sealed class Product : Aggregate<Guid>
 {
     private readonly List<ProductSpecification> _specifications = [];
     private readonly List<ProductImage> _images = [];
@@ -26,9 +23,6 @@ public sealed class Product : Aggregate<ProductId>
     public Brand Brand { get; private set; } = null!;
     public IReadOnlyCollection<ProductImage> Images => _images.AsReadOnly();
     public IReadOnlyCollection<ProductSpecification> Specifications => _specifications.AsReadOnly();
-
-
-    private Product() { }
     
     public static Product Create(
         string name, 
@@ -43,7 +37,7 @@ public sealed class Product : Aggregate<ProductId>
     {
         var product = new Product
         {
-            Id = ProductId.NewProductId(),
+            Id = Guid.NewGuid(),
             Name = name,
             Description = description,
             Price = price,
@@ -56,7 +50,6 @@ public sealed class Product : Aggregate<ProductId>
         };
 
         product.AddImages(images);
-        product.AddDomainEvent(new ProductCreatedEvent(2455555));
         return product;
     }
 
@@ -82,7 +75,7 @@ public sealed class Product : Aggregate<ProductId>
         if(Price != price)
         {
             Price = price;
-            AddDomainEvent(new ProductPriceChangedEvent(this));
+            // AddDomainEvent(new ProductPriceChangedEvent(this));
         }
     }
 
@@ -118,7 +111,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
-            .HasConversion(pId => pId.Value, value => new ProductId(value))
             .ValueGeneratedNever();
 
         builder.Property(p => p.Name)

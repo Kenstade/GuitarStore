@@ -22,9 +22,9 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
         {
             var categories = new List<Category>()
             {
-                new() { Name = "Electric guitars"},
-                new() { Name = "Acoustic guitars"},
-                new() { Name = "Guitar Amplifiers"},
+                new("Electric guitars"),
+                new("Acoustic guitars"),
+                new("Guitar Amplifiers"),
             };
 
             await _dbContext.Categories.AddRangeAsync(categories);
@@ -38,13 +38,13 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
         {
             var brands = new List<Brand>()
             {
-                new() { Name = "IBANEZ"},
-                new() { Name = "FENDER"},
-                new() { Name = "EART"},
-                new() { Name = "YAMAHA"},
-                new() { Name = "VESTON"},
-                new() { Name = "VOX"},
-                new() { Name = "Orange "},
+                new("IBANEZ"),
+                new("FENDER"),
+                new("EART"),
+                new("YAMAHA"),
+                new("VESTON"),
+                new("VOX"),
+                new("Orange"),
             };
 
             await _dbContext.Brands.AddRangeAsync(brands);
@@ -58,15 +58,14 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
         {
             var types = new List<SpecificationType>
             {
-                new() { Name = "Strings", CategoryId = 1 },
-                new() { Name = "Frets", CategoryId = 1 },
-                new() { Name = "PickupConfiguration", CategoryId = 1 },
-                new() { Name = "Fingerboard", CategoryId = 1 },
-                new() { Name = "Body", CategoryId = 1 },
-                new() { Name = "Neck", CategoryId = 1 },
-                new() { Name = "Top", CategoryId = 1 },
-                new() { Name = "Bridge", CategoryId = 1 },
-
+                new("Strings", 1),
+                new("Frets", 1),
+                new("PickupConfiguration", 1),
+                new("Fingerboard", 1),
+                new("Body", 1),
+                new("Neck", 1),
+                new("Top", 1),
+                new("Bridge", 1)
             };
 
             await _dbContext.SpecificationTypes.AddRangeAsync(types);

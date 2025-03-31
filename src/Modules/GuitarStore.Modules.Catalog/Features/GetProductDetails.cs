@@ -34,7 +34,7 @@ public sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
         
         var product = await _dbContext.Products
             .AsNoTracking()
-            .Where(p => p.Id.Value == requestId)
+            .Where(p => p.Id == requestId)
             .Select(p => new GetProductDetailsResponse
             (
                 p.Name,
@@ -51,7 +51,7 @@ public sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
             )).FirstOrDefaultAsync(ct);
 
         return product != null ? TypedResults.Ok(product)
-                               : TypedResults.Problem(new ProductNotFoundError(requestId));
+                               : TypedResults.Problem(new ProductNotFoundError(request.Id));
     }
 }
 public sealed record GetProductDetailsResponse(

@@ -1,35 +1,53 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.ShoppingCart.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.ShoppingCart.Models;
 
-public class Cart : Aggregate<CartId>
+public sealed class Cart : Aggregate<Guid>
 {
-    public Guid CustomerId { get; set; }
-    public List<CartItem> Items { get; set; } = [];
+    private readonly List<CartItem> _items = [];
+    public Guid CustomerId { get; private set; }
+    public IReadOnlyCollection<CartItem> Items => _items.AsReadOnly();
 
-    internal void AddItem(int productId, decimal price)
+    public static Cart Create(Guid customerId)
+    {
+        var cart = new Cart
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = customerId
+        };
+        
+        return cart;
+    }
+    
+    internal void AddItem(Guid productId, decimal price)
     {
         var existingItem = Items.FirstOrDefault(i => i.ProductId == productId);
 
         if (existingItem == null)
         {
-            Items.Add(new CartItem { ProductId = productId, Quantity = 1, Price = price});
+            _items.Add(CartItem.Create(productId, price, Id));
             return;
         }
-        existingItem.Quantity++;
+        
+        existingItem.AddUnit();
+    }
+
+    internal void RemoveItem(Guid productId)
+    {
+        var existingItem = Items.FirstOrDefault(i => i.ProductId == productId);
+        
+        if(existingItem != null) _items.Remove(existingItem);
     }
 }
 
-internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
+public sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
-            .HasConversion(c => c.Value, c => new CartId(c))
             .ValueGeneratedNever();
 
         builder.HasMany(c => c.Items)

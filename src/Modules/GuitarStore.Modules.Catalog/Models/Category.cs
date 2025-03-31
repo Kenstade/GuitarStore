@@ -1,22 +1,29 @@
-﻿using GuitarStore.Modules.Catalog.Data;
+﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.Catalog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public class Category
+public sealed class Category : Entity<int>
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    internal Category(string name)
+    {
+        Name = name;
+    }
+    public string Name { get; private set; }
     public ICollection<SpecificationType> SpecificationTypes { get; set; } = default!;
 }
 
-public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.ToTable("categories", CatalogDbContext.DefaultSchema);
         builder.HasKey(c => c.Id);
+        
+        builder.Property(c => c.Name)
+            .HasColumnType("varchar(50)");
 
         builder.HasMany(c => c.SpecificationTypes)
             .WithOne(s => s.Category)
