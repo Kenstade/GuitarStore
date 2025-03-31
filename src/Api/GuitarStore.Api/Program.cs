@@ -13,8 +13,11 @@ using BuildingBlocks.Core.Exceptions;
 using BuildingBlocks.Core.Messaging;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
 
@@ -72,6 +75,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 app.UseRouting();
+app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 
 app.UseAuthentication();
