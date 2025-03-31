@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{F3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{374CF510-7F56-4F03-9139-F7E1A69D6BC7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCarts", "ShoppingCarts", "{A5C36128-CE3F-4B28-9DC0-3E1BEB3005F7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCart", "ShoppingCart", "{A5C36128-CE3F-4B28-9DC0-3E1BEB3005F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuitarStore.Modules.Customers", "src\Modules\GuitarStore.Modules.Customers\GuitarStore.Modules.Customers.csproj", "{D1DB1D92-9C56-4310-94D4-39A462B528D7}"
 EndProject
@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuitarStore.Modules.Identit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuitarStore.Modules.Ordering", "src\Modules\GuitarStore.Modules.Ordering\GuitarStore.Modules.Ordering.csproj", "{17BA2BD3-99BC-4D19-BEC6-8BC1B9C4D1F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuitarStore.Modules.ShoppingCarts", "src\Modules\GuitarStore.Modules.ShoppingCarts\GuitarStore.Modules.ShoppingCarts.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuitarStore.Modules.ShoppingCart", "src\Modules\GuitarStore.Modules.ShoppingCart\GuitarStore.Modules.ShoppingCart.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{8622F46D-99D6-4E05-B2F8-52312AAF05D1}"
 EndProject

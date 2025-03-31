@@ -1,5 +1,5 @@
 using GuitarStore.Modules.Catalog;
-using GuitarStore.Modules.ShoppingCarts;
+using GuitarStore.Modules.ShoppingCart;
 using GuitarStore.Modules.Customers;
 using GuitarStore.Modules.Ordering;
 using GuitarStore.Modules.Identity;
@@ -23,7 +23,7 @@ builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
-    .AddShoppingCartsModule(builder.Configuration)
+    .AddShoppingCartModule(builder.Configuration)
     .AddCustomersModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration)
     .AddIdentityModule(builder.Configuration);
@@ -60,7 +60,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // app.UseDeveloperExceptionPage();
+    app.UseDeveloperExceptionPage();
     app.MapOpenApi();
 
     app.MapScalarApiReference(options =>
@@ -82,7 +82,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseBackgroundJobs(builder.Configuration);
-app.UseCatalogModule();
 
+app.UseCatalogModule()
+   .UseShoppingCartModule(); 
 
 app.Run();
