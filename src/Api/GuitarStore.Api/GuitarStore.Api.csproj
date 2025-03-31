@@ -21,7 +21,7 @@
     <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Customers\GuitarStore.Modules.Customers.csproj" />
     <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Identity\GuitarStore.Modules.Identity.csproj" />
     <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Ordering\GuitarStore.Modules.Ordering.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.ShoppingCarts\GuitarStore.Modules.ShoppingCarts.csproj" />
+    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.ShoppingCart\GuitarStore.Modules.ShoppingCart.csproj" />
   </ItemGroup>
 
 </Project>
