@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GuitarStore.Modules.Catalog.Features;
 public sealed record GetProductDetailsRequest(string Id);
 
-public sealed class GetProductDetails(CatalogDbContext dbContext, IValidator<GetProductDetailsRequest> validator) : IEndpoint
+public sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
 {
     private readonly CatalogDbContext _dbContext = dbContext;
 
