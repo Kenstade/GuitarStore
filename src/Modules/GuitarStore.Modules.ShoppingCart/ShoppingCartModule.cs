@@ -23,7 +23,6 @@ public static class ShoppingCartModule
     public static IApplicationBuilder UseShoppingCartModule(this IApplicationBuilder app)
     {
         app.UseMigration<CartDbContext>();
-        app.UseEndpoints(endpoints => endpoints.MapEndpoints());
         return app;
     }
 }

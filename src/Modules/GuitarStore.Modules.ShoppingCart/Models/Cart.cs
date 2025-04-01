@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.ShoppingCart.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +28,7 @@ public sealed class Cart : Aggregate<Guid>
 
         if (existingItem == null)
         {
-            _items.Add(CartItem.Create(productId, price, Id));
+            _items.Add(new CartItem(productId, 1, price, Id));
             return;
         }
         
@@ -46,6 +47,8 @@ public sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
+        builder.ToTable("cart", CartDbContext.DefaultSchema);
+        
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
             .ValueGeneratedNever();

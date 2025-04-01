@@ -26,7 +26,6 @@ public static class CatalogModule
     public static IApplicationBuilder UseCatalogModule(this IApplicationBuilder app)
     {
         app.UseMigration<CatalogDbContext>();
-        app.UseEndpoints(endpoints => endpoints.MapEndpoints());
         return app;
     }
 }

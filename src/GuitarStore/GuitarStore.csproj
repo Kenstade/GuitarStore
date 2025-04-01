@@ -75,6 +75,7 @@
     <None Remove="Orders\Errors\**" />
     <None Remove="Orders\Models\**" />
     <None Remove="ShoppingCart\Models\**" />
+    <Compile Remove="Catalogs\Features\GetCatalog.cs" />
   </ItemGroup>
 
   <ItemGroup>

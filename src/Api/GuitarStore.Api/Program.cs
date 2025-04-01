@@ -13,6 +13,7 @@ using BuildingBlocks.Core.Exceptions;
 using BuildingBlocks.Core.Messaging;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
+using BuildingBlocks.Web.MinimalApi;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,8 +75,8 @@ if (app.Environment.IsDevelopment())
         DarkModeEnabled = true,
     });
 }
-app.UseRouting();
 app.UseSerilogRequestLogging();
+
 app.UseExceptionHandler();
 
 app.UseAuthentication();
@@ -84,6 +85,8 @@ app.UseAuthorization();
 app.UseBackgroundJobs(builder.Configuration);
 
 app.UseCatalogModule()
-   .UseShoppingCartModule(); 
+   .UseShoppingCartModule();
+
+app.MapEndpoints();
 
 app.Run();
