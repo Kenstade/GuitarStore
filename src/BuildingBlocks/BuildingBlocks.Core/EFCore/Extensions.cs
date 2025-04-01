@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace BuildingBlocks.Core.EFCore;
 
@@ -12,7 +13,9 @@ public static class Extensions
     public static IServiceCollection AddPostgresDbContext<TContext>(this IServiceCollection services,
         IConfiguration configuration) where TContext : DbContext
     {
+        services.Configure<PostgresOptions>(configuration.GetSection(nameof(PostgresOptions)));
         var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
+        
         if (postgresOptions == null) throw new ArgumentNullException(nameof(postgresOptions));
 
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
@@ -58,7 +61,12 @@ public static class Extensions
 
     public static IApplicationBuilder UseMigration<TContext>(this IApplicationBuilder app) where TContext : DbContext
     {
-        //MigrateDatabaseAsync<TContext>(app.ApplicationServices).GetAwaiter().GetResult(); //TODO: проверка на inmemorydb
+        var postgresOptions = app.ApplicationServices.GetRequiredService<IOptions<PostgresOptions>>();
+
+        if (!postgresOptions.Value.UseInMemory)
+        {
+            MigrateDatabaseAsync<TContext>(app.ApplicationServices).GetAwaiter().GetResult();
+        } 
 
         SeedDataAsync(app.ApplicationServices).GetAwaiter().GetResult();
         

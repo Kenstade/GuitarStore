@@ -33,6 +33,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
 
@@ -52,8 +53,6 @@ builder.Services.AddProblemDetails(options =>
 });
 
 builder.Services.AddCustomHangfire(builder.Configuration);
-
-builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
