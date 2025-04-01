@@ -22,13 +22,13 @@ public sealed class Cart : Aggregate<Guid>
         return cart;
     }
     
-    internal void AddItem(Guid productId, decimal price)
+    internal void AddItem(Guid productId,string name, string image, decimal price)
     {
         var existingItem = Items.FirstOrDefault(i => i.ProductId == productId);
 
         if (existingItem == null)
         {
-            _items.Add(new CartItem(productId, 1, price, Id));
+            _items.Add(new CartItem(productId, name, image, 1, price, Id));
             return;
         }
         
