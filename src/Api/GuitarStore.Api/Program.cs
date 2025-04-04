@@ -21,6 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
+// builder.Services.AddDistributedCache(builder.Configuration);
+builder.Services.AddDistributedMemoryCache();
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
@@ -36,6 +38,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
+
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options =>

@@ -14,10 +14,9 @@ public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10
 {
     public string CacheKey => "GetCatalog";
 }
-public sealed class GetCatalog(CatalogDbContext dbContext, ICacheProvider cache) : IEndpoint
+public sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
 {
     private readonly CatalogDbContext _dbContext = dbContext;
-    private readonly ICacheProvider _cache = cache; 
     
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -25,7 +24,8 @@ public sealed class GetCatalog(CatalogDbContext dbContext, ICacheProvider cache)
         {
             return await Handle(request, ct);
         })
-        .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>()    
+        .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
+        .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
         .WithName("GetCatalog");
 
         return builder;
@@ -33,29 +33,28 @@ public sealed class GetCatalog(CatalogDbContext dbContext, ICacheProvider cache)
 
     private async Task<IResult> Handle(GetCatalogRequest request, CancellationToken ct)
     {
-        var catalog = await _cache.GetOrCreateAsync(request, async () =>
-        {
-            var catalogQuery = _dbContext.Products
-                .Include(p => p.Category)
-                .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
-                .AsQueryable();
-                
-            var products = await catalogQuery
-                .AsNoTrackingWithIdentityResolution()
-                .OrderBy(p => p.CreatedAt)
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(p => new ProductPartialResponse
-                (
-                    p.Name,
-                    p.Price,
-                    p.Category.Name
-                )).ToListAsync(ct);
 
-            var total = await catalogQuery.AsNoTracking().CountAsync(ct);
+        var catalogQuery = _dbContext.Products
+            .Include(p => p.Category)
+            .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
+            .AsQueryable();
+            
+        var products = await catalogQuery
+            .AsNoTrackingWithIdentityResolution()
+            .OrderBy(p => p.CreatedAt)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(p => new ProductPartialResponse
+            (
+                p.Id,
+                p.Name,
+                p.Price,
+                p.Category.Name
+            )).ToListAsync(ct);
 
-            return new GetCatalogResponse(products, total, request.PageNumber);
-        });
+        var total = await catalogQuery.AsNoTracking().CountAsync(ct);
+
+        var catalog = new GetCatalogResponse(products, total, request.PageNumber);
 
         return catalog.Products.Any() ? TypedResults.Ok(catalog)
                                       : TypedResults.Ok("Catalog is empty");
@@ -67,6 +66,7 @@ public sealed record GetCatalogResponse(
     int TotalResults,
     int PageNumber);
 public sealed record ProductPartialResponse(
+    Guid Id,
     string Name,
     decimal Price,
     string Category);
