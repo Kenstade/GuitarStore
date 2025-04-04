@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.Events;
 using Hangfire;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,9 +10,9 @@ namespace BuildingBlocks.Core.Messaging;
 public sealed class ProcessOutboxMessagesJob //TODO: BackgroundService вместо hangfire?
 {
     private readonly MessageDbContext _dbContext; //TODO: удалить контекст и реализовать unitofwork?
-    private readonly IPublisher _publisher;
+    private readonly IEventPublisher _publisher;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
-    public ProcessOutboxMessagesJob(MessageDbContext dbContext, IPublisher publisher, ILogger<ProcessOutboxMessagesJob> logger)
+    public ProcessOutboxMessagesJob(MessageDbContext dbContext, IEventPublisher publisher, ILogger<ProcessOutboxMessagesJob> logger)
     {
         _dbContext = dbContext;
         _publisher = publisher;
@@ -36,9 +36,10 @@ public sealed class ProcessOutboxMessagesJob //TODO: BackgroundService вмес�
                         TypeNameHandling = TypeNameHandling.All
                     });
 
-                if (domainEvent is null) continue; //добавить лог => выяснить почему null
-
-                await _publisher.Publish(domainEvent); //TODO: добавить в паблишер cancellationToken
+                if (domainEvent is null) continue; //добавить лог null
+                
+                
+                await _publisher.Publish((dynamic)domainEvent); //TODO: добавить в паблишер cancellationToken
 
                 outboxMessage.ProcessedOn = DateTime.UtcNow;
             }
