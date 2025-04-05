@@ -24,7 +24,7 @@ public class RemoveItemFromCart : IEndpoint
     }
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete("/cart/remove/{id}", async (RemoveItemFromCartRequest request, CancellationToken ct) =>
+        builder.MapDelete("/cart/remove/{id}", async ([AsParameters]RemoveItemFromCartRequest request, CancellationToken ct) =>
         {
             return await Handle(request, ct);
         })
