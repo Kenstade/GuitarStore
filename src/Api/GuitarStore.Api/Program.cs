@@ -4,7 +4,7 @@ using GuitarStore.Modules.Customers;
 using GuitarStore.Modules.Ordering;
 using GuitarStore.Modules.Identity;
 using Microsoft.AspNetCore.Http.Features;
-using BuildingBlocks.Core.OpenApi;
+using BuildingBlocks.Web.OpenApi;
 using BuildingBlocks.Web;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
@@ -21,8 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
-// builder.Services.AddDistributedCache(builder.Configuration);
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddDistributedCache(builder.Configuration);
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
@@ -36,9 +35,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
-builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<ICacheProvider, MemoryCacheProvider>();
-
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options =>
@@ -57,7 +53,8 @@ builder.Services.AddProblemDetails(options =>
 
 builder.Services.AddCustomHangfire(builder.Configuration);
 
-builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
+builder.Services.AddOpenApi(options => 
+    options.AddBearerTokenAuthentication());
 
 var app = builder.Build();
 
