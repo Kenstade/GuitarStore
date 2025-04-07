@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace BuildingBlocks.Core.OpenApi;
+namespace BuildingBlocks.Web.OpenApi;
 public static class Extensions
 {
     public static OpenApiOptions AddBearerTokenAuthentication(this OpenApiOptions options)
