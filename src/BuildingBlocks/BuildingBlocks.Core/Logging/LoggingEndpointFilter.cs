@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 
-namespace BuildingBlocks.Web.EndpointFilters;
+namespace BuildingBlocks.Core.Logging;
 
 public class LoggingEndpointFilter<TRequest> : IEndpointFilter
 {

@@ -1,5 +1,5 @@
 ﻿using BuildingBlocks.Core.Caching;
-using BuildingBlocks.Web.EndpointFilters;
+using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.Catalog.Data;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +14,7 @@ public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10
 {
     public string CacheKey => "GetCatalog";
 }
-public sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
+internal sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
 {
     private readonly CatalogDbContext _dbContext = dbContext;
     

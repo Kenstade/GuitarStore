@@ -1,5 +1,5 @@
 using BuildingBlocks.Web;
-using BuildingBlocks.Web.EndpointFilters;
+using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.ShoppingCart.Data;
 using GuitarStore.Modules.ShoppingCart.Errors;

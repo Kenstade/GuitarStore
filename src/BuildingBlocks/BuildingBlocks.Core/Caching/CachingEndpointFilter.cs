@@ -1,11 +1,10 @@
-using BuildingBlocks.Core.Caching;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace BuildingBlocks.Web.EndpointFilters;
+namespace BuildingBlocks.Core.Caching;
 
 public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter where TRequest : ICacheRequest
 {
@@ -18,18 +17,19 @@ public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter
     }
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
+        var ct = context.HttpContext.RequestAborted;
         var request = context.Arguments.OfType<TRequest>().FirstOrDefault();
-        var ct = context.HttpContext.RequestAborted; //работает?
+        if(request == null) return await next(context);
         
         var cachedResult = await _cache.GetStringAsync(request.CacheKey, ct);
         if (!string.IsNullOrEmpty(cachedResult))
         {
-            _logger.LogDebug("Returning cached {TRequest} from cache. CacheKey: {CacheKey}", 
-                typeof(TRequest).Name, request.CacheKey);
-
             var result = JsonConvert.DeserializeObject<TResponse>(cachedResult);
             
-            if(result != null) return TypedResults.Ok(result);
+            _logger.LogDebug("Return cached {TRequest} from cache. CacheKey: {CacheKey}", 
+                typeof(TRequest).Name, request.CacheKey);
+            
+            return TypedResults.Ok(result);
         }
         
         var response = await next(context);

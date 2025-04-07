@@ -1,4 +1,5 @@
-using BuildingBlocks.Web.EndpointFilters;
+using BuildingBlocks.Core.Logging;
+using BuildingBlocks.Core.Validation;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Catalog.Data;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GuitarStore.Modules.Catalog.Features;
 public sealed record GetProductDetailsRequest(string Id);
 
-public sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
+internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
 {
     private readonly CatalogDbContext _dbContext = dbContext;
 

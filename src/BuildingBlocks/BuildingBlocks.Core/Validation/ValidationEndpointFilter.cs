@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace BuildingBlocks.Web.EndpointFilters;
+namespace BuildingBlocks.Core.Validation;
 
 public sealed class ValidationEndpointFilter<TRequest> : IEndpointFilter
 {
