@@ -1,9 +1,10 @@
 ﻿using BuildingBlocks.Core.Messaging;
+using GuitarStore.Modules.Catalog.Contracts;
 using GuitarStore.Modules.Catalog.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Data;
-public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
+internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options), ICatalogDbContext
 {
     public const string DefaultSchema = "catalog";
 
@@ -11,13 +12,14 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<SpecificationType> SpecificationTypes { get; set; }
-    //TODO: сменить название?
+    // сменить название?
     public DbSet<ProductSpecification> ProductSpecification { get; set; }
+    
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
-        modelBuilder.Entity<OutboxMessage>(); //TODO: сделать регистрацию автоматической
 
         base.OnModelCreating(modelBuilder);
     }

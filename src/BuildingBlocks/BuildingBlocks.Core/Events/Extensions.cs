@@ -15,11 +15,9 @@ public static class Extensions
         
         foreach (var handlerType in handlerTypes)
         {
-            // var handlerInstance = Activator.CreateInstance(handlerType);
             var notificationType = handlerType.GetInterfaces().First().GetGenericArguments().First();
             var registerMethod = typeof(EventPublisher).GetMethod("Subscribe").MakeGenericMethod(notificationType);
-            registerMethod.Invoke(eventPublisher, new object[] { Activator.CreateInstance(handlerType) });
-            
+            registerMethod.Invoke(eventPublisher, new [] { Activator.CreateInstance(handlerType) });
         }
 
         services.AddSingleton<IEventPublisher>(eventPublisher);

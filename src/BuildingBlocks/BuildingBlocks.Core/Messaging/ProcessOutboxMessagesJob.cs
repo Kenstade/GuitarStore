@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace BuildingBlocks.Core.Messaging;
 [DisableConcurrentExecution(timeoutInSeconds: 10 * 60)]
-public sealed class ProcessOutboxMessagesJob //TODO: BackgroundService вместо hangfire?
+public sealed class ProcessOutboxMessagesJob // BackgroundService vs hangfire?
 {
-    private readonly MessageDbContext _dbContext; //TODO: удалить контекст и реализовать unitofwork?
+    private readonly MessageDbContext _dbContext; //dapper?
     private readonly IEventPublisher _publisher;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
     public ProcessOutboxMessagesJob(MessageDbContext dbContext, IEventPublisher publisher, ILogger<ProcessOutboxMessagesJob> logger)
@@ -17,7 +17,7 @@ public sealed class ProcessOutboxMessagesJob //TODO: BackgroundService вмес�
         _dbContext = dbContext;
         _publisher = publisher;
         _logger = logger;
-    }//TODO: добавить ct, 
+    }
     public async Task ProcessAsync()
     {
         try
@@ -38,8 +38,7 @@ public sealed class ProcessOutboxMessagesJob //TODO: BackgroundService вмес�
 
                 if (domainEvent is null) continue; //добавить лог null
                 
-                
-                await _publisher.Publish((dynamic)domainEvent); //TODO: добавить в паблишер cancellationToken
+                await _publisher.Publish((dynamic)domainEvent);
 
                 outboxMessage.ProcessedOn = DateTime.UtcNow;
             }
