@@ -9,11 +9,18 @@ public static class Extensions
     public static IServiceCollection AddDistributedCache(this IServiceCollection services, IConfiguration configuration)
     {
         var redisOptions = configuration.GetOptions<RedisOptions>(nameof(RedisOptions));
-        
-        services.AddStackExchangeRedisCache(options =>
+
+        if (redisOptions.UseInMemory)
         {
-            options.Configuration = redisOptions.ConnectionString;
-        });
+            services.AddDistributedMemoryCache();
+        }
+        else
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisOptions.ConnectionString;
+            });
+        }
         
         return services;
     }
