@@ -1,6 +1,6 @@
 ﻿namespace GuitarStore.Modules.Ordering.Models;
 
-public enum OrderStatus
+internal enum OrderStatus
 {
     Placed = 1,
     Paid = 2,

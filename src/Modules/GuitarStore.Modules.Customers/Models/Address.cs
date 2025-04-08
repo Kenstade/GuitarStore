@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Customers.Models;
 
-public class Address
+internal sealed class Address
 {
     public Guid Id { get; set; }
     public string City { get; set; } = string.Empty;

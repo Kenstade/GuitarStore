@@ -1,10 +1,9 @@
 ﻿using BuildingBlocks.Core.Messaging;
-using GuitarStore.Modules.Catalog.Contracts;
 using GuitarStore.Modules.Catalog.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Data;
-internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options), ICatalogDbContext
+internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
 {
     public const string DefaultSchema = "catalog";
 

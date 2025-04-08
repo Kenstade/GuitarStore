@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Web.Errors;
 
-namespace GuitarStore.Modules.Catalog.Errors;
+namespace GuitarStore.Modules.ShoppingCart.Errors;
 
 internal sealed class ProductNotFoundError : NotFoundError
 {

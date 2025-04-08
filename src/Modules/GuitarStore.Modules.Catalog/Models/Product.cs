@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public sealed class Product : Aggregate<Guid>
+internal sealed class Product : Aggregate<Guid>
 {
     private readonly List<ProductSpecification> _specifications = [];
     private readonly List<ProductImage> _images = [];
@@ -86,6 +86,12 @@ public sealed class Product : Aggregate<Guid>
         _images.AddRange(images);
     }
 
+    public string? GetMainImage()
+    {
+        var mainImage = _images.FirstOrDefault(p => p.IsMain);
+        
+        return mainImage?.ImageUrl;
+    }
     public int RemoveStock(int quantity)
     {
         if (Stock < quantity)
@@ -103,7 +109,7 @@ public sealed class Product : Aggregate<Guid>
     }
 }
 
-public class ProductConfiguration : IEntityTypeConfiguration<Product>
+internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {

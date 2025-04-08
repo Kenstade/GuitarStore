@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Data;
-public sealed class CartDbContext(DbContextOptions<CartDbContext> options) : DbContext(options)
+internal sealed class CartDbContext(DbContextOptions<CartDbContext> options) : DbContext(options)
 {
     public const string DefaultSchema = "shopping_cart";
     

@@ -2,7 +2,7 @@
 
 namespace GuitarStore.Modules.Customers.Errors;
 
-public class CustomerNotFoundError : NotFoundError
+internal sealed class CustomerNotFoundError : NotFoundError
 {
     public CustomerNotFoundError(Guid id) : base("Not Found", $"Customer with id '{id}' not found.")
     { }

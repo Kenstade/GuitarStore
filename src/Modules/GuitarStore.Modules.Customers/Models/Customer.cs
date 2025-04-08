@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Customers.Models;
 
-public sealed class Customer
+internal sealed class Customer
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

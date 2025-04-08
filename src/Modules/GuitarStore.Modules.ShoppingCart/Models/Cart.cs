@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.ShoppingCart.Models;
 
-public sealed class Cart : Aggregate<Guid>
+internal sealed class Cart : Aggregate<Guid>
 {
     private readonly List<CartItem> _items = [];
     public Guid CustomerId { get; private set; }
@@ -22,7 +22,7 @@ public sealed class Cart : Aggregate<Guid>
         return cart;
     }
     
-    internal void AddItem(Guid productId,string name, string image, decimal price)
+    internal void AddItem(Guid productId, string name, string? image, decimal price)
     {
         var existingItem = Items.FirstOrDefault(i => i.ProductId == productId);
 
@@ -43,7 +43,7 @@ public sealed class Cart : Aggregate<Guid>
     }
 }
 
-public sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
+internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {

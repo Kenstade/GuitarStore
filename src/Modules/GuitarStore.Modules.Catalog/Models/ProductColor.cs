@@ -1,6 +1,6 @@
 ﻿namespace GuitarStore.Modules.Catalog.Models;
 
-public enum ProductColor
+internal enum ProductColor
 {
     Unspecified,
     Black,

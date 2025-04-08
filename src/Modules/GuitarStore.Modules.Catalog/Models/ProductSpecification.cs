@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public sealed class ProductSpecification : Entity<int>
+internal sealed class ProductSpecification : Entity<int>
 {
     public string Value { get; private set; } = string.Empty;
     public int SpecificationTypeId { get; private set; }
@@ -14,7 +14,7 @@ public sealed class ProductSpecification : Entity<int>
     public Product Product { get; private set; } = default!;
 }
 
-public sealed class ProductSpecificationConfiguration : IEntityTypeConfiguration<ProductSpecification>
+internal sealed class ProductSpecificationConfiguration : IEntityTypeConfiguration<ProductSpecification>
 {
     public void Configure(EntityTypeBuilder<ProductSpecification> builder)
     {

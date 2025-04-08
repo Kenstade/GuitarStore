@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-public class Brand : Entity<int>
+internal class Brand : Entity<int>
 {
     internal Brand(string name)
     {
@@ -14,7 +14,7 @@ public class Brand : Entity<int>
     public string Name { get; private set; }
 }
 
-public sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
+internal sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
     public void Configure(EntityTypeBuilder<Brand> builder)
     {

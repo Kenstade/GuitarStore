@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Ordering.Models;
 
-public class Order
+internal sealed class Order
 {
     public Guid Id { get; set; }
     public decimal Total { get; set; }
@@ -16,7 +16,7 @@ public class Order
 
 }
 
-public class OrderConfiguration : IEntityTypeConfiguration<Order>
+internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {

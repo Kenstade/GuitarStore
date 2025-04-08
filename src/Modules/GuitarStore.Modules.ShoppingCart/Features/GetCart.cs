@@ -11,7 +11,7 @@ namespace GuitarStore.Modules.ShoppingCart.Features;
 
 public sealed record GetCartRequest();
 
-public sealed class GetCart : IEndpoint
+internal sealed class GetCart : IEndpoint
 {
     private readonly CartDbContext _dbContext;
     private readonly IUserContextProvider _userContext;
