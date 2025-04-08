@@ -10,31 +10,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Features;
 
-public sealed record RemoveItemFromCartRequest(Guid ProductId);
+public sealed record RemoveItemRequest(Guid ProductId);
 
-public class RemoveItemFromCart : IEndpoint
+internal sealed class RemoveItem : IEndpoint
 {
     private readonly CartDbContext _dbContext;
     private readonly IUserContextProvider _userContext;
 
-    public RemoveItemFromCart(CartDbContext dbContext, IUserContextProvider userContext)
+    public RemoveItem(CartDbContext dbContext, IUserContextProvider userContext)
     {
         _dbContext = dbContext;
         _userContext = userContext;
     }
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete("/cart/remove/{id}", async ([AsParameters]RemoveItemFromCartRequest request, CancellationToken ct) =>
+        builder.MapDelete("/cart/remove/{id}", async ([AsParameters]RemoveItemRequest request, CancellationToken ct) =>
         {
             return await Handle(request, ct);
         })
-        .AddEndpointFilter<LoggingEndpointFilter<AddItemToCartRequest>>()    
+        .AddEndpointFilter<LoggingEndpointFilter<RemoveItemRequest>>()    
         .WithName("RemoveItemFromCart");
         
         return builder;
     }
 
-    private async Task<IResult> Handle(RemoveItemFromCartRequest request, CancellationToken ct)
+    private async Task<IResult> Handle(RemoveItemRequest request, CancellationToken ct)
     {
         var userId = _userContext.GetUserId();
         
