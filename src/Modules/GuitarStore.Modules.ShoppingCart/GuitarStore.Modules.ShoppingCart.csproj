@@ -20,6 +20,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Web\BuildingBlocks.Web.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+		<ProjectReference Include="..\GuitarStore.Modules.Catalog\GuitarStore.Modules.Catalog.csproj" />
 	</ItemGroup>
 
 </Project>
