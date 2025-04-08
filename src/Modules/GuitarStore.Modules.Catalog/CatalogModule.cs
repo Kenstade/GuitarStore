@@ -6,6 +6,7 @@ using FluentValidation;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
+using GuitarStore.Modules.Catalog.Contracts;
 
 namespace GuitarStore.Modules.Catalog;
 public static class CatalogModule
@@ -14,6 +15,7 @@ public static class CatalogModule
     {
         services.AddPostgresDbContext<CatalogDbContext>(configuration);
         services.AddScoped<IDataSeeder, CatalogDataSeeder>();
+        services.AddScoped<ICatalogService, CatalogService>();
         
         services.AddEvents(typeof(CatalogModule).Assembly);
         
