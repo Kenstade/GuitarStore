@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Features;
-public sealed record GetProductDetailsRequest(string Id);
+public sealed record GetProductDetailsRequest(string ProductId);
 
 internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
 {
@@ -20,7 +20,9 @@ internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
     {
         builder.MapGet("catalog/{id}", async ([AsParameters] GetProductDetailsRequest request, CancellationToken ct) =>  
         {
-            return await Handle(request, ct);
+            var parsedRequest = Guid.Parse(request.ProductId);
+            
+            return await Handle(parsedRequest, ct);
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetProductDetailsRequest>>()    
         .AddEndpointFilter<ValidationEndpointFilter<GetProductDetailsRequest>>()
@@ -29,10 +31,8 @@ internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
         return builder;
     }
 
-    private async Task<IResult> Handle(GetProductDetailsRequest request, CancellationToken ct)
+    private async Task<IResult> Handle(Guid requestId, CancellationToken ct)
     {
-        var requestId = Guid.Parse(request.Id); 
-        
         var product = await _dbContext.Products
             .AsNoTracking()
             .Where(p => p.Id == requestId)
@@ -52,7 +52,7 @@ internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
             )).FirstOrDefaultAsync(ct);
 
         return product != null ? TypedResults.Ok(product)
-                               : TypedResults.Problem(new ProductNotFoundError(request.Id));
+                               : TypedResults.Problem(new ProductNotFoundError(requestId));
     }
 }
 public sealed record GetProductDetailsResponse(
@@ -69,6 +69,6 @@ public sealed class GetProductDetailsValidator : AbstractValidator<GetProductDet
 {
     public GetProductDetailsValidator()
     {
-        RuleFor(p => p.Id).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
+        RuleFor(p => p.ProductId).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
     }
 }
