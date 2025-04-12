@@ -58,7 +58,7 @@ internal sealed class AddItem : IEndpoint
             await _dbContext.Carts.AddAsync(cart);
         }
 
-        var product = await _catalogService.GetProductForCart(requestId, ct);
+        var product = await _catalogService.GetProductForCartAsync(requestId, ct);
         if (product == null) 
             return TypedResults.Problem(new ProductNotFoundError(requestId));
         

@@ -5,7 +5,7 @@ namespace GuitarStore.Modules.Catalog.Contracts;
 
 public interface ICatalogService
 {
-    Task<OrderDetails?> GetProductForCart(Guid id, CancellationToken ct = default);
+    Task<OrderDetails?> GetProductForCartAsync(Guid id, CancellationToken ct = default);
 }
 
 internal sealed class CatalogService : ICatalogService
@@ -15,7 +15,7 @@ internal sealed class CatalogService : ICatalogService
     {
         _dbContext = dbContext;
     }
-    public async Task<OrderDetails?> GetProductForCart(Guid productId, CancellationToken ct = default)
+    public async Task<OrderDetails?> GetProductForCartAsync(Guid productId, CancellationToken ct = default)
     {
         var product = await _dbContext.Products
             .AsNoTracking()
