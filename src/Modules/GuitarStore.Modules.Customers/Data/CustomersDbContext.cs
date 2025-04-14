@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Messaging.Outbox;
 using GuitarStore.Modules.Customers.Models;
 using Microsoft.EntityFrameworkCore;
 

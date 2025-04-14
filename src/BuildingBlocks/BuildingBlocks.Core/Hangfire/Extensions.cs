@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Messaging.Outbox;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.PostgreSql;

@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.Core.Messaging;
+﻿using BuildingBlocks.Core.Messaging.Outbox;
 using GuitarStore.Modules.Catalog.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +13,10 @@ internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> option
     public DbSet<SpecificationType> SpecificationTypes { get; set; }
     // сменить название?
     public DbSet<ProductSpecification> ProductSpecification { get; set; }
-    
-    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ConfigureOutboxMessage();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);

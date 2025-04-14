@@ -1,5 +1,5 @@
 ﻿using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Messaging.Outbox;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace BuildingBlocks.Core.Messaging;
+namespace BuildingBlocks.Core.Messaging.Outbox;
 
 public sealed class MessageDbContext(DbContextOptions<MessageDbContext> options) : DbContext(options)
 {
@@ -8,7 +8,7 @@ public sealed class MessageDbContext(DbContextOptions<MessageDbContext> options)
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MessageDbContext).Assembly);
+        modelBuilder.ConfigureOutboxMessage();
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using BuildingBlocks.Core.EFCore;
-using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.Catalog.Contracts;
 
@@ -16,8 +15,6 @@ public static class CatalogModule
         services.AddPostgresDbContext<CatalogDbContext>(configuration);
         services.AddScoped<IDataSeeder, CatalogDataSeeder>();
         services.AddScoped<ICatalogService, CatalogService>();
-        
-        services.AddEvents(typeof(CatalogModule).Assembly);
         
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly);
 
