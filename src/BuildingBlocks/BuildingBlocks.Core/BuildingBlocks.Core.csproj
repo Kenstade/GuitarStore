@@ -15,6 +15,7 @@
 	  <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
 	  <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
 	  <PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
+	  <PackageReference Include="MassTransit" Version="8.4.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.3" />
@@ -23,6 +24,10 @@
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 	  <PackageReference Include="Scalar.AspNetCore" Version="2.1.1" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Events\" />
 	</ItemGroup>
 
 </Project>

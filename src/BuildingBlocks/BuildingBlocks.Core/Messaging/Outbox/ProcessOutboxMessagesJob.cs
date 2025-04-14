@@ -1,22 +1,24 @@
 ﻿using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Events;
 using Hangfire;
+using MassTransit.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace BuildingBlocks.Core.Messaging;
+namespace BuildingBlocks.Core.Messaging.Outbox;
 [DisableConcurrentExecution(timeoutInSeconds: 10 * 60)]
 public sealed class ProcessOutboxMessagesJob // BackgroundService vs hangfire?
 {
     private readonly MessageDbContext _dbContext; //dapper?
-    private readonly IEventPublisher _publisher;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
-    public ProcessOutboxMessagesJob(MessageDbContext dbContext, IEventPublisher publisher, ILogger<ProcessOutboxMessagesJob> logger)
+    private readonly IMediator _mediator;
+    public ProcessOutboxMessagesJob(MessageDbContext dbContext, 
+        ILogger<ProcessOutboxMessagesJob> logger,
+        IMediator mediator)
     {
         _dbContext = dbContext;
-        _publisher = publisher;
         _logger = logger;
+        _mediator = mediator;
     }
     public async Task ProcessAsync()
     {
@@ -38,8 +40,7 @@ public sealed class ProcessOutboxMessagesJob // BackgroundService vs hangfire?
 
                 if (domainEvent is null) continue; //добавить лог null
                 
-                await _publisher.Publish((dynamic)domainEvent);
-
+                await _mediator.Publish(domainEvent);
                 outboxMessage.ProcessedOn = DateTime.UtcNow;
             }
 

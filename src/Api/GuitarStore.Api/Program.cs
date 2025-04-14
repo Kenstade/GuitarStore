@@ -10,15 +10,18 @@ using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Exceptions;
-using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Messaging.Outbox;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
+using BuildingBlocks.Core.Messaging;
 using BuildingBlocks.Web.MinimalApi;
 using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
+builder.Services.AddMessageBroker(typeof(CatalogModule).Assembly, typeof(ShoppingCartModule).Assembly);
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
 builder.Services.AddDistributedCache(builder.Configuration);
