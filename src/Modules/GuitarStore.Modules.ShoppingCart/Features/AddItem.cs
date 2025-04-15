@@ -9,7 +9,6 @@ using GuitarStore.Modules.ShoppingCart.Errors;
 using GuitarStore.Modules.ShoppingCart.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +30,7 @@ internal sealed class AddItem : IEndpoint
     }
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost("cart/add", async ([FromBody]AddItemRequest request,CancellationToken ct) =>
+        builder.MapPost("cart/add", async (AddItemRequest request, CancellationToken ct) =>
         {
             var parsedRequest = Guid.Parse(request.ProductId);
             
@@ -63,6 +62,8 @@ internal sealed class AddItem : IEndpoint
             return TypedResults.Problem(new ProductNotFoundError(requestId));
         
         cart.AddItem(requestId, product.Name, product.Image, product.Price);
+        
+        await _dbContext.SaveChangesAsync();
         
         return TypedResults.Ok($"{requestId}");
     }
