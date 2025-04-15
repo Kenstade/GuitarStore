@@ -39,14 +39,24 @@ internal sealed class GetCart : IEndpoint
         
         var cart = await _dbContext.Carts
             .AsNoTracking()
-            .Select(c => new {c.CustomerId, c.Items})
-            .FirstOrDefaultAsync(c => c.CustomerId == userId, ct);
+            .Where(c => c.CustomerId == userId)
+            .Select(c => new GetCartResponse
+            (
+                c.Items.Sum(i => i.Quantity * i.Price),
+                c.Items.Select(i => new CartItemPartialResponse
+                (
+                    i.Name, 
+                    i.Image, 
+                    i.Price, 
+                    i.Quantity
+                )).ToList()
+            )).FirstOrDefaultAsync(ct);
         
         if (cart == null) return TypedResults.Ok("Your cart is empty");
             
-        return TypedResults.Ok();
+        return TypedResults.Ok(cart);
     }
 }
 
 public sealed record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);
-public sealed record CartItemPartialResponse(string Name, string Image, decimal Price, int Quantity);
+public sealed record CartItemPartialResponse(string Name, string? Image, decimal Price, int Quantity);
