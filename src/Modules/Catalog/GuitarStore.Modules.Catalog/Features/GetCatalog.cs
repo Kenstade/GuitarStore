@@ -26,8 +26,7 @@ internal sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
-        .WithName("GetCatalog")
-        .RequireAuthorization();
+        .WithName("GetCatalog");
 
         return builder;
     }
