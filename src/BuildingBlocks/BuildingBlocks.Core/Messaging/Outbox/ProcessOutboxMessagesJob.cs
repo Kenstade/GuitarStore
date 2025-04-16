@@ -56,7 +56,7 @@ public sealed class ProcessOutboxMessagesJob // BackgroundService vs hangfire?
         }
         finally 
         { 
-            _logger.LogInformation("ProcessOutboxMessageJob finished..."); 
+            _logger.LogDebug("ProcessOutboxMessageJob finished..."); 
         }
     }
 }

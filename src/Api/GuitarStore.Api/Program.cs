@@ -1,8 +1,6 @@
 using GuitarStore.Modules.Catalog;
 using GuitarStore.Modules.ShoppingCart;
-using GuitarStore.Modules.Customers;
 using GuitarStore.Modules.Ordering;
-using GuitarStore.Modules.Identity;
 using Microsoft.AspNetCore.Http.Features;
 using BuildingBlocks.Web.OpenApi;
 using BuildingBlocks.Web;
@@ -25,7 +23,8 @@ builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(conte
 
 builder.Services.AddMessageBus(
     typeof(CatalogModule).Assembly,
-    typeof(ShoppingCartModule).Assembly);
+    typeof(ShoppingCartModule).Assembly,
+    typeof(OrdersModule).Assembly);
 
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
@@ -34,9 +33,9 @@ builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services
     .AddCatalogModule(builder.Configuration)
     .AddShoppingCartModule(builder.Configuration)
-    .AddCustomersModule(builder.Configuration)
-    .AddOrdersModule(builder.Configuration)
-    .AddIdentityModule(builder.Configuration);
+    .AddOrdersModule(builder.Configuration);
+    // .AddCustomersModule(builder.Configuration)
+    // .AddIdentityModule(builder.Configuration);
 
 builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
@@ -90,7 +89,8 @@ app.UseAuthorization();
 app.UseBackgroundJobs(builder.Configuration);
 
 app.UseCatalogModule()
-   .UseShoppingCartModule();
+   .UseShoppingCartModule()
+   .UseOrdersModule();
 
 app.MapEndpoints();
 

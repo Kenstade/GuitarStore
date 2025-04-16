@@ -17,11 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Web\BuildingBlocks.Web.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Catalog\GuitarStore.Modules.Catalog.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Customers\GuitarStore.Modules.Customers.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Identity\GuitarStore.Modules.Identity.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.Ordering\GuitarStore.Modules.Ordering.csproj" />
-    <ProjectReference Include="..\..\Modules\GuitarStore.Modules.ShoppingCart\GuitarStore.Modules.ShoppingCart.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\GuitarStore.Modules.Catalog\GuitarStore.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\Modules\Orders\GuitarStore.Modules.Orders\GuitarStore.Modules.Orders.csproj" />
+    <ProjectReference Include="..\..\Modules\ShoppingCart\GuitarStore.Modules.ShoppingCart\GuitarStore.Modules.ShoppingCart.csproj" />
   </ItemGroup>
 
 </Project>

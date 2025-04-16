@@ -15,11 +15,11 @@ WORKDIR /src
 COPY ["src/Api/GuitarStore.Api/GuitarStore.Api.csproj", "src/Api/GuitarStore.Api/"]
 COPY ["src/BuildingBlocks/BuildingBlocks.Core/BuildingBlocks.Core.csproj", "src/BuildingBlocks/BuildingBlocks.Core/"]
 COPY ["src/BuildingBlocks/BuildingBlocks.Web/BuildingBlocks.Web.csproj", "src/BuildingBlocks/BuildingBlocks.Web/"]
-COPY ["src/Modules/GuitarStore.Modules.Catalog/GuitarStore.Modules.Catalog.csproj", "src/Modules/GuitarStore.Modules.Catalog/"]
-COPY ["src/Modules/GuitarStore.Modules.Customers/GuitarStore.Modules.Customers.csproj", "src/Modules/GuitarStore.Modules.Customers/"]
-COPY ["src/Modules/GuitarStore.Modules.Identity/GuitarStore.Modules.Identity.csproj", "src/Modules/GuitarStore.Modules.Identity/"]
-COPY ["src/Modules/GuitarStore.Modules.Ordering/GuitarStore.Modules.Ordering.csproj", "src/Modules/GuitarStore.Modules.Ordering/"]
-COPY ["src/Modules/GuitarStore.Modules.ShoppingCarts/GuitarStore.Modules.ShoppingCarts.csproj", "src/Modules/GuitarStore.Modules.ShoppingCarts/"]
+COPY ["src/Modules/Catalog/GuitarStore.Modules.Catalog/GuitarStore.Modules.Catalog.csproj", "src/Modules/GuitarStore.Modules.Catalog/"]
+COPY ["src/Modules/Customers/GuitarStore.Modules.Customers/GuitarStore.Modules.Customers.csproj", "src/Modules/GuitarStore.Modules.Customers/"]
+COPY ["src/Modules/Identity/GuitarStore.Modules.Identity/GuitarStore.Modules.Identity.csproj", "src/Modules/GuitarStore.Modules.Identity/"]
+COPY ["src/Modules/Orders/GuitarStore.Modules.Orders/GuitarStore.Modules.Orders.csproj", "src/Modules/GuitarStore.Modules.Ordering/"]
+COPY ["src/Modules/ShoppingCart/GuitarStore.Modules.ShoppingCarts/GuitarStore.Modules.ShoppingCarts.csproj", "src/Modules/GuitarStore.Modules.ShoppingCarts/"]
 RUN dotnet restore "./src/Api/GuitarStore.Api/GuitarStore.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Api/GuitarStore.Api"

@@ -76,6 +76,10 @@
     <None Remove="Orders\Models\**" />
     <None Remove="ShoppingCart\Models\**" />
     <Compile Remove="Catalogs\Features\GetCatalog.cs" />
+    <Compile Remove="Catalogs\**" />
+    <EmbeddedResource Remove="Catalogs\**" />
+    <Content Remove="Catalogs\**" />
+    <None Remove="Catalogs\**" />
   </ItemGroup>
 
   <ItemGroup>
