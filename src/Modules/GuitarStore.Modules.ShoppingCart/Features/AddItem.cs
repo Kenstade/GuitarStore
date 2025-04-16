@@ -10,7 +10,6 @@ using GuitarStore.Modules.ShoppingCart.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Features;
 
@@ -48,7 +47,6 @@ internal sealed class AddItem : IEndpoint
         var userId = _userContext.GetUserId();
         
         var cart = _dbContext.Carts
-            .Include(c => c.Items)
             .FirstOrDefault(c => c.CustomerId == userId); //придумать как достать из кеша (dbConextExtension?)
 
         if (cart == null)
