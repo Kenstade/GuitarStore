@@ -1,21 +1,48 @@
 services:
-  guitarstore.postgres:
-    container_name: guitarstore.postgres
+  postgres:
+    container_name: GuitarStore.Postgres
     image: postgres:latest
     environment:
-      POSTGRES_DB: "guitarstoredb"
+      POSTGRES_DB: "GuitarStoreDb"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "123"
+      POSTGRES_PASSWORD: "postgres"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     ports:
       - "5432:5432"
         
-  guitarstore.redis:
+  redis:
+    container_name: GuitarStore.Redis
     image: redis:latest
     restart: always
     ports: 
       - '6379:6379'
+        
+  rabbitmq:
+    container_name: GuitarStore.RabbitMq
+    image: rabbitmq:management
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15627:15672"
+    volumes:
+      - /var/lib/rabbitmq/data
+    networks:
+      - rabbitmq
+        
+  keycloak:
+    container_name: GuitarStore.Keycloak
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    restart: always
+    ports:
+      - "8080:8080"
+    command:
+      - start-dev
 
-volumes:
-  postgres-data:
+networks:
+  rabbitmq:
+    driver: bridge

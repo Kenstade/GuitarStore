@@ -14,8 +14,8 @@ using BuildingBlocks.Core.Messaging.Outbox;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
-using MassTransit;
 using Serilog;
 
 
@@ -38,9 +38,7 @@ builder.Services
     .AddOrdersModule(builder.Configuration)
     .AddIdentityModule(builder.Configuration);
 
-builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
-
+builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 
@@ -62,7 +60,7 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddCustomHangfire(builder.Configuration);
 
 builder.Services.AddOpenApi(options => 
-    options.AddBearerTokenAuthentication());
+    options.AddKeycloakAuthentication(builder.Configuration));
 
 var app = builder.Build();
 
