@@ -1,4 +1,4 @@
-﻿namespace GuitarStore.Modules.Ordering.Models;
+﻿namespace GuitarStore.Modules.Orders.Models;
 
 internal enum OrderStatus
 {

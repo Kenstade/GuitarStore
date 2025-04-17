@@ -1,6 +1,6 @@
 ﻿using BuildingBlocks.Web.Errors;
 
-namespace GuitarStore.Modules.Ordering.Errors;
+namespace GuitarStore.Modules.Orders.Errors;
 
 internal sealed class OrderNotFoundError : NotFoundError
 {

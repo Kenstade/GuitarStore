@@ -1,7 +1,7 @@
-﻿using GuitarStore.Modules.Ordering.Models;
+﻿using GuitarStore.Modules.Orders.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GuitarStore.Modules.Ordering.Data;
+namespace GuitarStore.Modules.Orders.Data;
 internal sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options) : DbContext(options)
 {
     internal const string DefaultSchema = "orders";

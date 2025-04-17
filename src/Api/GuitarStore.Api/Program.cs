@@ -1,6 +1,5 @@
 using GuitarStore.Modules.Catalog;
 using GuitarStore.Modules.ShoppingCart;
-using GuitarStore.Modules.Ordering;
 using Microsoft.AspNetCore.Http.Features;
 using BuildingBlocks.Web.OpenApi;
 using BuildingBlocks.Web;
@@ -14,6 +13,7 @@ using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
 using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
+using GuitarStore.Modules.Orders;
 using Serilog;
 
 

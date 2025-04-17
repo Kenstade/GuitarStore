@@ -1,10 +1,10 @@
 ﻿using BuildingBlocks.Web.MinimalApi;
-using GuitarStore.Modules.Ordering.Data;
+using GuitarStore.Modules.Orders.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace GuitarStore.Modules.Ordering.Features;
+namespace GuitarStore.Modules.Orders.Features;
 //Отдельный модуль?
 internal sealed class Checkout : IEndpoint
 {

@@ -1,4 +1,4 @@
-﻿namespace GuitarStore.Modules.Ordering.Features;
+﻿namespace GuitarStore.Modules.Orders.Features;
 
 public sealed class GetOrders
 {

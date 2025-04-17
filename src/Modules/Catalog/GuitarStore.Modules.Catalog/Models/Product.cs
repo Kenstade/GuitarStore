@@ -1,6 +1,5 @@
 ﻿using BuildingBlocks.Core.Domain;
 using GuitarStore.Modules.Catalog.Data;
-using GuitarStore.Modules.Catalog.Events;
 using GuitarStore.Modules.Catalog.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +11,7 @@ internal sealed class Product : Aggregate<Guid>
     private readonly List<ProductSpecification> _specifications = [];
     private readonly List<ProductImage> _images = [];
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
     public ProductColor Color { get; private set; }
@@ -52,7 +51,6 @@ internal sealed class Product : Aggregate<Guid>
 
         product.AddImages(images);
         
-        product.AddDomainEvent(new PriceChanged(product.Id, price));
         return product;
     }
 

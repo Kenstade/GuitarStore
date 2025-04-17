@@ -1,12 +1,12 @@
 ﻿using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
-using GuitarStore.Modules.Ordering.Data;
+using GuitarStore.Modules.Orders.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GuitarStore.Modules.Ordering;
+namespace GuitarStore.Modules.Orders;
 public static class OrdersModule
 {
     public static IServiceCollection AddOrdersModule(this IServiceCollection services, IConfiguration configuration)

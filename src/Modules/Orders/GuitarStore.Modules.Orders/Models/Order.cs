@@ -1,9 +1,9 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Ordering.Data;
+using GuitarStore.Modules.Orders.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GuitarStore.Modules.Ordering.Models;
+namespace GuitarStore.Modules.Orders.Models;
 
 internal sealed class Order : Aggregate<Guid>
 {
