@@ -13,11 +13,16 @@ using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
 using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
+using GuitarStore.Api.Extensions;
 using GuitarStore.Modules.Orders;
 using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddModulesSettingsFile(
+    builder.Environment.ContentRootPath,
+    builder.Environment.EnvironmentName);
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
@@ -34,8 +39,6 @@ builder.Services
     .AddCatalogModule(builder.Configuration)
     .AddShoppingCartModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration);
-    // .AddCustomersModule(builder.Configuration)
-    // .AddIdentityModule(builder.Configuration);
 
 builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
@@ -94,4 +97,4 @@ app.UseCatalogModule()
 
 app.MapEndpoints();
 
-app.Run();
+await app.RunAsync();
