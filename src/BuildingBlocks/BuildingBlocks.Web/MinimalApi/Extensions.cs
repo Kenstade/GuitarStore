@@ -10,7 +10,7 @@ public static class Extensions
         foreach(var type in assembly.GetTypes()
             .Where(x => typeof(IEndpoint).IsAssignableFrom(x) && !x.IsAbstract && !x.IsInterface))
         {
-            services.AddScoped(typeof(IEndpoint), type);
+            services.AddTransient(typeof(IEndpoint), type);
         }
 
         return services;
@@ -18,7 +18,7 @@ public static class Extensions
 
     public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
     {
-        var scope = builder.ServiceProvider.CreateScope();
+        using var scope = builder.ServiceProvider.CreateScope();
         var endpoints = scope.ServiceProvider.GetServices<IEndpoint>();
 
         foreach(var endpoint in endpoints)
