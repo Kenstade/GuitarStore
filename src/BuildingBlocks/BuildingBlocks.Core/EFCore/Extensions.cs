@@ -15,8 +15,6 @@ public static class Extensions
     {
         services.Configure<PostgresOptions>(configuration.GetSection(nameof(PostgresOptions)));
         var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
-        
-        if (postgresOptions == null) throw new ArgumentNullException(nameof(postgresOptions));
 
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
 
@@ -34,8 +32,10 @@ public static class Extensions
             services.AddDbContext<TContext>((sp, options) =>
             {
                 var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+                
                 options.UseNpgsql(postgresOptions.ConnectionString)
-                .AddInterceptors(interceptor);
+                    .UseSnakeCaseNamingConvention()
+                    .AddInterceptors(interceptor);
             });
         }
 
