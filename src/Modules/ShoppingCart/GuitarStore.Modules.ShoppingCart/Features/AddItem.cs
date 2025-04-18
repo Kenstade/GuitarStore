@@ -37,7 +37,8 @@ internal sealed class AddItem : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<AddItemRequest>>()   
         .AddEndpointFilter<ValidationEndpointFilter<AddItemRequest>>()
-        .WithName("AddItemIntoCart");
+        .WithName("AddItemIntoCart")
+        .RequireAuthorization();
         
         return builder;
     }
