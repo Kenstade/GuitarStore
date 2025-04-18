@@ -13,7 +13,7 @@ public static class OrdersModule
     {
         services.AddPostgresDbContext<OrdersDbContext>(configuration);
         
-        services.AddValidatorsFromAssembly(typeof(OrdersModule).Assembly);
+        services.AddValidatorsFromAssembly(typeof(OrdersModule).Assembly, includeInternalTypes: true);
         
         services.AddMinimalApiEndpoints(typeof(OrdersModule).Assembly);
         

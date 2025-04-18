@@ -13,7 +13,7 @@ public static class ShoppingCartModule
     {
         services.AddPostgresDbContext<CartDbContext>(configuration);
         
-        services.AddValidatorsFromAssembly(typeof(ShoppingCartModule).Assembly);
+        services.AddValidatorsFromAssembly(typeof(ShoppingCartModule).Assembly, includeInternalTypes: true);
         
         services.AddMinimalApiEndpoints(typeof(ShoppingCartModule).Assembly);
         

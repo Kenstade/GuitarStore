@@ -16,7 +16,7 @@ public static class CatalogModule
         services.AddScoped<IDataSeeder, CatalogDataSeeder>();
         services.AddScoped<ICatalogService, CatalogService>();
         
-        services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly);
+        services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
 
         services.AddMinimalApiEndpoints(typeof(CatalogModule).Assembly);
 
