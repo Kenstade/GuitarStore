@@ -1,6 +1,7 @@
 using BuildingBlocks.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BuildingBlocks.Core.Caching;
 
@@ -21,6 +22,8 @@ public static class Extensions
                 options.Configuration = redisOptions.ConnectionString;
             });
         }
+        
+        services.TryAddSingleton<ICacheService, CacheService>();
         
         return services;
     }
