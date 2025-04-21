@@ -17,8 +17,8 @@ public static class Extensions
     }
 
     public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
-    {
-        using var scope = builder.ServiceProvider.CreateScope();
+    { 
+        var scope = builder.ServiceProvider.CreateScope();
         var endpoints = scope.ServiceProvider.GetServices<IEndpoint>();
 
         foreach(var endpoint in endpoints)
