@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Contracts;
 
-public interface ICatalogService
-{
-    Task<OrderDetails?> GetProductForCartAsync(Guid id, CancellationToken ct = default);
-}
-
 internal sealed class CatalogService : ICatalogService
 {
     private readonly CatalogDbContext _dbContext;
@@ -15,12 +10,12 @@ internal sealed class CatalogService : ICatalogService
     {
         _dbContext = dbContext;
     }
-    public async Task<OrderDetails?> GetProductForCartAsync(Guid productId, CancellationToken ct = default)
+    public async Task<ProductDetails?> GetProductForCartAsync(Guid productId, CancellationToken ct = default)
     {
         var product = await _dbContext.Products
             .AsNoTracking()
             .Where(p => p.Id == productId)
-            .Select(p => new OrderDetails
+            .Select(p => new ProductDetails
             (
                 p.Name, 
                 p.GetMainImage(),
