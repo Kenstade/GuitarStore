@@ -22,39 +22,19 @@ public static class Extensions
         {
             services.AddDbContext<TContext>((sp,options) =>
             {
-                var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
                 options.UseInMemoryDatabase("guitarstoredb")
-                .AddInterceptors(interceptor);
+                .AddInterceptors(sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>());
             });
         }
         else
         {
             services.AddDbContext<TContext>((sp, options) =>
             {
-                var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-                
                 options.UseNpgsql(postgresOptions.ConnectionString)
                     .UseSnakeCaseNamingConvention()
-                    .AddInterceptors(interceptor);
+                    .AddInterceptors(sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>());
             });
         }
-
-        //services.AddIdentity<User, Role>(options =>
-        //{
-        //    options.Password.RequireDigit = false;
-        //    options.Password.RequireLowercase = false;
-        //    options.Password.RequireNonAlphanumeric = false;
-        //    options.Password.RequireUppercase = false;
-        //    options.Password.RequiredLength = 1;
-
-        //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-        //    options.Lockout.MaxFailedAccessAttempts = 5;
-        //    options.Lockout.AllowedForNewUsers = true;
-
-        //    options.User.RequireUniqueEmail = true;
-        //})
-        //.AddEntityFrameworkStores<AppDbContext>()
-        //.AddDefaultTokenProviders();
 
         return services;
     }
