@@ -11,10 +11,13 @@ using BuildingBlocks.Core.Messaging.Outbox;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
+using BuildingBlocks.Core.Monitoring;
 using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
 using GuitarStore.Modules.Orders;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 
@@ -33,7 +36,9 @@ builder.Services.AddMessageBus(
 
 
 builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
+
 builder.Services.AddDistributedCache(builder.Configuration);
+builder.Services.AddMonitoring(builder.Configuration);
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
@@ -72,17 +77,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
     app.MapScalarApiReference(options =>
-    {
-        options.OpenApiRoutePattern = "/openapi/{documentName}.json";
-    });
+        options.OpenApiRoutePattern = "/openapi/{documentName}.json");
 
-    app.UseHangfireDashboard(options: new DashboardOptions
-    {
-        Authorization = [],
-        DarkModeEnabled = true,
-    });
+    app.UseHangfireDashboard();
 }
+
 app.UseSerilogRequestLogging();
+
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseExceptionHandler();
 
