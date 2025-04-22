@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Web\BuildingBlocks.Web.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Web\BuildingBlocks.Core.csproj" />
     <ProjectReference Include="..\..\Catalog\GuitarStore.Modules.Catalog.Contracts\GuitarStore.Modules.Catalog.Contracts.csproj" />
   </ItemGroup>
 
