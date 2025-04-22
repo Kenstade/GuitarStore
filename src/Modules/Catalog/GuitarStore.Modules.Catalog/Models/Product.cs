@@ -103,7 +103,6 @@ internal sealed class Product : Aggregate<Guid>
         int removed = Math.Min(quantity, Stock);
 
         Stock -= removed;
-        //TODO: ?
         if(Stock == 0) IsAvailable = false;
         
         return removed;
