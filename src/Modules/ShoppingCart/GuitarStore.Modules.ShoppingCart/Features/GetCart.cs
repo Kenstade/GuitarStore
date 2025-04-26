@@ -28,7 +28,9 @@ internal sealed class GetCart : IEndpoint
             return await Handle(ct);
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCartRequest>>()    
-        .WithName("GetCart");    
+        .WithName("GetCart")
+        .WithTags("Cart")
+        .RequireAuthorization();    
         
         return builder;
     }

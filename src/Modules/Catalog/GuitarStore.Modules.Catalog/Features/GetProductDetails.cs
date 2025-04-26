@@ -12,9 +12,14 @@ using Microsoft.EntityFrameworkCore;
 namespace GuitarStore.Modules.Catalog.Features;
 public sealed record GetProductDetailsRequest(string ProductId);
 
-internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
+internal sealed class GetProductDetails : IEndpoint
 {
-    private readonly CatalogDbContext _dbContext = dbContext;
+    private readonly CatalogDbContext _dbContext;
+
+    public GetProductDetails(CatalogDbContext dbContext) 
+    {
+        _dbContext = dbContext;
+    }
 
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -26,7 +31,8 @@ internal sealed class GetProductDetails(CatalogDbContext dbContext) : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetProductDetailsRequest>>()    
         .AddEndpointFilter<ValidationEndpointFilter<GetProductDetailsRequest>>()
-        .WithName("GetProductDetails");
+        .WithName("GetProductDetails")
+        .WithTags("Catalog");
         
         return builder;
     }

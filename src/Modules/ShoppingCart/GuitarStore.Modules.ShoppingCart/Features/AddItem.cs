@@ -38,6 +38,7 @@ internal sealed class AddItem : IEndpoint
         .AddEndpointFilter<LoggingEndpointFilter<AddItemRequest>>()   
         .AddEndpointFilter<ValidationEndpointFilter<AddItemRequest>>()
         .WithName("AddItemIntoCart")
+        .WithTags("Cart")
         .RequireAuthorization();
         
         return builder;
@@ -48,12 +49,12 @@ internal sealed class AddItem : IEndpoint
         var userId = _userContext.GetUserId();
         
         var cart = _dbContext.Carts
-            .FirstOrDefault(c => c.CustomerId == userId); //придумать как достать из кеша (dbConextExtension?)
+            .FirstOrDefault(c => c.CustomerId == userId);
 
         if (cart == null)
         {
             cart = Cart.Create(userId);
-            await _dbContext.Carts.AddAsync(cart);
+            await _dbContext.Carts.AddAsync(cart, ct);
         }
 
         var product = await _catalogService.GetProductForCartAsync(requestId, ct);

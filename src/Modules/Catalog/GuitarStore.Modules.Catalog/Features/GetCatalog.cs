@@ -14,9 +14,13 @@ public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10
 {
     public string CacheKey => "GetCatalog";
 }
-internal sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
+internal sealed class GetCatalog : IEndpoint
 {
-    private readonly CatalogDbContext _dbContext = dbContext;
+    private readonly CatalogDbContext _dbContext;
+    public GetCatalog(CatalogDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
     
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -26,7 +30,8 @@ internal sealed class GetCatalog(CatalogDbContext dbContext) : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
-        .WithName("GetCatalog");
+        .WithName("GetCatalog")
+        .WithTags("Catalog");
 
         return builder;
     }

@@ -29,7 +29,9 @@ internal sealed class RemoveItem : IEndpoint
             return await Handle(request, ct);
         })
         .AddEndpointFilter<LoggingEndpointFilter<RemoveItemRequest>>()    
-        .WithName("RemoveItemFromCart");
+        .WithName("RemoveItemFromCart")
+        .WithTags("Cart")
+        .RequireAuthorization();
         
         return builder;
     }

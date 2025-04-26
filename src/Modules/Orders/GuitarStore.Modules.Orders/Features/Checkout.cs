@@ -19,6 +19,8 @@ internal sealed class Checkout : IEndpoint
         {
             return await Handle(ct);
         })
+        .WithName("Checkout")
+        .WithTags("Orders")
         .RequireAuthorization();    
         
         return builder;
