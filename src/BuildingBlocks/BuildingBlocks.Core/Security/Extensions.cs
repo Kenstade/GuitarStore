@@ -24,6 +24,10 @@ public static class Extensions
                 };
             });
         services.AddAuthorization();
+        
+        
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContextProvider, UserContextProvider>();
         return services;
     }
 }

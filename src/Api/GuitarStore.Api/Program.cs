@@ -46,8 +46,6 @@ builder.Services
     .AddOrdersModule(builder.Configuration);
 
 builder.Services.AddCustomIdentity(builder.Configuration);
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContextProvider, UserContextProvider>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options =>
