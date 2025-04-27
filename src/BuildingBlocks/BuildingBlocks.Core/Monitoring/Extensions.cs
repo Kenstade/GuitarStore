@@ -1,6 +1,7 @@
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Core.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +13,12 @@ public static class Extensions
     {
         var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
         var redisOptions = configuration.GetOptions<RedisOptions>(nameof(RedisOptions));
+        var keycloakOptions = configuration.GetOptions<KeycloakOptions>(nameof(KeycloakOptions));
         
         services.AddHealthChecks()
             .AddNpgSql(postgresOptions.ConnectionString)
-            .AddRedis(redisOptions.ConnectionString);
+            .AddRedis(redisOptions.ConnectionString)
+            .AddUrlGroup(new Uri(keycloakOptions.AuthorizationUrl), HttpMethod.Get, "keycloak");
         
         return services;
     }
