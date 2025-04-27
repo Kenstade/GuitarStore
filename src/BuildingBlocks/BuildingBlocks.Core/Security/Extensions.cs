@@ -20,7 +20,7 @@ public static class Extensions
                 o.MetadataAddress = jwtOptions.MetadataAddress;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = jwtOptions.ValidIssuer
+                    ValidIssuers = jwtOptions.ValidIssuer
                 };
             });
         services.AddAuthorization();
