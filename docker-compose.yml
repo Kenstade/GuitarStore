@@ -1,4 +1,14 @@
 services:
+  api:
+    image: ${DOCKER_REGISTRY-}guitarstoreapi
+    container_name: GuitarStore.Api
+    build:
+      context: .
+      dockerfile: src/Api/GuitarStore.Api/Dockerfile
+    ports:
+      - "5000:8080"
+      - "5050:8081"
+      
   postgres:
     container_name: GuitarStore.Postgres
     image: postgres:latest
