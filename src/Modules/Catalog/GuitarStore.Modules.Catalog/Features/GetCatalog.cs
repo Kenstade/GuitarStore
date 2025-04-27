@@ -31,7 +31,8 @@ internal sealed class GetCatalog : IEndpoint
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
         .WithName("GetCatalog")
-        .WithTags("Catalog");
+        .WithTags("Catalog")
+        .AllowAnonymous();
 
         return builder;
     }
