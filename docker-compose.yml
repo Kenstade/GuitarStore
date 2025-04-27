@@ -49,7 +49,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
     restart: always
     ports:
-      - "8080:8080"
+      - "18080:8080"
     command:
       - start-dev
 
