@@ -1,4 +1,4 @@
-using BuildingBlocks.Web;
+using BuildingBlocks.Core.Security;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.ShoppingCart.Data;

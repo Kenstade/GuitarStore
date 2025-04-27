@@ -1,4 +1,4 @@
-using BuildingBlocks.Web;
+using BuildingBlocks.Core.Security;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.ShoppingCart.Data;
@@ -43,8 +43,7 @@ internal sealed class RemoveItem : IEndpoint
         var cart = await _dbContext.Carts
             .Include(c => c.Items)
             .FirstOrDefaultAsync(c => c.CustomerId == userId, ct);
-
-        //throw ex?
+        
         if (cart == null) return TypedResults.Problem(new CartNotFoundError(userId));
         
         cart.RemoveItem(request.ProductId);

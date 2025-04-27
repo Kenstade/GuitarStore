@@ -1,4 +1,4 @@
-using BuildingBlocks.Web;
+using BuildingBlocks.Core.Security;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Core.Validation;
 using BuildingBlocks.Web.MinimalApi;
