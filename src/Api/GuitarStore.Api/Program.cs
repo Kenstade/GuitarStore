@@ -2,7 +2,6 @@ using GuitarStore.Modules.Catalog;
 using GuitarStore.Modules.ShoppingCart;
 using Microsoft.AspNetCore.Http.Features;
 using BuildingBlocks.Web.OpenApi;
-using BuildingBlocks.Web;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.EFCore;
@@ -77,7 +76,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
     app.MapScalarApiReference(options =>
-        options.OpenApiRoutePattern = "/openapi/{documentName}.json");
+    {
+        options.OpenApiRoutePattern = "/openapi/{documentName}.json";
+        options.Servers = [];
+    });
 
     app.UseHangfireDashboard();
 }
