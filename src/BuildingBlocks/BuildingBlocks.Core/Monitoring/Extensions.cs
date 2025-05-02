@@ -13,13 +13,12 @@ public static class Extensions
     {
         var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
         var redisOptions = configuration.GetOptions<RedisOptions>(nameof(RedisOptions));
-        var keycloakOptions = configuration.GetOptions<KeycloakOptions>(nameof(KeycloakOptions));
+        var keycloakOptions = configuration.GetOptions<KeyCloakOptions>(nameof(KeyCloakOptions));
         
         services.AddHealthChecks()
             .AddNpgSql(postgresOptions.ConnectionString)
             .AddRedis(redisOptions.ConnectionString)
-            .AddUrlGroup(new Uri(keycloakOptions.AuthorizationUrl), HttpMethod.Get, "keycloak");
-        
+            .AddUrlGroup(new Uri(keycloakOptions.HealthUrl), HttpMethod.Get, "keycloak");
         return services;
     }
 }
