@@ -11,13 +11,13 @@ internal sealed class User : Aggregate<Guid>
     public string Password { get; private set; } = null!;
     public string PhoneNumber { get; private set; } = null!;
 
-    public static User Create(string email, string password)
+    public static User Create(Guid userId, string email, string password)
     {
         var user = new User
         {
-            Id = Guid.NewGuid(),
+            Id = userId,
             Email = email,
-            Password = password,
+            Password = password
         };
         //user registered domain event
         return user;
