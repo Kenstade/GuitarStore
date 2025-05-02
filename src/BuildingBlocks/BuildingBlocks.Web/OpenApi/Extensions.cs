@@ -10,7 +10,7 @@ public static class Extensions
 {
     public static OpenApiOptions AddKeycloakAuthentication(this OpenApiOptions options, IConfiguration configuration)
     {
-        var keycloakOptions = configuration.GetOptions<KeycloakOptions>(nameof(KeycloakOptions));
+        var keycloakOptions = configuration.GetOptions<KeyCloakOptions>(nameof(KeyCloakOptions));
         
         var scheme = new OpenApiSecurityScheme()
         {
