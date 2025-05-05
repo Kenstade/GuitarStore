@@ -38,7 +38,7 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.Name)
-            .HasColumnType("vrachar(50)");
+            .HasColumnType("varchar(50)");
         
         builder.Property(x => x.Image)
             .HasColumnType("varchar(255)");
