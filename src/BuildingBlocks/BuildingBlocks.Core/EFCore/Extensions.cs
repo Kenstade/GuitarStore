@@ -41,12 +41,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseMigration<TContext>(this IApplicationBuilder app) where TContext : DbContext
     {
-        var postgresOptions = app.ApplicationServices.GetRequiredService<IOptions<PostgresOptions>>();
-
-        if (!postgresOptions.Value.UseInMemory)
-        {
-            MigrateDatabaseAsync<TContext>(app.ApplicationServices).GetAwaiter().GetResult();
-        } 
+        MigrateDatabaseAsync<TContext>(app.ApplicationServices).GetAwaiter().GetResult();
 
         SeedDataAsync(app.ApplicationServices).GetAwaiter().GetResult();
         
@@ -56,9 +51,14 @@ public static class Extensions
     private static async Task MigrateDatabaseAsync<TContext>(IServiceProvider sp) where TContext : DbContext
     {
         using var scope = sp.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<TContext>();
 
-        await context.Database.MigrateAsync();       
+        var postgresOptions = scope.ServiceProvider.GetRequiredService<IOptions<PostgresOptions>>();
+        
+        if (!postgresOptions.Value.UseInMemory)
+        {
+            var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            await context.Database.MigrateAsync();  
+        }
     }
 
     private static async Task SeedDataAsync(IServiceProvider sp)
