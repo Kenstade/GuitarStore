@@ -31,7 +31,7 @@ internal sealed class Product : Aggregate<Guid>
         int stock,        
         int categoryId, 
         int brandId,
-        IList<ProductImage>? images,
+        IList<ProductImage>? images = null,
         bool isAvailable = true)
     {
         var product = new Product
@@ -51,32 +51,6 @@ internal sealed class Product : Aggregate<Guid>
         product.AddImages(images);
         
         return product;
-    }
-
-    public void Update(string name,
-        string description,
-        decimal price,
-        ProductColor color,
-        int stock,
-        int categoryId,
-        int brandId,
-        IList<ProductImage>? images,
-        bool isAvailable = true)
-    {
-        Name = name;
-        Description = description;
-        Color = color;
-        Stock = stock;
-        IsAvailable = isAvailable;
-        CategoryId = categoryId;
-        BrandId = brandId;
-        AddImages(images);
-
-        if(Price != price)
-        {
-            Price = price;
-            // AddDomainEvent(new ProductPriceChangedEvent(this));
-        }
     }
 
     public void AddImages(IList<ProductImage>? images)
@@ -119,11 +93,11 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .ValueGeneratedNever();
 
         builder.Property(p => p.Name)
-            .HasColumnType("varchar(50)")
+            .HasMaxLength(50)
             .IsRequired();
         
         builder.Property(p => p.Description)
-            .HasColumnType("varchar(500)")
+            .HasMaxLength(500)
             .IsRequired(false);
 
         builder.HasOne(p => p.Category)
@@ -133,16 +107,6 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(p => p.Brand)
             .WithMany()
             .HasForeignKey(p => p.BrandId);
-
-        //TODO: разобраться с many-to-many
-        builder.HasMany(p => p.Specifications)
-            .WithOne(ps => ps.Product)
-            .HasForeignKey(ps => ps.ProductId);
-
-        builder.HasMany(p => p.Images)
-            .WithOne(i => i.Product)
-            .HasForeignKey(i => i.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(p => p.Color)
             .HasDefaultValue(ProductColor.Unspecified)
