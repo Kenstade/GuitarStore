@@ -19,6 +19,7 @@ internal sealed class Order : Aggregate<Guid>
         var order = new Order
         {
             Id = Guid.NewGuid(),
+            CustomerId = customerId,
             Total = total,
             OrderStatus = orderStatus,
             Address = address,
