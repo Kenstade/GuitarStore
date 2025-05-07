@@ -23,6 +23,7 @@ public static class OutboxModelBuilderExtensions
             builder.HasKey(m => m.Id);
         
             builder.Property(m => m.Content)
+                .HasMaxLength(2000)
                 .HasColumnType("jsonb");
         });
     }
