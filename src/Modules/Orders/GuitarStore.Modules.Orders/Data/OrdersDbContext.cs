@@ -11,6 +11,8 @@ internal sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(DefaultSchema);
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrdersDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

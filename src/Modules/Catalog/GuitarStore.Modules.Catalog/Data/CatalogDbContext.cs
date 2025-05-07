@@ -11,11 +11,12 @@ internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> option
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<SpecificationType> SpecificationTypes { get; set; }
-    // сменить название?
     public DbSet<ProductSpecification> ProductSpecification { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(DefaultSchema);
+        
         modelBuilder.ConfigureOutboxMessage();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
 

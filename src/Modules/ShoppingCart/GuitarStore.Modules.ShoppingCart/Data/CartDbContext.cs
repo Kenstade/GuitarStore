@@ -11,6 +11,8 @@ internal sealed class CartDbContext(DbContextOptions<CartDbContext> options) : D
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(DefaultSchema);
+            
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

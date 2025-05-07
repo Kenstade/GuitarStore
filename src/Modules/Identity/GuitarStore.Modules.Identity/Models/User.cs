@@ -1,7 +1,6 @@
 ﻿using BuildingBlocks.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using IdentityDbContext = GuitarStore.Modules.Identity.Data.IdentityDbContext;
 
 namespace GuitarStore.Modules.Identity.Models;
 
@@ -28,7 +27,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("users", IdentityDbContext.DefaultSchema);
+        builder.ToTable("users");
         builder.HasKey(u => u.Id);
         
         builder.Property(u => u.Email).HasMaxLength(50).IsRequired();

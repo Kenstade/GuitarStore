@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Orders.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,7 +28,7 @@ internal sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderIte
 {
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
-        builder.ToTable("order_items", OrdersDbContext.DefaultSchema);
+        builder.ToTable("order_items");
         builder.HasKey(i => i.Id);
 
         builder.Property(i => i.Name)

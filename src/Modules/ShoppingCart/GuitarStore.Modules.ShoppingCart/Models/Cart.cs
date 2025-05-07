@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.ShoppingCart.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -47,7 +46,7 @@ internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
 {
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
-        builder.ToTable("cart", CartDbContext.DefaultSchema);
+        builder.ToTable("cart");
         
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)

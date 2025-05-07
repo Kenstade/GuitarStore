@@ -18,7 +18,7 @@ public static class OutboxModelBuilderExtensions
     {
         modelBuilder.Entity<OutboxMessage>(builder =>
         {
-            builder.ToTable("outbox_messages", "messages");
+            builder.ToTable("outbox_messages");
 
             builder.HasKey(m => m.Id);
         

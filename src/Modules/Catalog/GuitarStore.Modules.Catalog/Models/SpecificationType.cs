@@ -23,7 +23,7 @@ internal sealed class SpecificationTypeConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<SpecificationType> builder)
     {
-        builder.ToTable("specification_type", CatalogDbContext.DefaultSchema);
+        builder.ToTable("specification_type");
         
         builder.HasKey(x => x.Id);
 

@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Catalog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,7 +22,7 @@ internal sealed class ProductImageConfiguration : IEntityTypeConfiguration<Produ
 {
     public void Configure(EntityTypeBuilder<ProductImage> builder)
     {
-        builder.ToTable("product_image", CatalogDbContext.DefaultSchema);
+        builder.ToTable("product_image");
         
         builder.HasKey(x => x.Id);
         

@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Catalog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +17,7 @@ internal sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
     public void Configure(EntityTypeBuilder<Brand> builder)
     {
-        builder.ToTable("brands", CatalogDbContext.DefaultSchema);
+        builder.ToTable("brands");
         
         builder.HasKey(x => x.Id);
 

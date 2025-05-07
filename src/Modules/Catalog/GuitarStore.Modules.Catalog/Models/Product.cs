@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Catalog.Data;
 using GuitarStore.Modules.Catalog.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -113,7 +112,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.ToTable("products", CatalogDbContext.DefaultSchema);
+        builder.ToTable("products");
 
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)

@@ -10,7 +10,6 @@ internal sealed class CustomersDbContext(DbContextOptions<CustomersDbContext> op
     public DbSet<Address> Addresses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<OutboxMessage>();
         modelBuilder.HasDefaultSchema("customer");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomersDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
