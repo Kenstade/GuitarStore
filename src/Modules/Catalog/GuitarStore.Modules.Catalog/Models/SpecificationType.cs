@@ -1,22 +1,22 @@
-﻿using GuitarStore.Modules.Catalog.Data;
+﻿using BuildingBlocks.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-internal sealed class SpecificationType
+internal sealed class SpecificationType : Entity<int>
 {
+    private readonly List<ProductSpecification> _productSpecifications = [];
     internal SpecificationType(string name, int categoryId)
     {
         Name = name;
         CategoryId = categoryId;
     }
     
-    public int Id { get; private set; }
     public string Name { get; private set; }
-    public ICollection<ProductSpecification> ProductSpecifications { get; private set; } = default!;
     public int CategoryId { get; private set; }
-    public Category Category { get; private set; } = default!;
+    public Category Category { get; private set; } = null!;
+    public IReadOnlyCollection<ProductSpecification> Specifications => _productSpecifications.AsReadOnly();
 }
 
 internal sealed class SpecificationTypeConfiguration : IEntityTypeConfiguration<SpecificationType>
@@ -28,10 +28,10 @@ internal sealed class SpecificationTypeConfiguration : IEntityTypeConfiguration<
         builder.HasKey(x => x.Id);
 
         builder.Property(s => s.Name)
-            .HasColumnType("varchar(50)");
-
-        builder.HasMany(s => s.ProductSpecifications)
-            .WithOne(ps => ps.SpecificationType)
-            .HasForeignKey(ps => ps.SpecificationTypeId);
+            .HasMaxLength(50);
+        
+        builder.HasOne(st => st.Category)
+            .WithMany(c => c.SpecificationTypes)
+            .HasForeignKey(st => st.CategoryId);
     }
 }
