@@ -4,13 +4,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-internal sealed class ProductSpecification : Entity<int>
+internal sealed class ProductSpecification : Entity
 {
-    public string Value { get; private set; } = string.Empty;
+    public ProductSpecification(string value, int specificationTypeId, Guid productId)
+    {
+        Value = value;
+        SpecificationTypeId = specificationTypeId;
+        ProductId = productId;
+    }
+    
+    public string Value { get; private set; }
     public int SpecificationTypeId { get; private set; }
-    public SpecificationType SpecificationType { get; private set; } = default!;
+    public SpecificationType SpecificationType { get; private set; } = null!;
     public Guid ProductId { get; private set; }
-    public Product Product { get; private set; } = default!;
+    public Product Product { get; private set; } = null!;
 }
 
 internal sealed class ProductSpecificationConfiguration : IEntityTypeConfiguration<ProductSpecification>
@@ -19,9 +26,17 @@ internal sealed class ProductSpecificationConfiguration : IEntityTypeConfigurati
     {
         builder.ToTable("product_specification");
         
-        builder.HasKey(x => x.Id);
-
+        builder.HasKey(ps => new { ps.SpecificationTypeId, ps.ProductId });
+        
         builder.Property(x => x.Value)
-            .HasColumnType("varchar(50)");
+            .HasMaxLength(50);
+        
+        builder.HasOne<Product>()
+            .WithMany(p => p.Specifications)
+            .HasForeignKey(ps => ps.ProductId);
+        
+        builder.HasOne<SpecificationType>()
+            .WithMany(sp => sp.Specifications)
+            .HasForeignKey(sp => sp.SpecificationTypeId);
     }
 }
