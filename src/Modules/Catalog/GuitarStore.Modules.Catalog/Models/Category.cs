@@ -6,12 +6,12 @@ namespace GuitarStore.Modules.Catalog.Models;
 
 internal sealed class Category : Entity<int>
 {
-    internal Category(string name)
+    public Category(string name)
     {
         Name = name;
     }
     public string Name { get; private set; }
-    public ICollection<SpecificationType> SpecificationTypes { get; set; } = default!;
+    public ICollection<SpecificationType> SpecificationTypes { get; set; } = null!;
 }
 
 internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
@@ -22,10 +22,6 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.HasKey(c => c.Id);
         
         builder.Property(c => c.Name)
-            .HasColumnType("varchar(50)");
-
-        builder.HasMany(c => c.SpecificationTypes)
-            .WithOne(s => s.Category)
-            .HasForeignKey(s => s.CategoryId);
+            .HasMaxLength(50);
     }
 }
