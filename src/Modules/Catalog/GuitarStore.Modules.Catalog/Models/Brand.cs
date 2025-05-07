@@ -6,10 +6,11 @@ namespace GuitarStore.Modules.Catalog.Models;
 
 internal class Brand : Entity<int>
 {
-    internal Brand(string name)
+    public Brand(string name)
     {
         Name = name;
     }
+    
     public string Name { get; private set; }
 }
 
@@ -22,6 +23,6 @@ internal sealed class BrandConfiguration : IEntityTypeConfiguration<Brand>
         builder.HasKey(x => x.Id);
 
         builder.Property(b => b.Name)
-            .HasColumnType("varchar(100)");
+            .HasMaxLength(100);
     }
 }
