@@ -27,7 +27,11 @@ internal sealed class ProductImageConfiguration : IEntityTypeConfiguration<Produ
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.ImageUrl)
-            .HasColumnType("varchar(255)")
+            .HasMaxLength(255)
             .IsRequired();
+        
+        builder.HasOne(i => i.Product)
+            .WithMany(p => p.Images)
+            .HasForeignKey(i => i.ProductId);
     }
 }
