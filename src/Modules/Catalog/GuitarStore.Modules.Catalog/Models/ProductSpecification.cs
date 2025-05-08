@@ -26,17 +26,17 @@ internal sealed class ProductSpecificationConfiguration : IEntityTypeConfigurati
     {
         builder.ToTable("product_specification");
         
-        builder.HasKey(ps => new { ps.SpecificationTypeId, ps.ProductId });
+        builder.HasKey(ps => ps.Value);
         
         builder.Property(x => x.Value)
             .HasMaxLength(50);
         
-        builder.HasOne<Product>()
+        builder.HasOne(ps => ps.Product)
             .WithMany(p => p.Specifications)
             .HasForeignKey(ps => ps.ProductId);
         
-        builder.HasOne<SpecificationType>()
+        builder.HasOne(ps => ps.SpecificationType)
             .WithMany(sp => sp.Specifications)
-            .HasForeignKey(sp => sp.SpecificationTypeId);
+            .HasForeignKey(ps => ps.SpecificationTypeId);
     }
 }
