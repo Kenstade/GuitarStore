@@ -6,19 +6,20 @@ namespace GuitarStore.Modules.Catalog.Data;
 
 internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeeder
 {
-    private readonly CatalogDbContext _dbContext = dbContext;
     public async Task SeedAllAsync()
     {
         await SeedCategoriesAsync();
         await SeedBrandsAsync();
         await SeedProductSpecificationTypes();
         await SeedProductsAsync();
-        //await SeedProductSpecifications();
+        
+        
+        await dbContext.SaveChangesAsync();
     }
 
     private async Task SeedCategoriesAsync()
     {
-        if (!await _dbContext.Categories.AnyAsync())
+        if (!await dbContext.Categories.AnyAsync())
         {
             var categories = new List<Category>()
             {
@@ -27,19 +28,18 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
                 new("Guitar Amplifiers"),
             };
 
-            await _dbContext.Categories.AddRangeAsync(categories);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Categories.AddRangeAsync(categories);
         }
     }
 
     private async Task SeedBrandsAsync()
     {
-        if (!await _dbContext.Brands.AnyAsync())
+        if (!await dbContext.Brands.AnyAsync())
         {
             var brands = new List<Brand>()
             {
-                new("IBANEZ"),
                 new("FENDER"),
+                new("IBANEZ"),
                 new("EART"),
                 new("YAMAHA"),
                 new("VESTON"),
@@ -47,14 +47,13 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
                 new("Orange"),
             };
 
-            await _dbContext.Brands.AddRangeAsync(brands);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Brands.AddRangeAsync(brands);
         }
     }
 
     private async Task SeedProductSpecificationTypes()
     {
-        if (!await _dbContext.SpecificationTypes.AnyAsync())
+        if (!await dbContext.SpecificationTypes.AnyAsync())
         {
             var types = new List<SpecificationType>
             {
@@ -68,75 +67,45 @@ internal sealed class CatalogDataSeeder(CatalogDbContext dbContext) : IDataSeede
                 new("Bridge", 1)
             };
 
-            await _dbContext.SpecificationTypes.AddRangeAsync(types);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SpecificationTypes.AddRangeAsync(types);
         }
     }
 
     private async Task SeedProductsAsync()
     {
-        if (!await _dbContext.Products.AnyAsync())
+        if (!await dbContext.Products.AnyAsync())
         {
             var products = new List<Product>()
             {
-                Product.Create("IBANEZ GRGR131EX-BKF", "text", 319.99M, ProductColor.Unspecified, 10, 1, 2, null),
-                //new() { Name = "IBANEZ GRGR131EX-BKF", Description = "text", Image = "url", Price = 319.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
-                //new() { Name = "IBANEZ GRX70QA-TRB", Description = "text", Image = "url", Price = 309.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
-                //new() { Name = "IBANEZ GRGR221PA-AQB", Description = "text", Image = "url", Price = 409.95M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
-                //new() { Name = "IBANEZ GIO GRG170DX BKN", Description = "text", Image = "url", Price = 419.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 2},
-                //new() { Name = "FENDER SQUIER Affinity 2021 Stratocaster MN Black", Description = "text", Image = "url", Price = 469.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 3},
-                //new() { Name = "FENDER PLAYER Telecaster MN Butterscotch Blonde", Description = "text", Image = "url", Price = 1299.99M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 3},
-                //new() { Name = "EART GW2 Natural", Description = "text", Image = "url", Price = 469.95M, Stock = 10, IsAvailable = true, CategoryId = 1, BrandId = 4},               
-
-                //new() { Name = "YAMAHA F310", Description = "text", Image = "url", Price = 239.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 5 },
-                //new() { Name = "VESTON F-38/BK", Description = "text", Image = "url", Price = 99.95M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 6},
-                //new() { Name = "FENDER CD-60 Black", Description = "text", Image = "url", Price = 269.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 3},
-                //new() { Name = "IBANEZ PF1512-NT", Description = "text", Image = "url", Price = 329.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 2},
-                //new() { Name = "IBANEZ AC340-OPN", Description = "text", Image = "url", Price = 359.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 2},
-                //new() { Name = "IBANEZ PF15-BK", Description = "text", Image = "url", Price = 299.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 2},
-                //new() { Name = "FENDER FA-125", Description = "text", Image = "url", Price = 229.99M, Stock = 10, IsAvailable = true, CategoryId = 2, BrandId = 3},
-
-                //new() { Name = "VOX VT20X", Description = "text", Image = "url", Price = 329.99M, Stock = 10, IsAvailable = true, CategoryId = 3, BrandId = 7 },
-                //new() { Name = "VOX VX15-GT", Description = "text", Image = "url", Price = 299.99M, Stock = 10, IsAvailable = true, CategoryId = 3, BrandId = 7 },
-                //new() { Name = "IBANEZ IBZ10BV2", Description = "text", Image = "url", Price = 139.99M, Stock = 10, IsAvailable = true, CategoryId = 3, BrandId = 2 },
-                //new() { Name = "IBANEZ T15II", Description = "text", Image = "url", Price = 169.99M, Stock = 10, IsAvailable = true, CategoryId = 3, BrandId = 2 },
-                //new() { Name = "Orange Crush 20RT", Description = "text", Image = "url", Price = 249.99M, Stock = 10, IsAvailable = true, CategoryId = 3, BrandId = 8 },
+                Product.Create("IBANEZ GRGR131EX-BKF", "description", 319.99M, ProductColor.Unspecified, 10, 1, 2),
+                Product.Create("IBANEZ GRX70QA-TRB", "description", 309.99M,ProductColor.Unspecified, 10, 1, 2),
+                Product.Create("IBANEZ GRGR221PA-AQB", "description", 409.95M,ProductColor.Unspecified, 10, 1, 2),
+                Product.Create("IBANEZ GIO GRG170DX BKN", "description", 419.99M,ProductColor.Unspecified, 10, 1, 2),
+                Product.Create("FENDER SQUIER Affinity 2021 Stratocaster MN Black", "description", 469.99M,ProductColor.Unspecified, 10, 1, 1),
+                Product.Create("FENDER PLAYER Telecaster MN Butterscotch Blonde", "description", 1299.99M,ProductColor.Unspecified, 10, 1, 1),
+                Product.Create("EART GW2 Natural", "description", 469.95M,ProductColor.Unspecified, 10, 1, 3),
+                
+                Product.Create("YAMAHA F310", "description", 239.99M,ProductColor.Unspecified, 10, 2, 4),
+                Product.Create("VESTON F-38/BK", "description", 99.95M,ProductColor.Unspecified, 10, 2, 5),
+                Product.Create("FENDER CD-60 Black", "description", 269.99M,ProductColor.Unspecified, 10, 2, 1),
+                Product.Create("IBANEZ PF1512-NT", "description", 329.99M,ProductColor.Unspecified, 10, 2, 2),
+                Product.Create("IBANEZ AC340-OPN", "description", 359.99M,ProductColor.Unspecified, 10, 2, 2),
+                Product.Create("IBANEZ PF15-BK", "description", 299.99M,ProductColor.Unspecified, 10, 2, 2),
+                Product.Create("FENDER FA-125", "description", 229.99M,ProductColor.Unspecified, 10, 2, 1),
+                
+                Product.Create("VOX VT20X", "description", 329.99M,ProductColor.Unspecified, 10, 3, 6),
+                Product.Create("VOX VX15-GT", "description", 299.99M,ProductColor.Unspecified, 10, 3, 6),
+                Product.Create("IBANEZ IBZ10BV2", "description", 139.99M,ProductColor.Unspecified, 10, 3, 2),
+                Product.Create("IBANEZ T15II", "description", 169.99M,ProductColor.Unspecified, 10, 3, 2),
+                Product.Create("Orange Crush 20RT", "description", 249.99M,ProductColor.Unspecified, 10, 3, 7)
             };
 
-            await _dbContext.Products.AddRangeAsync(products);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Products.AddRangeAsync(products);
         }
     }
 
     //private async Task SeedProductSpecifications()
     //{
-    //    if (!await _dbContext.ProductSpecification.AnyAsync())
-    //    {
-    //        var specs = new List<ProductSpecification>
-    //        {
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 1 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 2 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 3 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 4 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 5 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 6 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 7 },
-    //            new() { Value = "6", SpecificationTypeId = 1, ProductId = 8 },
-
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 1 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 2 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 3 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 4 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 5 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 6 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 7 },
-    //            new() { Value = "22", SpecificationTypeId = 2, ProductId = 8 },
-
-    //        };
-
-    //        await _dbContext.ProductSpecification.AddRangeAsync(specs);
-    //        await _dbContext.SaveChangesAsync();
-    //    }
     //}
 
 }
