@@ -15,16 +15,15 @@ public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter
     }
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var ct = context.HttpContext.RequestAborted;
+        const string prefix = nameof(CachingEndpointFilter<TRequest, TResponse>);
         
-        var request = context.Arguments.OfType<TRequest>().FirstOrDefault();
-        if(request == null) return await next(context);
+        var ct = context.HttpContext.RequestAborted;
 
-        var cachedResult = await _cache.GetAsync<TResponse>(request.CacheKey, ct);
+        var cachedResult = await _cache.GetAsync<TResponse>(typeof(TRequest).Name, ct);
         if (cachedResult != null)
         {
-            _logger.LogInformation("Return cached '{TRequest}' from cache. CacheKey: {CacheKey}", 
-                typeof(TRequest).Name, request.CacheKey);
+            _logger.LogInformation("[{Prefix}] Return response from cache. CacheKey: {CacheKey}", 
+                prefix, typeof(TRequest).Name);
             
             return TypedResults.Ok(cachedResult);
         }
@@ -33,7 +32,7 @@ public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter
 
         if (response is Ok<TResponse> ok)
         {
-            await _cache.SetAsync(request.CacheKey, ok.Value);
+            await _cache.SetAsync(typeof(TRequest).Name, ok.Value, ct);
         }
         
         return response;
