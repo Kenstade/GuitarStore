@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Http.Features;
 using BuildingBlocks.Web.OpenApi;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
-using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Exceptions;
-using BuildingBlocks.Core.Messaging.Outbox;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
@@ -33,9 +31,6 @@ builder.Services.AddMessageBus(
     typeof(CatalogModule).Assembly,
     typeof(ShoppingCartModule).Assembly,
     typeof(OrdersModule).Assembly);
-
-
-builder.Services.AddPostgresDbContext<MessageDbContext>(builder.Configuration);
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
