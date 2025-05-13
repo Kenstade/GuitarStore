@@ -2,5 +2,4 @@
 
 public interface ICacheRequest
 {
-    string CacheKey { get; }
 }

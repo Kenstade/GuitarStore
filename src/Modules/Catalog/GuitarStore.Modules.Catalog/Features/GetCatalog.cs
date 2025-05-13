@@ -10,10 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace GuitarStore.Modules.Catalog.Features;
 
 public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1)
-    : ICacheRequest
-{
-    public string CacheKey => "GetCatalog";
-}
+    : ICacheRequest;
+
 internal sealed class GetCatalog : IEndpoint
 {
     private readonly CatalogDbContext _dbContext;
