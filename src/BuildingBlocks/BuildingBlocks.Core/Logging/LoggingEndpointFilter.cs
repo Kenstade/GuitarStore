@@ -16,16 +16,16 @@ public class LoggingEndpointFilter<TRequest> : IEndpointFilter
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         const string prefix = nameof(LoggingEndpointFilter<TRequest>);
-        _logger.LogInformation("[{prefix}] Processing {request}", prefix ,typeof(TRequest).Name);
+        _logger.LogInformation("[{Prefix}] Processing {Request}", prefix ,typeof(TRequest).Name);
         
         var result = await next(context);
         if (context.HttpContext.Response.StatusCode == 200)
         {
-            _logger.LogInformation("[{prefix}] Completed {request}", prefix ,typeof(TRequest).Name);
+            _logger.LogInformation("[{Prefix}] Completed {Request}", prefix, typeof(TRequest).Name);
         }
         else
         {
-            _logger.LogError("[{prefix}] Completed {request} with {Error}", 
+            _logger.LogError("[{Prefix}] Completed {Request} with {Error}", 
                 prefix, typeof(TRequest).Name, context.HttpContext.Response.StatusCode);
         }
         
