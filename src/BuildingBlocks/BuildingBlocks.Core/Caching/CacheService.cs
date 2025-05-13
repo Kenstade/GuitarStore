@@ -12,7 +12,7 @@ public sealed class CacheService(IDistributedCache cache) : ICacheService
         return result is null ? default : JsonConvert.DeserializeObject<T>(result);
     }
 
-    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, CancellationToken ct = default)
+    public async Task SetAsync<T>(string key, T value, CancellationToken ct = default, TimeSpan? expiration = null)
     {
         await cache.SetStringAsync(key, JsonConvert.SerializeObject(value),CacheOptions.Create(expiration), ct);
     }
