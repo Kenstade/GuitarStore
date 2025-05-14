@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Core.Messaging;
-using BuildingBlocks.Core.Messaging.Outbox;
+﻿using BuildingBlocks.Core.Messaging.Outbox;
 using GuitarStore.Modules.Customers.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +10,9 @@ internal sealed class CustomersDbContext(DbContextOptions<CustomersDbContext> op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("customer");
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CustomersDbContext).Assembly);
+        modelBuilder.ConfigureOutboxMessage();
         base.OnModelCreating(modelBuilder);
     }
 }

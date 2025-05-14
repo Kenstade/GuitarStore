@@ -1,5 +1,5 @@
-﻿using BuildingBlocks.Core.EFCore.Interceptors;
-using BuildingBlocks.Core.Extensions;
+﻿using BuildingBlocks.Core.Extensions;
+using BuildingBlocks.Core.Messaging.Outbox;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
