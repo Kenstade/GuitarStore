@@ -9,13 +9,10 @@ namespace BuildingBlocks.Core.Exceptions;
 public class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<GlobalExceptionHandler> logger)
     : IExceptionHandler
 {
-    private readonly IProblemDetailsService _pd = pd;
-    private readonly ILogger<GlobalExceptionHandler> _logger = logger;
-
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
         CancellationToken cancellationToken)
     {
-        _logger.LogError(exception, "Exception occured: {Message}.", exception.Message);
+        logger.LogError(exception, "Exception occured: {Message}.", exception.Message);
 
         httpContext.Response.StatusCode = exception switch
         {
@@ -25,7 +22,7 @@ public class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<GlobalExc
             _ => StatusCodes.Status500InternalServerError
         };
 
-        return await _pd.TryWriteAsync(new ProblemDetailsContext
+        return await pd.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
