@@ -17,8 +17,8 @@ public static class CatalogModule
         services.AddScoped<ICatalogService, CatalogService>();
         
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
-
         services.AddMinimalApiEndpoints(typeof(CatalogModule).Assembly);
+        services.AddEventPublisher(typeof(CatalogModule).Assembly);
 
         return services;
     }
