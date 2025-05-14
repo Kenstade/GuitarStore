@@ -1,9 +1,8 @@
 ﻿using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.Messaging.Outbox;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 
-namespace BuildingBlocks.Core.EFCore.Interceptors;
+namespace BuildingBlocks.Core.Messaging.Outbox;
 public sealed class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, 
@@ -14,11 +13,11 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChanges
         
         var events = dbContext.ChangeTracker
             .Entries<IAggregate>()
-            .Where(a => a.Entity.DomainEvents.Any())
+            .Where(a => a.Entity.GetDomainEvents().Any())
             .Select(a => a.Entity)
             .SelectMany(aggregate =>
             { 
-                var domainEvents = aggregate.DomainEvents;
+                var domainEvents = aggregate.GetDomainEvents();
 
                 aggregate.ClearDomainEvents();
 
