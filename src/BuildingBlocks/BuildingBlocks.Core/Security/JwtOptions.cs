@@ -2,7 +2,7 @@
 
 public sealed class JwtOptions
 {
-    public string Audience { get; set; } = null!;
-    public string MetadataAddress { get; set; } = null!;
-    public string[] ValidIssuer { get; set; } = null!;
+    public string Audience { get; init; } = null!;
+    public string MetadataAddress { get; init; } = null!;
+    public string[] ValidIssuer { get; init; } = null!;
 }

@@ -2,11 +2,11 @@
 
 public sealed class KeyCloakOptions
 {
-    public string AuthorizationUrl { get; set; } = null!;
-    public string HealthUrl { get; set; } = null!;
-    public string AdminUrl { get; set; } = null!;
-    public string TokenUrl { get; set; } = null!;
-    public string ConfidentialClientId { get; set; } = null!;
-    public string ConfidentialClientSecret { get; set; } = null!;
-    public string PublicClientId {get; set;} = null!;
+    public string AuthorizationUrl { get; init; } = null!;
+    public string HealthUrl { get; init; } = null!;
+    public string AdminUrl { get; init; } = null!;
+    public string TokenUrl { get; init; } = null!;
+    public string ConfidentialClientId { get; init; } = null!;
+    public string ConfidentialClientSecret { get; init; } = null!;
+    public string PublicClientId {get; init;} = null!;
 }

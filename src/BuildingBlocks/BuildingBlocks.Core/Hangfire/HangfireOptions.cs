@@ -2,5 +2,5 @@
 
 public class HangfireOptions
 {
-    public string OutboxSchedule { get; set; } = string.Empty;
+    public string OutboxSchedule { get; init; } = null!;
 }

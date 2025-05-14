@@ -2,6 +2,6 @@
 
 public class PostgresOptions
 {
-    public string ConnectionString { get; set; } = null!;
-    public bool UseInMemory { get; set; }
+    public string ConnectionString { get; init; } = null!;
+    public bool UseInMemory { get; init; }
 }
