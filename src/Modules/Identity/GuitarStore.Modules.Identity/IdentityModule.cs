@@ -1,7 +1,9 @@
 ﻿using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
+using GuitarStore.Modules.Identity.BackgroundJobs;
 using GuitarStore.Modules.Identity.Data;
+using GuitarStore.Modules.Identity.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,14 +16,19 @@ public static class IdentityModule
     {
         services.AddPostgresDbContext<IdentityContext>(configuration);
         services.AddScoped<IDataSeeder, IdentityDataSeeder>();
+        
+        services.AddScoped<ProcessOutboxMessageJob>();
+        
         services.AddValidatorsFromAssembly(typeof(IdentityModule).Assembly);
         services.AddMinimalApiEndpoints(typeof(IdentityModule).Assembly);
         
         return services;
     }
+
     public static IApplicationBuilder UseIdentityModule(this IApplicationBuilder app, IConfiguration configuration)
     {
         app.UseMigration<IdentityContext>();
+        app.UseBackgroundJobs(configuration);
 
         return app;
     }
