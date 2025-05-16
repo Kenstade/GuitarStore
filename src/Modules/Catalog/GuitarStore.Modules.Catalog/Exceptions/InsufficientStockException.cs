@@ -2,7 +2,7 @@
 
 namespace GuitarStore.Modules.Catalog.Exceptions;
 
-internal class InsufficientStockException : DomainException
+internal sealed class InsufficientStockException : DomainException
 {
     public InsufficientStockException(string message) : base(message)
     {
