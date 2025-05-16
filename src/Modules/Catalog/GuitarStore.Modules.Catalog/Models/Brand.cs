@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuitarStore.Modules.Catalog.Models;
 
-internal class Brand : Entity<int>
+internal sealed class Brand : Entity<int>
 {
     public Brand(string name)
     {
