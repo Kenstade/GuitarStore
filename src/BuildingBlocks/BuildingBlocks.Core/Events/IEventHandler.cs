@@ -2,7 +2,7 @@ using BuildingBlocks.Core.Domain;
 
 namespace BuildingBlocks.Core.Events;
 
-public interface IEventHandler<in TEvent> where TEvent : IDomainEvent
+public interface IEventHandler<in TDomainEvent> where TDomainEvent : IDomainEvent
 {
-    Task Handle(TEvent @event, CancellationToken ct = default);
+    Task Handle(TDomainEvent domainEvent, CancellationToken ct = default);
 }

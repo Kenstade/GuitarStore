@@ -4,5 +4,5 @@ namespace BuildingBlocks.Core.Events;
 
 public interface IEventPublisher
 {
-    Task Publish<TEvent>(TEvent @event, CancellationToken ct = default) where TEvent : IDomainEvent;
+    Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken ct = default) where TDomainEvent : IDomainEvent;
 }

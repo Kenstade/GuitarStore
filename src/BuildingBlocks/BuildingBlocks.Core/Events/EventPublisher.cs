@@ -1,34 +1,32 @@
 using System.Collections.Concurrent;
 using BuildingBlocks.Core.Domain;
-using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Core.Events;
 
-public sealed class EventPublisher(IServiceProvider serviceProvider, ILogger<EventPublisher> logger) : IEventPublisher
+public sealed class EventPublisher(IServiceProvider serviceProvider) : IEventPublisher
 {
-    private static readonly ConcurrentDictionary<Type, EventHandlerWrapper> _eventHandlers = [];
+    private static readonly ConcurrentDictionary<Type, EventHandlerWrapper> EventHandlers = [];
 
-    public Task Publish<TEvent>(TEvent @event, CancellationToken ct = default) where TEvent : IDomainEvent
+    public Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken ct = default) 
+        where TDomainEvent : IDomainEvent
     {
-        if (@event == null)
-        {
-            throw new ArgumentNullException(nameof(@event));
-        }
+        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
         
-        return PublishEvent(@event, ct);
+        return PublishEvent(domainEvent, ct);
     }
 
-    private static async Task ForeachAwaitPublisher(IEnumerable<EventHandlerExecutor> handlerExecutors, IDomainEvent @event, CancellationToken ct)
+    private static async Task ForeachAwaitPublisher(IEnumerable<EventHandlerExecutor> handlerExecutors, 
+        IDomainEvent domainEvent, CancellationToken ct)
     {
         foreach (var handler in handlerExecutors)
         {
-            await handler.HandlerCallback(@event, ct).ConfigureAwait(false);
+            await handler.HandlerCallback(domainEvent, ct).ConfigureAwait(false);
         }
     }
     
-    private Task PublishEvent(IDomainEvent @event, CancellationToken ct)
+    private Task PublishEvent(IDomainEvent domainEvent, CancellationToken ct)
     {
-        var handler = _eventHandlers.GetOrAdd(@event.GetType(), static eventType =>
+        var handler = EventHandlers.GetOrAdd(domainEvent.GetType(), static eventType =>
         {
             var wrapperType = typeof(EventHandlerWrapperImpl<>).MakeGenericType(eventType);
             var wrapper = Activator.CreateInstance(wrapperType) ?? throw new InvalidOperationException();
@@ -36,7 +34,7 @@ public sealed class EventPublisher(IServiceProvider serviceProvider, ILogger<Eve
             return (EventHandlerWrapper)wrapper;
         });
         
-        return handler.Handle(@event, serviceProvider, ForeachAwaitPublisher, ct);
+        return handler.Handle(domainEvent, serviceProvider, ForeachAwaitPublisher, ct);
     }
     
 }

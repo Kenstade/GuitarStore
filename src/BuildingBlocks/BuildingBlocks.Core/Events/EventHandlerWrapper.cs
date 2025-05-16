@@ -5,22 +5,22 @@ namespace BuildingBlocks.Core.Events;
 
 public abstract class EventHandlerWrapper
 {
-    public abstract Task Handle(IDomainEvent @event, IServiceProvider serviceProvider,
+    public abstract Task Handle(IDomainEvent domainEvent, IServiceProvider serviceProvider,
         Func<IEnumerable<EventHandlerExecutor>, IDomainEvent, CancellationToken, Task> publish,
         CancellationToken cancellationToken);
 }
 
 public sealed class EventHandlerWrapperImpl<TEvent> : EventHandlerWrapper where TEvent : IDomainEvent
 {
-    public override Task Handle(IDomainEvent @event, IServiceProvider serviceProvider, 
+    public override Task Handle(IDomainEvent domainEvent, IServiceProvider serviceProvider, 
         Func<IEnumerable<EventHandlerExecutor>, IDomainEvent, CancellationToken, Task> publish, 
         CancellationToken cancellationToken)
     {
         var handlers = serviceProvider
             .GetServices<IEventHandler<TEvent>>()
-            .Select(static handler => new EventHandlerExecutor(handler, (@event,ct) => handler.Handle((TEvent)@event, ct)));
+            .Select(static handler => new EventHandlerExecutor(handler, (domainEvent,ct) => handler.Handle((TEvent)domainEvent, ct)));
         
-        return publish(handlers, @event, cancellationToken);
+        return publish(handlers, domainEvent, cancellationToken);
     }
 }
 
