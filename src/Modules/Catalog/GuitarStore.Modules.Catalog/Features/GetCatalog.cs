@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Features;
 
-public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1)
-    : ICacheRequest;
+public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1);
 
 internal sealed class GetCatalog : IEndpoint
 {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Core.Caching;
 
-public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter where TRequest : ICacheRequest
+public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter
 {
     private readonly ICacheService _cache;
     private readonly ILogger<CachingEndpointFilter<TRequest, TResponse>> _logger;
