@@ -91,11 +91,10 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseBackgroundJobs(builder.Configuration);
-
-app.UseCatalogModule()
+app.UseCatalogModule(builder.Configuration)
    .UseShoppingCartModule()
-   .UseOrdersModule();
+   .UseOrdersModule()
+   .UseIdentityModule(builder.Configuration);
 
 app.MapEndpoints();
 
