@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BuildingBlocks.Core.Messaging.Outbox;
 
@@ -12,19 +13,19 @@ public sealed class OutboxMessage
     public string? Error { get; set; } 
 }
 
-public static class OutboxModelBuilderExtensions 
+public sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage> 
 {
-    public static void ConfigureOutboxMessage(this ModelBuilder modelBuilder)
+    public void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
-        modelBuilder.Entity<OutboxMessage>(builder =>
-        {
-            builder.ToTable("outbox_messages");
+        builder.ToTable("outbox_messages");
 
-            builder.HasKey(m => m.Id);
+        builder.HasKey(m => m.Id);
+
+        builder.Property(m => m.Type)
+            .HasMaxLength(100);
         
-            builder.Property(m => m.Content)
-                .HasMaxLength(2000)
-                .HasColumnType("jsonb");
-        });
+        builder.Property(m => m.Content)
+            .HasMaxLength(2000)
+            .HasColumnType("jsonb");
     }
 }
