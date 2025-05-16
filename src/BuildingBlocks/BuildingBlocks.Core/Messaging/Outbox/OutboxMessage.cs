@@ -4,10 +4,10 @@ namespace BuildingBlocks.Core.Messaging.Outbox;
 
 public sealed class OutboxMessage
 {
-    public Guid Id { get; set; }
-    public required string Type { get; set; }
-    public required string Content { get; set; }
-    public DateTime OccuredOn { get; set; }
+    public Guid Id { get; init; }
+    public string Type { get; init; } = null!;
+    public string Content { get; init; } = null!;
+    public DateTime OccuredOn { get; init; }
     public DateTime? ProcessedOn { get; set; }
     public string? Error { get; set; } 
 }
