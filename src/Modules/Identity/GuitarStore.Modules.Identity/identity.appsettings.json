@@ -1,5 +1,5 @@
 {
-  "Catalog": {
+  "Identity": {
     "HangfireOptions": {
       "OutboxSchedule": "0/1 * * * * *"
     }
