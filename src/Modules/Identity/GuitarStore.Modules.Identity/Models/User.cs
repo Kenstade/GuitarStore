@@ -6,19 +6,28 @@ namespace GuitarStore.Modules.Identity.Models;
 
 internal sealed class User : Aggregate<Guid>
 {   
+    private readonly List<Role> _roles = [];
+     
     public string Email { get; private set; } = null!;
     public string Password { get; private set; } = null!;
     public string PhoneNumber { get; private set; } = null!;
+    public string IdentityId { get; private set; } = null!;
+    public IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
 
-    public static User Create(Guid userId, string email, string password)
+    public static User Create(string email, string password, string identityId)
     {
         var user = new User
         {
-            Id = userId,
+            Id = Guid.NewGuid(),
             Email = email,
-            Password = password
+            Password = password,
+            IdentityId = identityId
         };
-        //user registered domain event
+
+        user._roles.Add(new Role("Customer"));
+        
+        // user.AddDomainEvent(new UserRegistered(user.Id));
+        
         return user;
     }
 }
@@ -36,5 +45,8 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Password).HasMaxLength(50).IsRequired();
         
         builder.Property(u => u.PhoneNumber).HasMaxLength(15).IsRequired(false);
+
+        builder.HasIndex(u => u.IdentityId).IsUnique();
+        builder.Property(u => u.IdentityId).HasMaxLength(50).IsRequired();
     }
 }
