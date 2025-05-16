@@ -4,17 +4,23 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using BuildingBlocks.Core.EFCore;
+using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
+using GuitarStore.Modules.Catalog.BackgroundJobs;
 using GuitarStore.Modules.Catalog.Contracts;
+using GuitarStore.Modules.Catalog.Extensions;
 
 namespace GuitarStore.Modules.Catalog;
 public static class CatalogModule
 {
+    public const string ModuleName = "Catalog";
     public static IServiceCollection AddCatalogModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<CatalogDbContext>(configuration);
         services.AddScoped<IDataSeeder, CatalogDataSeeder>();
         services.AddScoped<ICatalogService, CatalogService>();
+
+        services.AddScoped<ProcessOutboxMessageJob>();
         
         services.AddValidatorsFromAssembly(typeof(CatalogModule).Assembly, includeInternalTypes: true);
         services.AddMinimalApiEndpoints(typeof(CatalogModule).Assembly);
@@ -23,9 +29,10 @@ public static class CatalogModule
         return services;
     }
 
-    public static IApplicationBuilder UseCatalogModule(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCatalogModule(this IApplicationBuilder app, IConfiguration configuration)
     {
         app.UseMigration<CatalogDbContext>();
+        app.UseBackgroundJobs(configuration);
         return app;
     }
 }
