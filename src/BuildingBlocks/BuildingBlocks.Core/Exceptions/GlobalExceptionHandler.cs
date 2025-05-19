@@ -6,21 +6,44 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Core.Exceptions;
 
-public class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<GlobalExceptionHandler> logger)
+public sealed class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<GlobalExceptionHandler> logger)
     : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Exception occured: {Message}.", exception.Message);
-
-        httpContext.Response.StatusCode = exception switch
+        var (statusCode, logLevel, problemDetailsSummary) = exception switch
         {
-            ApplicationException => StatusCodes.Status400BadRequest,
-            DomainException => StatusCodes.Status409Conflict,
-            OperationCanceledException => StatusCodes.Status499ClientClosedRequest,
-            _ => StatusCodes.Status500InternalServerError
+            OperationCanceledException => (
+                StatusCodes.Status499ClientClosedRequest,
+                LogLevel.Information,
+                new ProblemDetails
+                {
+                    Type = exception.GetType().Name,
+                    Title = "Request canceled",
+                    Detail = exception.Message,
+                }),
+            
+            ApplicationException => (
+                StatusCodes.Status400BadRequest,
+                LogLevel.Error,
+                CreateDefaultProblemDetails(exception)),
+            
+            DomainException => (
+                StatusCodes.Status409Conflict,
+                LogLevel.Error,
+                CreateDefaultProblemDetails(exception)),
+            
+            _ => (
+                StatusCodes.Status500InternalServerError,
+                LogLevel.Error,
+                CreateDefaultProblemDetails(exception))
         };
+        
+        httpContext.Response.StatusCode = statusCode;
+        logger.Log(logLevel, exception, "Exception occurred: {Message}", exception.Message);
 
         return await pd.TryWriteAsync(new ProblemDetailsContext
         {
@@ -28,11 +51,19 @@ public class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<GlobalExc
             Exception = exception,
             ProblemDetails = new ProblemDetails
             {
-                Type = exception.GetType().Name,
-                Title = "An error occured",
-                Detail = exception.Message,
+                Type = problemDetailsSummary.Type,
+                Title = problemDetailsSummary.Title,
+                Detail = problemDetailsSummary.Detail,
+                Status = statusCode
             }
         });
     }
+
+    private static ProblemDetails CreateDefaultProblemDetails(Exception ex) => new()
+    {
+        Type = ex.GetType().Name,
+        Title = "An error occurred",
+        Detail = ex.Message
+    };
 }
 
