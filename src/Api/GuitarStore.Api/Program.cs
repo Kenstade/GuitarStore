@@ -12,6 +12,7 @@ using BuildingBlocks.Core.Monitoring;
 using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
+using GuitarStore.Modules.Customers;
 using GuitarStore.Modules.Identity;
 using GuitarStore.Modules.Orders;
 using HealthChecks.UI.Client;
@@ -40,6 +41,8 @@ builder.Services
     .AddShoppingCartModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration)
     .AddIdentityModule(builder.Configuration);
+    .AddIdentityModule(builder.Configuration)
+    .AddCustomersModule(builder.Configuration);
 
 builder.Services.AddCustomIdentity(builder.Configuration);
 
@@ -95,6 +98,10 @@ app.UseCatalogModule(builder.Configuration)
    .UseShoppingCartModule()
    .UseOrdersModule()
    .UseIdentityModule(builder.Configuration);
+   .UseShoppingCartModule(builder.Configuration)
+   .UseOrdersModule(builder.Configuration)
+   .UseIdentityModule(builder.Configuration)
+   .UseCustomersModule();
 
 app.MapEndpoints();
 
