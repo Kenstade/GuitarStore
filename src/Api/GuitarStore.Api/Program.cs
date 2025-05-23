@@ -1,6 +1,5 @@
 using GuitarStore.Modules.Catalog;
 using GuitarStore.Modules.ShoppingCart;
-using Microsoft.AspNetCore.Http.Features;
 using BuildingBlocks.Web.OpenApi;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
@@ -44,7 +43,6 @@ builder.Services
     .AddCatalogModule(builder.Configuration)
     .AddShoppingCartModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration)
-    .AddIdentityModule(builder.Configuration);
     .AddIdentityModule(builder.Configuration)
     .AddCustomersModule(builder.Configuration);
 
@@ -89,9 +87,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCatalogModule(builder.Configuration)
-   .UseShoppingCartModule()
-   .UseOrdersModule()
-   .UseIdentityModule(builder.Configuration);
    .UseShoppingCartModule(builder.Configuration)
    .UseOrdersModule(builder.Configuration)
    .UseIdentityModule(builder.Configuration)
