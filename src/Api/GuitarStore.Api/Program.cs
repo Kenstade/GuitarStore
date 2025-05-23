@@ -10,6 +10,7 @@ using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
 using BuildingBlocks.Core.Monitoring;
 using BuildingBlocks.Core.Security;
+using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
 using GuitarStore.Modules.Catalog.Extensions;
@@ -50,19 +51,9 @@ builder.Services
 builder.Services.AddCustomIdentity(builder.Configuration);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails(options =>
-{
-    options.CustomizeProblemDetails = context =>
-    {
-        context.ProblemDetails.Instance =
-        $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
 
-        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-
-        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
-        context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
-    };
-});
+builder.Services.AddProblemDetails(options => 
+    options.AddCustomProblemDetails());
 
 builder.Services.AddCustomHangfire(builder.Configuration);
 
