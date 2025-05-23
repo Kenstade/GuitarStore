@@ -1,17 +1,18 @@
-﻿using System.Reflection;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.Core.Messaging;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMessageBus(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddMessageBus(this IServiceCollection services, 
+        Action<IBusRegistrationConfigurator> configureConsumers)
     {
         services.AddMassTransit(busCfg =>
         {
             busCfg.SetKebabCaseEndpointNameFormatter();
-            busCfg.AddConsumers(assemblies);
+
+            configureConsumers(busCfg);
             
             busCfg.UsingInMemory((context, cfg) =>
             {
