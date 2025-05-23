@@ -12,9 +12,12 @@ using BuildingBlocks.Core.Monitoring;
 using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
+using GuitarStore.Modules.Catalog.Extensions;
 using GuitarStore.Modules.Customers;
 using GuitarStore.Modules.Identity;
 using GuitarStore.Modules.Orders;
+using GuitarStore.Modules.Orders.Extensions;
+using GuitarStore.Modules.ShoppingCart.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -28,10 +31,10 @@ builder.Configuration.AddModulesSettingsFile(
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddMessageBus(
-    typeof(CatalogModule).Assembly,
-    typeof(ShoppingCartModule).Assembly,
-    typeof(OrdersModule).Assembly);
+builder.Services.AddMessageBus(busCfg => busCfg
+    .AddCatalogModuleConsumers()
+    .AddOrdersModuleConsumers()
+    .AddIdentityModuleConsumers());
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
