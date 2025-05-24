@@ -17,7 +17,6 @@ internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> option
     {
         modelBuilder.HasDefaultSchema(DefaultSchema);
         
-        modelBuilder.ConfigureOutboxMessage();
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CatalogDbContext).Assembly);
 
