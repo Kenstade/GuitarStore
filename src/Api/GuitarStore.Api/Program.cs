@@ -14,6 +14,7 @@ using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
 using GuitarStore.Modules.Catalog.Extensions;
 using GuitarStore.Modules.Customers;
+using GuitarStore.Modules.Customers.Extensions;
 using GuitarStore.Modules.Identity;
 using GuitarStore.Modules.Orders;
 using GuitarStore.Modules.Orders.Extensions;
@@ -34,7 +35,8 @@ builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(conte
 builder.Services.AddMessageBus(busCfg => busCfg
     .AddCatalogModuleConsumers()
     .AddOrdersModuleConsumers()
-    .AddIdentityModuleConsumers());
+    .AddIdentityModuleConsumers()
+    .AddCustomersModuleConsumers());
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
