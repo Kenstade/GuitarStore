@@ -47,13 +47,8 @@ internal sealed class CartConfiguration : IEntityTypeConfiguration<Cart>
     public void Configure(EntityTypeBuilder<Cart> builder)
     {
         builder.ToTable("cart");
-        
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id)
             .ValueGeneratedNever();
-
-        builder.HasMany(c => c.Items)
-            .WithOne()
-            .HasForeignKey(i => i.CartId);
     }
 }

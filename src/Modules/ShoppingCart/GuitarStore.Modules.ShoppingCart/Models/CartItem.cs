@@ -33,8 +33,11 @@ internal sealed class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
     public void Configure(EntityTypeBuilder<CartItem> builder)
     {
         builder.ToTable("cart_items");
-        
         builder.HasKey(x => x.Id);
+        
+        builder.HasOne<Cart>()
+            .WithMany(c => c.Items)
+            .HasForeignKey(x => x.CartId);
         
         builder.Property(x => x.Name)
             .HasMaxLength(50);
