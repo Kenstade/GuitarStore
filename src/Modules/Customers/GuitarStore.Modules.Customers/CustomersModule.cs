@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.EFCore;
+using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Customers.Data;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ public static class CustomersModule
         services.AddPostgresDbContext<CustomersDbContext>(configuration);
 
         services.AddValidatorsFromAssembly(typeof(CustomersModule).Assembly);
+        services.AddMinimalApiEndpoints(typeof(CustomersModule).Assembly);
 
         return services;
     }
