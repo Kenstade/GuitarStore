@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GuitarStore.Modules.Orders.Extensions;
 
-public static class ApplicationBuilderExtensions
+internal static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseBackgroundJobs(this IApplicationBuilder app, IConfiguration configuration)
     {
@@ -16,7 +16,7 @@ public static class ApplicationBuilderExtensions
         
         app.ApplicationServices
             .GetRequiredService<IRecurringJobManager>()
-            .AddOrUpdate<ProcessOutboxMessageJob>("outbox-processor", job => 
+            .AddOrUpdate<ProcessOutboxMessageJob>("orders-outbox-processor", job => 
                 job.ProcessAsync(), hangfireOptions.OutboxSchedule);
         
         return app;

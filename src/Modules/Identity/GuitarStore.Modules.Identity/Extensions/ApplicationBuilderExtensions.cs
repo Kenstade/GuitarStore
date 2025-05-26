@@ -16,7 +16,7 @@ internal static class ApplicationBuilderExtensions
         
         app.ApplicationServices
             .GetRequiredService<IRecurringJobManager>()
-            .AddOrUpdate<ProcessOutboxMessageJob>("outbox-processor", job => 
+            .AddOrUpdate<ProcessOutboxMessageJob>("identity-outbox-processor", job => 
                 job.ProcessAsync(), hangfireOptions.OutboxSchedule);
         
         return app;
