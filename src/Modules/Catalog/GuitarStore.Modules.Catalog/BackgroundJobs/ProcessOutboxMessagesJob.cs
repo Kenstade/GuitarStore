@@ -2,18 +2,18 @@ using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Events;
 using BuildingBlocks.Core.Messaging.Outbox;
 using BuildingBlocks.Core.Serialization;
-using GuitarStore.Modules.Orders.Data;
+using GuitarStore.Modules.Catalog.Data;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace GuitarStore.Modules.Orders.BackgroundJobs;
+namespace GuitarStore.Modules.Catalog.BackgroundJobs;
 
 [DisableConcurrentExecution(10)]
-internal sealed class ProcessOutboxMessageJob(
-    OrdersDbContext dbContext, 
-    ILogger<ProcessOutboxMessageJob> logger, 
+internal sealed class ProcessOutboxMessagesJob(
+    CatalogDbContext dbContext, 
+    ILogger<ProcessOutboxMessagesJob> logger, 
     IEventPublisher publisher)
 {
     public async Task ProcessAsync()
@@ -35,7 +35,7 @@ internal sealed class ProcessOutboxMessageJob(
                 if (domainEvent is null)
                 {
                     logger.LogWarning("[{Module}] Failed to deserialize outbox message - '{MessageId}'.", 
-                        OrdersModule.ModuleName, outboxMessage.Id);
+                        CatalogModule.ModuleName, outboxMessage.Id);
                     continue;
                 }
 
@@ -45,7 +45,7 @@ internal sealed class ProcessOutboxMessageJob(
             catch (Exception ex)
             {
                 logger.LogError(ex, "[{Module}] An error occured while processing message - '{MessageId}'.", 
-                    OrdersModule.ModuleName, outboxMessage.Id);
+                    CatalogModule.ModuleName, outboxMessage.Id);
                 
                 outboxMessage.Error = ex.ToString();
             }
