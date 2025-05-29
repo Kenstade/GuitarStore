@@ -2,6 +2,9 @@ using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Core.Security;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,5 +23,15 @@ public static class Extensions
             .AddRedis(redisOptions.ConnectionString)
             .AddUrlGroup(new Uri(keycloakOptions.HealthUrl), HttpMethod.Get, "keycloak");
         return services;
+    }
+
+    public static IApplicationBuilder UseMonitoring(this IApplicationBuilder app)
+    {
+        app.UseHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        return app;
     }
 }
