@@ -16,8 +16,6 @@ public static class Extensions
         services.Configure<PostgresOptions>(configuration.GetSection(nameof(PostgresOptions)));
         var postgresOptions = configuration.GetOptions<PostgresOptions>(nameof(PostgresOptions));
 
-        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
-
         if (postgresOptions.UseInMemory)
         {
             services.AddDbContext<TContext>((sp,options) =>
@@ -70,5 +68,12 @@ public static class Extensions
         {
             await seeder.SeedAllAsync();
         }
+    }
+
+    public static IServiceCollection RegisterEfCoreInterceptors(this IServiceCollection services)
+    {
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        
+        return services;
     }
 }
