@@ -6,7 +6,6 @@ using FluentValidation;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
-using GuitarStore.Modules.Catalog.BackgroundJobs;
 using GuitarStore.Modules.Catalog.Contracts;
 
 namespace GuitarStore.Modules.Catalog;
