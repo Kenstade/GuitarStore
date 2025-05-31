@@ -3,6 +3,7 @@ using GuitarStore.Modules.ShoppingCart;
 using BuildingBlocks.Web.OpenApi;
 using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
+using BuildingBlocks.Core.Dapper;
 using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Exceptions;
 using Hangfire;
@@ -41,6 +42,7 @@ builder.Services.AddMonitoring(builder.Configuration);
 builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddCustomHangfire(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddDbConnectionFactory(builder.Configuration);
 
 builder.Services.RegisterEfCoreInterceptors();
 
