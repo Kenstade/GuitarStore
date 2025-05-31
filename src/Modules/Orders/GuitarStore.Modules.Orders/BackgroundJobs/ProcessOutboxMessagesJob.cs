@@ -1,56 +1,91 @@
+using System.Data;
+using BuildingBlocks.Core.Dapper;
 using BuildingBlocks.Core.Domain;
 using BuildingBlocks.Core.Events;
-using BuildingBlocks.Core.Messaging.Outbox;
 using BuildingBlocks.Core.Serialization;
-using GuitarStore.Modules.Orders.Data;
+using Dapper;
 using Hangfire;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace GuitarStore.Modules.Orders.BackgroundJobs;
 
 [DisableConcurrentExecution(10)]
-internal sealed class ProcessOutboxMessageJob(
-    OrdersDbContext dbContext, 
-    ILogger<ProcessOutboxMessageJob> logger, 
+internal sealed class ProcessOutboxMessagesJob(
+    IDbConnectionFactory dbConnectionFactory,
+    ILogger<ProcessOutboxMessagesJob> logger, 
     IEventPublisher publisher)
 {
     public async Task ProcessAsync()
     {
-        var messages = await dbContext
-            .Set<OutboxMessage>()
-            .Where(m => m.ProcessedOn == null)
-            .OrderBy(m => m.OccuredOn)
-            .Take(100)
-            .ToListAsync();
+        await using var connection = await dbConnectionFactory.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        
+        var outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
 
-        foreach (var outboxMessage in messages)
+        foreach (var outboxMessage in outboxMessages)
         {
+            Exception? exception = null;
+            
             try
             {
-                var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(outboxMessage.Content,
-                    SerializerSettings.Instance);
-
-                if (domainEvent is null)
-                {
-                    logger.LogWarning("[{Module}] Failed to deserialize outbox message - '{MessageId}'.", 
-                        OrdersModule.ModuleName, outboxMessage.Id);
-                    continue;
-                }
+                var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(outboxMessage.Content, 
+                    SerializerSettings.Instance)!;
 
                 await publisher.Publish(domainEvent);
-                
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "[{Module}] An error occured while processing message - '{MessageId}'.", 
                     OrdersModule.ModuleName, outboxMessage.Id);
                 
-                outboxMessage.Error = ex.ToString();
+                exception = ex;
             }
-            outboxMessage.ProcessedOn = DateTime.UtcNow;
+
+            await UpdateOutboxMessageAsync(connection, transaction, outboxMessage, exception);
         }
-        await dbContext.SaveChangesAsync();
+        
+        await transaction.CommitAsync();
+
     }
+
+    private async Task<IReadOnlyList<OutboxMessageResponse>> GetOutboxMessagesAsync(IDbConnection connection,
+        IDbTransaction transaction)
+    {
+        const string sql =
+            $"""
+             SELECT
+             id AS {nameof(OutboxMessageResponse.Id)},
+             content AS {nameof(OutboxMessageResponse.Content)}
+             FROM orders.outbox_messages
+             WHERE processed_on IS NULL
+             ORDER BY occured_on
+             LIMIT 100
+             FOR UPDATE
+             """;
+
+        var outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(sql, transaction: transaction);
+        
+        return outboxMessages.ToList();
+    }
+
+    private async Task UpdateOutboxMessageAsync( IDbConnection connection, IDbTransaction transaction,
+        OutboxMessageResponse outboxMessage, Exception? exception)
+    {
+        const string sql =
+            """
+            UPDATE orders.outbox_messages
+            SET processed_on = @ProcessedOn, error = @Error
+            WHERE id = @Id;
+            """;
+        
+        await connection.ExecuteAsync(sql, new
+        {
+            outboxMessage.Id,
+            ProcessedOn = DateTime.UtcNow,
+            Error = exception?.ToString()
+        }, 
+        transaction: transaction);
+    }
+    internal sealed record OutboxMessageResponse(Guid Id, string Content);
 }
