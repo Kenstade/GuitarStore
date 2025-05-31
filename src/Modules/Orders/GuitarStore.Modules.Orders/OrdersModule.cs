@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.EFCore;
+using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Orders.BackgroundJobs;
@@ -19,7 +20,7 @@ public static class OrdersModule
 
         services.AddEventPublisher(typeof(OrdersModule).Assembly);
 
-        services.AddScoped<ProcessOutboxMessageJob>();
+        services.AddScoped<ProcessOutboxMessagesJob>();
         services.AddValidatorsFromAssembly(typeof(OrdersModule).Assembly, includeInternalTypes: true);
         services.AddMinimalApiEndpoints(typeof(OrdersModule).Assembly);
         
