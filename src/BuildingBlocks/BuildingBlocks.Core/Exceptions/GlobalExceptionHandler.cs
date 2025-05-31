@@ -22,7 +22,7 @@ public sealed class GlobalExceptionHandler(IProblemDetailsService pd, ILogger<Gl
                 new ProblemDetails
                 {
                     Type = exception.GetType().Name,
-                    Title = "Request canceled",
+                    Title = "Request cancelled",
                     Detail = exception.Message,
                 }),
             
