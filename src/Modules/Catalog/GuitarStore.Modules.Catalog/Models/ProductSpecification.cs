@@ -26,7 +26,7 @@ internal sealed class ProductSpecificationConfiguration : IEntityTypeConfigurati
     {
         builder.ToTable("product_specification");
         
-        builder.HasKey(ps => ps.Value);
+        builder.HasKey(ps => new { ps.SpecificationTypeId, ps.ProductId });
         
         builder.Property(x => x.Value)
             .HasMaxLength(50);
