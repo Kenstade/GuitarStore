@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BuildingBlocks.Core.ErrorHandling.Errors;
+namespace BuildingBlocks.Core.ErrorHandling;
 
 public sealed class Error : ProblemDetails
 {

@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using BuildingBlocks.Core.ErrorHandling.Errors;
 
-namespace BuildingBlocks.Core.ErrorHandling.Results;
+namespace BuildingBlocks.Core.ErrorHandling;
 
 public class Result
 {
