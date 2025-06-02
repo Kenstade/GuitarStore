@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace BuildingBlocks.Core.Security;
 
-public interface IUserContextProvider
+public interface IUserContext
 {
     Guid GetUserId();
     Guid GetIdentityId();
 }
 
-public sealed class UserContextProvider(IHttpContextAccessor accessor) : IUserContextProvider
+public sealed class UserContext(IHttpContextAccessor accessor) : IUserContext
 {
     public Guid GetIdentityId()
     {
