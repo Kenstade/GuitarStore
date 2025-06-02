@@ -24,7 +24,7 @@ internal sealed class User : Aggregate<Guid>
             IdentityId = identityId
         };
 
-        user._roles.Add(new Role("Customer"));
+        user._roles.Add(new Role(Constants.Roles.User));
         
         // user.AddDomainEvent(new UserRegistered(user.Id));
         
