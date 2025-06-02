@@ -23,11 +23,11 @@ public static class Extensions
                     ValidIssuers = jwtOptions.ValidIssuer
                 };
             });
+        
         services.AddAuthorization();
         
-        
         services.AddHttpContextAccessor();
-        services.AddScoped<IUserContextProvider, UserContextProvider>();
+        services.AddScoped<IUserContext, UserContext>();
         return services;
     }
 }
