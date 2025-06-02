@@ -10,7 +10,12 @@ public static class ConfigurationExtensions
         var options = new TModel();
 
         var optionsSection = configuration.GetSection(section);
-        if (optionsSection == null) throw new ArgumentNullException(typeof(TModel).Name);
+        
+        if (optionsSection == null)
+        {
+            throw new InvalidOperationException(
+                $"Configuration section '{section}' not found for type {typeof(TModel).Name}");
+        }
             
         optionsSection.Bind(options);
 
