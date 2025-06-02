@@ -16,32 +16,38 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
-        builder.ToTable("permissions");
-        
-        builder.HasKey(p => p.Code);
+        builder.ToTable("permissions")
+            .HasKey(p => p.Code);
 
         builder.Property(p => p.Code)
             .HasMaxLength(100);
         
-        builder.HasData(new Permission("carts:read"));
+        var permissionCodes = new []
+        {
+            "carts:read", 
+            "carts:update", 
+            "carts:remove", 
+            "orders:read", 
+            "orders:create"
+        };
+        
+        builder.HasData(permissionCodes.Select(permission => new Permission(permission)));
         
         builder.HasMany<Role>()
             .WithMany(r => r.Permissions)
             .UsingEntity(joinBuilder =>
             {
                 joinBuilder.ToTable("role_permissions");
-                joinBuilder.HasData(
-                    CreateRolePermission(new Role("Customer"), new Permission("carts:read")),
-                    CreateRolePermission(new Role("Admin"), new Permission("carts:read")));
+                joinBuilder.HasData(GetRolePermissions(permissionCodes));
             });
     }
 
-    private static object CreateRolePermission(Role role, Permission permission)
+    private static IEnumerable<object> GetRolePermissions(IEnumerable<string> permissionCodes)
     {
-        return new
-        {
-            RoleName = role.Name,
-            PermissionsCode = permission.Code,
-        };
+        var roles = new[] { Constants.Roles.User, Constants.Roles.Admin };
+        
+        return from role in roles
+            from code in permissionCodes
+            select new { RoleName = role, PermissionsCode = code };
     }
 }
