@@ -50,9 +50,9 @@ public static class Extensions
     {
         using var scope = sp.CreateScope();
 
-        var postgresOptions = scope.ServiceProvider.GetRequiredService<IOptions<PostgresOptions>>();
+        var postgresOptions = scope.ServiceProvider.GetRequiredService<IOptions<PostgresOptions>>().Value;
         
-        if (!postgresOptions.Value.UseInMemory)
+        if (!postgresOptions.UseInMemory)
         {
             var context = scope.ServiceProvider.GetRequiredService<TContext>();
             await context.Database.MigrateAsync();  
