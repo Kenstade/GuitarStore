@@ -29,14 +29,16 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasMaxLength(50)
             .IsRequired();
         
-        builder.HasData(new Role("Customer"), new Role("Admin"));
+        builder.HasData(
+            new Role(Constants.Roles.User), 
+            new Role(Constants.Roles.Admin));
 
         builder.HasMany<User>()
             .WithMany(u => u.Roles)
             .UsingEntity(joinBuilder =>
             {
                 joinBuilder.ToTable("user_roles");
-                joinBuilder.Property("RolesName").HasColumnName("role_name"); // naming conventions package?
+                joinBuilder.Property("RolesName").HasColumnName("role_name");
             });
         
     }
