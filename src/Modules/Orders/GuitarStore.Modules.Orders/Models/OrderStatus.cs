@@ -2,9 +2,12 @@
 
 internal enum OrderStatus
 {
-    Placed = 1,
-    Paid = 2,
-    Shipped = 3,
-    Delivered = 4,
-    Canceled = 5
+    Initializing = 1,
+    AwaitingValidation = 2,
+    StockConfirmed = 3,
+    AwaitingPayment = 4,
+    Paid = 5,
+    Shipped = 6,
+    Delivered = 7,
+    Cancelled = 8
 }
