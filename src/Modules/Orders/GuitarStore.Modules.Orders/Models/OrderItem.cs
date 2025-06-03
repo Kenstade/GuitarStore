@@ -6,7 +6,7 @@ namespace GuitarStore.Modules.Orders.Models;
 
 internal sealed class OrderItem : Entity<int>
 {
-    internal OrderItem(Guid productId, string name, string image, decimal price, int quantity, Guid orderId)
+    public OrderItem(Guid productId, string name, string? image, decimal price, int quantity, Guid orderId)
     {
         ProductId = productId;
         Name = name;
@@ -30,8 +30,15 @@ internal sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderIte
     {
         builder.ToTable("order_items");
         builder.HasKey(i => i.Id);
+        
+        builder.HasOne<Order>()
+            .WithMany(o => o.Items)
+            .HasForeignKey(i => i.OrderId);
 
         builder.Property(i => i.Name)
             .HasMaxLength(100);
+
+        builder.Property(i => i.Image)
+            .HasMaxLength(255); 
     }
 }
