@@ -1,8 +1,10 @@
-﻿namespace GuitarStore.Modules.Catalog.Contracts;
+﻿using BuildingBlocks.Core.ErrorHandling;
+
+namespace GuitarStore.Modules.Catalog.Contracts;
 
 public interface ICatalogService
 {
-    Task<ProductDetails?> GetProductForCartAsync(Guid productId, CancellationToken ct = default);
+    Task<Result<ProductDetails>> GetProductForCartAsync(Guid productId, CancellationToken ct = default);
 }
 
 public sealed record ProductDetails(string Name, string? Image, decimal Price);

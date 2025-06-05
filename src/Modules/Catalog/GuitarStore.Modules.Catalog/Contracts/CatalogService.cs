@@ -1,20 +1,17 @@
-﻿using GuitarStore.Modules.Catalog.Data;
+﻿using BuildingBlocks.Core.ErrorHandling;
+using GuitarStore.Modules.Catalog.Data;
+using GuitarStore.Modules.Catalog.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Contracts;
 
-internal sealed class CatalogService : ICatalogService
+internal sealed class CatalogService(CatalogDbContext dbContext) : ICatalogService
 {
-    private readonly CatalogDbContext _dbContext;
-    public CatalogService(CatalogDbContext dbContext)
+    public async Task<Result<ProductDetails>> GetProductForCartAsync(Guid productId, CancellationToken ct = default)
     {
-        _dbContext = dbContext;
-    }
-    public async Task<ProductDetails?> GetProductForCartAsync(Guid productId, CancellationToken ct = default)
-    {
-        var product = await _dbContext.Products
+        var product = await dbContext.Products
             .AsNoTracking()
-            .Where(p => p.Id == productId)
+            .Where(p => p.Id == productId && p.IsAvailable)
             .Select(p => new ProductDetails
             (
                 p.Name, 
@@ -23,6 +20,6 @@ internal sealed class CatalogService : ICatalogService
             ))
             .FirstOrDefaultAsync(ct);
         
-        return product;
+        return product ?? Result.Failure<ProductDetails>(ProductErrors.NotFound(productId));
     }
 }   
