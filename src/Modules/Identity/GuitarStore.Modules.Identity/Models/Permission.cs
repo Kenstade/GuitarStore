@@ -25,10 +25,10 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
         var permissionCodes = new []
         {
             "carts:read", 
-            "carts:update", 
-            "carts:remove", 
+            "carts:update",
             "orders:read", 
-            "orders:create"
+            "orders:create",
+            "orders:update",
         };
         
         builder.HasData(permissionCodes.Select(permission => new Permission(permission)));
