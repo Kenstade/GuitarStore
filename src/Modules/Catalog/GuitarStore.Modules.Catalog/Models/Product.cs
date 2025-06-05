@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Core.Domain;
-using GuitarStore.Modules.Catalog.Exceptions;
+using BuildingBlocks.Core.ErrorHandling;
+using GuitarStore.Modules.Catalog.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,12 +11,13 @@ internal sealed class Product : Aggregate<Guid>
     private readonly List<ProductSpecification> _specifications = [];
     private readonly List<ProductImage> _images = [];
 
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
     public decimal Price { get; private set; }
     public ProductColor Color { get; private set; }
     public int Stock { get; private set; }
     public bool IsAvailable { get; private set; }
+    public int AvailableStock { get; private set; }
     public int CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
     public int BrandId { get; private set; } 
@@ -41,7 +43,7 @@ internal sealed class Product : Aggregate<Guid>
             Description = description,
             Price = price,
             Color = color,
-            Stock = stock,
+            AvailableStock = stock,
             CreatedAt = DateTime.UtcNow,
             IsAvailable = isAvailable,
             CategoryId = categoryId,
@@ -79,6 +81,15 @@ internal sealed class Product : Aggregate<Guid>
         if(Stock == 0) IsAvailable = false;
         
         return removed;
+    public void RemoveStock(int quantity)
+    {
+        if (AvailableStock < quantity)
+        {
+            throw new ProblemDetailsException(ProductErrors.InsufficientStock(Id, quantity));
+        }
+
+        AvailableStock -= quantity;
+        if(AvailableStock == 0) IsAvailable = false;
     }
 }
 
