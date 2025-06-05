@@ -25,14 +25,14 @@ public sealed class CachingEndpointFilter<TRequest, TResponse> : IEndpointFilter
             _logger.LogInformation("[{Prefix}] Return response from cache. CacheKey: {CacheKey}", 
                 prefix, typeof(TRequest).Name);
             
-            return TypedResults.Ok(cachedResult);
+            return Results.Ok(cachedResult);
         }
         
         var response = await next(context);
 
-        if (response is Ok<TResponse> ok)
+        if (response is Ok<TResponse> okResponse)
         {
-            await _cache.SetAsync(typeof(TRequest).Name, ok.Value, ct);
+            await _cache.SetAsync(typeof(TRequest).Name, okResponse.Value, ct);
         }
         
         return response;
