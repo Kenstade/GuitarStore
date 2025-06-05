@@ -13,17 +13,35 @@ public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10
 
 internal sealed class GetCatalog : IEndpoint
 {
-    private readonly CatalogDbContext _dbContext;
-    public GetCatalog(CatalogDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-    
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, CancellationToken ct) =>
+        builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, CatalogDbContext dbContext, 
+                CancellationToken ct) =>
         {
-            return await Handle(request, ct);
+            var catalogQuery = dbContext.Products
+                .Include(p => p.Category)
+                .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
+                .AsQueryable();
+
+            var products = await catalogQuery
+                .AsNoTrackingWithIdentityResolution()
+                .OrderBy(p => p.CreatedAt)
+                .Skip((request.PageNumber - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(p => new ProductPartialResponse
+                (
+                    p.Id,
+                    p.Name,
+                    p.Price,
+                    p.Category.Name
+                )).ToListAsync(ct);
+
+            var total = await catalogQuery.AsNoTracking().CountAsync(ct);
+
+            var catalog = new GetCatalogResponse(products, total, request.PageNumber);
+
+            return catalog.Products.Any() ? Results.Ok(catalog)
+                                          : Results.Ok("Catalog is empty");
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
@@ -32,35 +50,6 @@ internal sealed class GetCatalog : IEndpoint
         .AllowAnonymous();
 
         return builder;
-    }
-
-    private async Task<IResult> Handle(GetCatalogRequest request, CancellationToken ct)
-    {
-
-        var catalogQuery = _dbContext.Products
-            .Include(p => p.Category)
-            .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
-            .AsQueryable();
-            
-        var products = await catalogQuery
-            .AsNoTrackingWithIdentityResolution()
-            .OrderBy(p => p.CreatedAt)
-            .Skip((request.PageNumber - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .Select(p => new ProductPartialResponse
-            (
-                p.Id,
-                p.Name,
-                p.Price,
-                p.Category.Name
-            )).ToListAsync(ct);
-
-        var total = await catalogQuery.AsNoTracking().CountAsync(ct);
-
-        var catalog = new GetCatalogResponse(products, total, request.PageNumber);
-
-        return catalog.Products.Any() ? TypedResults.Ok(catalog)
-                                      : TypedResults.Ok("Catalog is empty");
     }
 }
 

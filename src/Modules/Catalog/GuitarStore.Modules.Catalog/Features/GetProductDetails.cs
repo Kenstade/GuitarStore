@@ -10,24 +10,39 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Features;
-public sealed record GetProductDetailsRequest(string ProductId);
+
+public sealed record GetProductDetailsRequest(string Id);
 
 internal sealed class GetProductDetails : IEndpoint
 {
-    private readonly CatalogDbContext _dbContext;
-
-    public GetProductDetails(CatalogDbContext dbContext) 
-    {
-        _dbContext = dbContext;
-    }
-
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet("catalog/{id}", async ([AsParameters] GetProductDetailsRequest request, CancellationToken ct) =>  
+        builder.MapGet("catalog/{id}", async ([AsParameters]GetProductDetailsRequest request, 
+            CatalogDbContext dbContext, CancellationToken ct) =>  
         {
-            var parsedRequest = Guid.Parse(request.ProductId);
+            var parsedRequestId = Guid.Parse(request.Id);
             
-            return await Handle(parsedRequest, ct);
+            var product = await dbContext.Products
+                .AsNoTracking()
+                .Where(p => p.Id == parsedRequestId)
+                .Select(p => new GetProductDetailsResponse
+                (
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.Category.Name,
+                    p.Brand.Name,
+                    p.Specifications
+                    .Select(ps => new ProductSpecPartialResponse
+                    (
+                        ps.SpecificationType.Name, 
+                        ps.Value
+                    )).ToList()
+                )).FirstOrDefaultAsync(ct);
+
+            return product != null ? Results.Ok(product)
+                                   : Results.Problem(ProductErrors.NotFound(request.Id));
+            
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetProductDetailsRequest>>()    
         .AddEndpointFilter<ValidationEndpointFilter<GetProductDetailsRequest>>()
@@ -36,30 +51,6 @@ internal sealed class GetProductDetails : IEndpoint
         .AllowAnonymous();
         
         return builder;
-    }
-
-    private async Task<IResult> Handle(Guid requestId, CancellationToken ct)
-    {
-        var product = await _dbContext.Products
-            .AsNoTracking()
-            .Where(p => p.Id == requestId)
-            .Select(p => new GetProductDetailsResponse
-            (
-                p.Name,
-                p.Description,
-                p.Price,
-                p.Category.Name,
-                p.Brand.Name,
-                p.Specifications
-                .Select(ps => new ProductSpecPartialResponse
-                (
-                    ps.SpecificationType.Name, 
-                    ps.Value
-                )).ToList()
-            )).FirstOrDefaultAsync(ct);
-
-        return product != null ? TypedResults.Ok(product)
-                               : TypedResults.Problem(new ProductNotFoundError(requestId));
     }
 }
 public sealed record GetProductDetailsResponse(
@@ -76,6 +67,6 @@ public sealed class GetProductDetailsValidator : AbstractValidator<GetProductDet
 {
     public GetProductDetailsValidator()
     {
-        RuleFor(p => p.ProductId).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
+        RuleFor(p => p.Id).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
     }
 }
