@@ -1,39 +1,53 @@
-using BuildingBlocks.Core.Security;
 using BuildingBlocks.Core.Logging;
+using BuildingBlocks.Core.Security;
 using BuildingBlocks.Core.Validation;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Catalog.Contracts;
 using GuitarStore.Modules.ShoppingCart.Data;
-using GuitarStore.Modules.ShoppingCart.Errors;
 using GuitarStore.Modules.ShoppingCart.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Features;
 
-public sealed record AddItemRequest(string ProductId);
+public sealed record AddItemRequest(string Id);
 
 internal sealed class AddItem : IEndpoint
 {
-    private readonly CartDbContext _dbContext;
-    private readonly IUserContextProvider _userContext;
-    private readonly ICatalogService _catalogService;
-
-    public AddItem(CartDbContext dbContext, IUserContextProvider userContext, ICatalogService catalogService)
-    {
-        _dbContext = dbContext;
-        _userContext = userContext;
-        _catalogService = catalogService;
-    }
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost("cart/add", async (AddItemRequest request, CancellationToken ct) =>
+        builder.MapPost("cart/add-item", async (AddItemRequest request, CartDbContext dbContext, 
+                IUserContext userContext, ICatalogService catalogService, CancellationToken ct) =>
         {
-            var parsedRequest = Guid.Parse(request.ProductId);
+            var parsedRequestId = Guid.Parse(request.Id); 
             
-            return await Handle(parsedRequest, ct);
+            var userId = userContext.GetUserId();
+        
+            var cart = dbContext.Carts
+                .Include(c => c.Items)
+                .FirstOrDefault(c => c.CustomerId == userId);
+
+            if (cart == null)
+            {
+                cart = Cart.Create(userId);
+                await dbContext.Carts.AddAsync(cart, ct);
+            }
+
+            var result = await catalogService.GetProductForCartAsync(parsedRequestId, ct);
+            
+            if (result.IsFailure)
+            {
+                return Results.Problem(result.Error);
+            }
+
+            cart.AddItem(parsedRequestId, result.Value.Name, result.Value.Image, result.Value.Price);
+
+            await dbContext.SaveChangesAsync(ct);
+        
+            return Results.Ok($"{parsedRequestId}");
         })
         .AddEndpointFilter<LoggingEndpointFilter<AddItemRequest>>()   
         .AddEndpointFilter<ValidationEndpointFilter<AddItemRequest>>()
@@ -43,36 +57,12 @@ internal sealed class AddItem : IEndpoint
         
         return builder;
     }
-
-    private async Task<IResult> Handle(Guid requestId, CancellationToken ct)
-    {
-        var userId = _userContext.GetUserId();
-        
-        var cart = _dbContext.Carts
-            .FirstOrDefault(c => c.CustomerId == userId);
-
-        if (cart == null)
-        {
-            cart = Cart.Create(userId);
-            await _dbContext.Carts.AddAsync(cart, ct);
-        }
-
-        var product = await _catalogService.GetProductForCartAsync(requestId, ct);
-        if (product == null) 
-            return TypedResults.Problem(new ProductNotFoundError(requestId));
-        
-        cart.AddItem(requestId, product.Name, product.Image, product.Price);
-        
-        await _dbContext.SaveChangesAsync();
-        
-        return TypedResults.Ok($"{requestId}");
-    }
 }
 
 public sealed class AddItemRequestValidator : AbstractValidator<AddItemRequest>
 {
     public AddItemRequestValidator()
     {
-        RuleFor(p => p.ProductId).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
+        RuleFor(p => p.Id).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
     }
 }

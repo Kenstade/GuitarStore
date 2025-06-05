@@ -1,6 +1,8 @@
-using BuildingBlocks.Core.Security;
+using System.Security.Claims;
 using BuildingBlocks.Core.Logging;
+using BuildingBlocks.Core.Security.Authentication;
 using BuildingBlocks.Web.MinimalApi;
+using FluentValidation;
 using GuitarStore.Modules.ShoppingCart.Data;
 using GuitarStore.Modules.ShoppingCart.Errors;
 using Microsoft.AspNetCore.Builder;
@@ -10,23 +12,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Features;
 
-public sealed record RemoveItemRequest(Guid ProductId);
+public sealed record RemoveItemRequest(string Id);
 
 internal sealed class RemoveItem : IEndpoint
 {
-    private readonly CartDbContext _dbContext;
-    private readonly IUserContextProvider _userContext;
-
-    public RemoveItem(CartDbContext dbContext, IUserContextProvider userContext)
-    {
-        _dbContext = dbContext;
-        _userContext = userContext;
-    }
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete("/cart/remove/{id}", async ([AsParameters]RemoveItemRequest request, CancellationToken ct) =>
+        builder.MapDelete("/cart/remove", async ([AsParameters]RemoveItemRequest request, CartDbContext dbContext,
+                ClaimsPrincipal user, CancellationToken ct) =>
         {
-            return await Handle(request, ct);
+            var parsedRequestId = Guid.Parse(request.Id);
+            
+            var userId = user.GetUserId();
+        
+            var cart = await dbContext.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.CustomerId == userId, ct);
+        
+            if (cart == null) return Results.Problem(CartErrors.NotFound(userId));
+        
+            cart.RemoveItem(parsedRequestId);
+            await dbContext.SaveChangesAsync(ct);
+        
+            return Results.Ok();
         })
         .AddEndpointFilter<LoggingEndpointFilter<RemoveItemRequest>>()    
         .WithName("RemoveItemFromCart")
@@ -35,21 +43,12 @@ internal sealed class RemoveItem : IEndpoint
         
         return builder;
     }
+}
 
-    private async Task<IResult> Handle(RemoveItemRequest request, CancellationToken ct)
+public sealed class RemoveItemRequestValidator : AbstractValidator<RemoveItemRequest>
+{
+    public RemoveItemRequestValidator()
     {
-        var userId = _userContext.GetUserId();
-        
-        var cart = await _dbContext.Carts
-            .Include(c => c.Items)
-            .FirstOrDefaultAsync(c => c.CustomerId == userId, ct);
-        
-        if (cart == null) return TypedResults.Problem(new CartNotFoundError(userId));
-        
-        cart.RemoveItem(request.ProductId);
-        
-        await _dbContext.SaveChangesAsync(ct);
-        
-        return TypedResults.Ok();
+        RuleFor(p => p.Id).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid Id");
     }
 }
