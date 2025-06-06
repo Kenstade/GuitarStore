@@ -1,9 +1,11 @@
 ﻿using BuildingBlocks.Core.EFCore;
+using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Identity.BackgroundJobs;
 using GuitarStore.Modules.Identity.Data;
 using GuitarStore.Modules.Identity.Extensions;
+using GuitarStore.Modules.Identity.KeyCloak;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,9 +17,16 @@ public static class IdentityModule
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<IdentityContext>(configuration);
-        services.AddScoped<IDataSeeder, IdentityDataSeeder>();
+        services.AddEventPublisher(typeof(IdentityModule).Assembly);
         
-        services.AddScoped<ProcessOutboxMessageJob>();
+        services.AddScoped<ProcessOutboxMessagesJob>();
+
+        services.AddKeyCloakIdentityProvider(configuration);
+        
+        services.AddTransient<IIdentityProvider, IdentityProvider>(); //cqrs
+        
+        services.AddPermissionAuthorization();
+        services.AddQueryHandlers();
         
         services.AddValidatorsFromAssembly(typeof(IdentityModule).Assembly);
         services.AddMinimalApiEndpoints(typeof(IdentityModule).Assembly);
