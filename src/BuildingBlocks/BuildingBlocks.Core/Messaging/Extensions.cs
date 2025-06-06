@@ -6,7 +6,7 @@ namespace BuildingBlocks.Core.Messaging;
 public static class Extensions
 {
     public static IServiceCollection AddMessageBus(this IServiceCollection services, 
-        Action<IBusRegistrationConfigurator> configureConsumers)
+        Action<IRegistrationConfigurator> configureConsumers)
     {
         services.AddMassTransit(busCfg =>
         {

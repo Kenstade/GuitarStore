@@ -2,6 +2,7 @@
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.ShoppingCart.Data;
+using GuitarStore.Modules.ShoppingCart.Events.Integration;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,7 @@ public static class ShoppingCartModule
     
     public static IRegistrationConfigurator AddShoppingCartModuleConsumers(this IRegistrationConfigurator configurator)
     {
+        configurator.AddConsumer<OrderStartedConsumer>();
         
         return configurator;
     }
