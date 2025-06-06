@@ -5,6 +5,7 @@ using FluentValidation;
 using GuitarStore.Modules.Orders.BackgroundJobs;
 using GuitarStore.Modules.Orders.Data;
 using GuitarStore.Modules.Orders.Extensions;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,5 +34,11 @@ public static class OrdersModule
         app.UseBackgroundJobs(configuration);
         
         return app;
+    }
+    
+    public static IRegistrationConfigurator AddOrdersModuleConsumers(this IRegistrationConfigurator configurator, IConfiguration configuration)
+    {
+            
+        return configurator;
     }
 }
