@@ -7,6 +7,7 @@ using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Events;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Modules.Catalog.Contracts;
+using MassTransit;
 
 namespace GuitarStore.Modules.Catalog;
 public static class CatalogModule
@@ -30,4 +31,11 @@ public static class CatalogModule
         app.UseMigration<CatalogDbContext>();
         return app;
     }
+    
+    public static IRegistrationConfigurator AddCatalogModuleConsumers(this IRegistrationConfigurator configurator)
+    {
+        
+        return configurator;
+    }
+    
 }
