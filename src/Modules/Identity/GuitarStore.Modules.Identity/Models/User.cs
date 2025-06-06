@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.Identity.Events.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,7 +27,7 @@ internal sealed class User : Aggregate<Guid>
 
         user._roles.Add(new Role(Constants.Roles.User));
         
-        // user.AddDomainEvent(new UserRegistered(user.Id));
+        user.AddDomainEvent(new UserRegistered(user.Id, user.Email));
         
         return user;
     }
