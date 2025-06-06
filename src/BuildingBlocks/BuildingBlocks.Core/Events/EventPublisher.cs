@@ -7,24 +7,24 @@ public sealed class EventPublisher(IServiceProvider serviceProvider) : IEventPub
 {
     private static readonly ConcurrentDictionary<Type, EventHandlerWrapper> EventHandlers = [];
 
-    public Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken ct = default) 
+    public Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken cancellationToken = default) 
         where TDomainEvent : IDomainEvent
     {
         if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
         
-        return PublishEvent(domainEvent, ct);
+        return PublishEvent(domainEvent, cancellationToken);
     }
 
     private static async Task ForeachAwaitPublisher(IEnumerable<EventHandlerExecutor> handlerExecutors, 
-        IDomainEvent domainEvent, CancellationToken ct)
+        IDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         foreach (var handler in handlerExecutors)
         {
-            await handler.HandlerCallback(domainEvent, ct).ConfigureAwait(false);
+            await handler.HandlerCallback(domainEvent, cancellationToken).ConfigureAwait(false);
         }
     }
     
-    private Task PublishEvent(IDomainEvent domainEvent, CancellationToken ct)
+    private Task PublishEvent(IDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         var handler = EventHandlers.GetOrAdd(domainEvent.GetType(), static eventType =>
         {
@@ -34,7 +34,7 @@ public sealed class EventPublisher(IServiceProvider serviceProvider) : IEventPub
             return (EventHandlerWrapper)wrapper;
         });
         
-        return handler.Handle(domainEvent, serviceProvider, ForeachAwaitPublisher, ct);
+        return handler.Handle(domainEvent, serviceProvider, ForeachAwaitPublisher, cancellationToken);
     }
     
 }
