@@ -2,6 +2,7 @@
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.ShoppingCart.Data;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +13,7 @@ public static class ShoppingCartModule
     public static IServiceCollection AddShoppingCartModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<CartDbContext>(configuration);
-        
         services.AddValidatorsFromAssembly(typeof(ShoppingCartModule).Assembly, includeInternalTypes: true);
-        
         services.AddMinimalApiEndpoints(typeof(ShoppingCartModule).Assembly);
         
         return services;
@@ -24,5 +23,11 @@ public static class ShoppingCartModule
     {
         app.UseMigration<CartDbContext>();
         return app;
+    }
+    
+    public static IRegistrationConfigurator AddShoppingCartModuleConsumers(this IRegistrationConfigurator configurator)
+    {
+        
+        return configurator;
     }
 }
