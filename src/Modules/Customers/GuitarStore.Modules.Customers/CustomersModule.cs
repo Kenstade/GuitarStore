@@ -2,6 +2,8 @@
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Customers.Data;
+using GuitarStore.Modules.Customers.Events.Integration;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,5 +26,12 @@ public static class CustomersModule
         app.UseMigration<CustomersDbContext>();
 
         return app;
+    }
+    
+    public static IRegistrationConfigurator AddCustomersModuleConsumers(this IRegistrationConfigurator configurator)
+    {
+        configurator.AddConsumer<UserRegisteredConsumer>();
+        
+        return configurator;
     }
 }
