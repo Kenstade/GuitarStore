@@ -5,7 +5,7 @@ using Scalar.AspNetCore;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.Dapper;
 using BuildingBlocks.Core.EFCore;
-using BuildingBlocks.Core.Exceptions;
+using BuildingBlocks.Core.ErrorHandling;
 using Hangfire;
 using BuildingBlocks.Core.Hangfire;
 using BuildingBlocks.Core.Messaging;
@@ -14,13 +14,9 @@ using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.MinimalApi;
 using GuitarStore.Api.Extensions;
-using GuitarStore.Modules.Catalog.Extensions;
 using GuitarStore.Modules.Customers;
-using GuitarStore.Modules.Customers.Extensions;
 using GuitarStore.Modules.Identity;
 using GuitarStore.Modules.Orders;
-using GuitarStore.Modules.Orders.Extensions;
-using GuitarStore.Modules.ShoppingCart.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,11 +27,11 @@ builder.Configuration.AddModulesSettingsFile(
 
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddMessageBus(busCfg => busCfg
+builder.Services.AddMessageBus(cfg => cfg
     .AddCatalogModuleConsumers()
-    .AddOrdersModuleConsumers()
-    .AddIdentityModuleConsumers()
-    .AddCustomersModuleConsumers());
+    .AddOrdersModuleConsumers(builder.Configuration)
+    .AddCustomersModuleConsumers()
+    .AddShoppingCartModuleConsumers());
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
@@ -67,7 +63,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCatalogModule(builder.Configuration)
-   .UseShoppingCartModule(builder.Configuration)
+   .UseShoppingCartModule()
    .UseOrdersModule(builder.Configuration)
    .UseIdentityModule(builder.Configuration)
    .UseCustomersModule();
