@@ -36,8 +36,8 @@ internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
-        builder.ToTable("orders");
-        builder.HasKey(o => o.Id);
+        builder.ToTable("orders")
+            .HasKey(o => o.Id);
 
         builder.Property(p => p.OrderStatus)
             .HasMaxLength(25)
