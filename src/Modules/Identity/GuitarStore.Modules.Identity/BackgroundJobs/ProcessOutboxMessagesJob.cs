@@ -37,7 +37,7 @@ internal sealed class ProcessOutboxMessagesJob(
             catch (Exception ex)
             {
                 logger.LogError(ex, "[{Module}] An error occured while processing message - '{MessageId}'.", 
-                    IdentityModule.ModuleName, outboxMessage.Id);
+                    Constants.ModuleName, outboxMessage.Id);
                 
                 exception = ex;
             }

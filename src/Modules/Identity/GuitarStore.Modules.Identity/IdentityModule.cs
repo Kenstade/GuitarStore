@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace GuitarStore.Modules.Identity;
 public static class IdentityModule
 {
-    public const string ModuleName = "Identity";
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<IdentityContext>(configuration);
