@@ -13,7 +13,6 @@ using MassTransit;
 namespace GuitarStore.Modules.Catalog;
 public static class CatalogModule
 {
-    public const string ModuleName = "Catalog";
     public static IServiceCollection AddCatalogModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<CatalogDbContext>(configuration);
