@@ -2,9 +2,9 @@
 
 internal enum OrderStatus
 {
-    Initializing = 1,
+    Placed = 1,
     AwaitingValidation = 2,
-    StockConfirmed = 3,
+    Validated = 3,
     AwaitingPayment = 4,
     Paid = 5,
     Shipped = 6,
