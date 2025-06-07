@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Core.Domain;
+using GuitarStore.Modules.Orders.Events.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
