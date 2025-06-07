@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 namespace GuitarStore.Modules.Orders;
 public static class OrdersModule
 {
-    public const string ModuleName = "Orders";
     public static IServiceCollection AddOrdersModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPostgresDbContext<OrdersDbContext>(configuration);
