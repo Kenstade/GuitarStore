@@ -15,7 +15,7 @@ public static class CustomersModule
     {
         services.AddPostgresDbContext<CustomersDbContext>(configuration);
 
-        services.AddValidatorsFromAssembly(typeof(CustomersModule).Assembly);
+        services.AddValidatorsFromAssembly(typeof(CustomersModule).Assembly, includeInternalTypes: true);
         services.AddMinimalApiEndpoints(typeof(CustomersModule).Assembly);
 
         return services;
