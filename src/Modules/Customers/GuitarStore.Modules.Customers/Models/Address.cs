@@ -6,20 +6,40 @@ namespace GuitarStore.Modules.Customers.Models;
 
 internal sealed class Address : Entity<Guid>
 {
-    public string City { get; set; } = null!;
-    public string Street { get; set; } = null!;
-    public string BuildingNumber { get; set; } = null!;
-    public string Apartment { get; set; } = null!;
+    public Address(string city, string street, string buildingNumber, string apartment, Guid customerId)
+    {
+        City = city;
+        Street = street;
+        BuildingNumber = buildingNumber;
+        Apartment = apartment;
+        CustomerId = customerId;
+    }
+    
+    public string City { get; set; }
+    public string Street { get; set; }
+    public string BuildingNumber { get; set; }
+    public string Apartment { get; set; }
     public Guid CustomerId { get; set; }
-    public Customer Customer { get; set; } = null!;
+
+    public void Update(string? city, string? street, string? buildingNumber, string? apartment)
+    {
+        City = city ?? City;
+        Street = street ?? Street;
+        BuildingNumber = buildingNumber ?? BuildingNumber;
+        Apartment = apartment ?? Apartment;
+    }
 }
 
 internal sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
-        builder.ToTable("addresses");
-        builder.HasKey(x => x.Id);
+        builder.ToTable("addresses")
+            .HasKey(c => c.Id);
+        
+        builder.HasOne<Customer>()
+            .WithMany(c => c.Addresses)
+            .HasForeignKey(a => a.CustomerId);
 
         builder.Property(c => c.City)
             .IsRequired()
