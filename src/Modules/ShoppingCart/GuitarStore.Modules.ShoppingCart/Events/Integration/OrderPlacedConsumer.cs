@@ -7,16 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace GuitarStore.Modules.ShoppingCart.Events.Integration;
 
-internal sealed class OrderStatusChangedToPlacedConsumer(
+internal sealed class OrderPlacedConsumer(
     CartDbContext dbContext, 
     IBus bus, 
-    ILogger<OrderStatusChangedToPlacedConsumer> logger) 
-    : IConsumer<OrderStatusChangedToPlacedIntegrationEvent>
+    ILogger<OrderPlacedConsumer> logger) 
+    : IConsumer<OrderPlacedIntegrationEvent>
 {
-    public async Task Consume(ConsumeContext<OrderStatusChangedToPlacedIntegrationEvent> context)
+    public async Task Consume(ConsumeContext<OrderPlacedIntegrationEvent> context)
     {
         logger.LogInformation("Handling '{IntegrationEvent}' - '{IntegrationEventId}'.", 
-            nameof(OrderStatusChangedToPlacedIntegrationEvent), context.Message.Id); 
+            nameof(OrderPlacedIntegrationEvent), context.Message.Id); 
         
         var integrationEvent = await dbContext.Carts
             .Where(c => c.CustomerId == context.Message.CustomerId)

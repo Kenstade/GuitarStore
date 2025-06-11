@@ -28,7 +28,7 @@ public static class ShoppingCartModule
     
     public static IRegistrationConfigurator AddShoppingCartModuleConsumers(this IRegistrationConfigurator configurator)
     {
-        configurator.AddConsumer<OrderStatusChangedToPlacedConsumer>();
+        configurator.AddConsumer<OrderPlacedConsumer>();
         
         return configurator;
     }
