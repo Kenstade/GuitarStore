@@ -29,6 +29,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             "orders:read", 
             "orders:create",
             "orders:update",
+            "addresses:add",
+            "customers:get",
+            "addresses:update"
         };
         
         builder.HasData(permissionCodes.Select(permission => new Permission(permission)));
