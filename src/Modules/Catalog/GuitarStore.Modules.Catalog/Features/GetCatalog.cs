@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Features;
 
-public sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1);
+internal sealed record GetCatalogRequest(int? CategoryId = null, int PageSize = 10, int PageNumber = 1);
 
 internal sealed class GetCatalog : IEndpoint
 {
@@ -28,7 +28,7 @@ internal sealed class GetCatalog : IEndpoint
                 .OrderBy(p => p.CreatedAt)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(p => new ProductPartialResponse
+                .Select(p => new ProductSummary
                 (
                     p.Id,
                     p.Name,
@@ -43,7 +43,7 @@ internal sealed class GetCatalog : IEndpoint
             return catalog.Products.Any() ? Results.Ok(catalog)
                                           : Results.Ok("Catalog is empty");
         })
-        .AddEndpointFilter<LoggingEndpointFilter<GetCatalogRequest>>() 
+        .AddEndpointFilter<LoggingEndpointFilter<GetCatalog>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
         .WithName("GetCatalog")
         .WithTags("Catalog")
@@ -53,11 +53,11 @@ internal sealed class GetCatalog : IEndpoint
     }
 }
 
-public sealed record GetCatalogResponse(
-    ICollection<ProductPartialResponse> Products,
+internal sealed record GetCatalogResponse(
+    ICollection<ProductSummary> Products,
     int TotalResults,
     int PageNumber);
-public sealed record ProductPartialResponse(
+internal sealed record ProductSummary(
     Guid Id,
     string Name,
     decimal Price,
