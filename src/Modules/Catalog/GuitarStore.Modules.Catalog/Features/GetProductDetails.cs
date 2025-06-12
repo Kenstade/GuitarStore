@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Features;
 
-public sealed record GetProductDetailsRequest(string Id);
+internal sealed record GetProductDetailsRequest(string Id);
 
 internal sealed class GetProductDetails : IEndpoint
 {
@@ -20,11 +20,9 @@ internal sealed class GetProductDetails : IEndpoint
         builder.MapGet("catalog/{id}", async ([AsParameters]GetProductDetailsRequest request, 
             CatalogDbContext dbContext, CancellationToken ct) =>  
         {
-            var parsedRequestId = Guid.Parse(request.Id);
-            
             var product = await dbContext.Products
                 .AsNoTracking()
-                .Where(p => p.Id == parsedRequestId)
+                .Where(p => p.Id == Guid.Parse(request.Id))
                 .Select(p => new GetProductDetailsResponse
                 (
                     p.Name,
@@ -33,18 +31,19 @@ internal sealed class GetProductDetails : IEndpoint
                     p.Category.Name,
                     p.Brand.Name,
                     p.Specifications
-                    .Select(ps => new ProductSpecPartialResponse
+                    .Select(ps => new ProductSpecSummary
                     (
                         ps.SpecificationType.Name, 
                         ps.Value
                     )).ToList()
                 )).FirstOrDefaultAsync(ct);
 
-            return product != null ? Results.Ok(product)
-                                   : Results.Problem(ProductErrors.NotFound(request.Id));
+            return product is not null 
+                ? Results.Ok(product)
+                : Results.Problem(ProductErrors.NotFound(request.Id));
             
         })
-        .AddEndpointFilter<LoggingEndpointFilter<GetProductDetailsRequest>>()    
+        .AddEndpointFilter<LoggingEndpointFilter<GetProductDetails>>()    
         .AddEndpointFilter<ValidationEndpointFilter<GetProductDetailsRequest>>()
         .WithName("GetProductDetails")
         .WithTags("Catalog")
@@ -53,17 +52,17 @@ internal sealed class GetProductDetails : IEndpoint
         return builder;
     }
 }
-public sealed record GetProductDetailsResponse(
+internal sealed record GetProductDetailsResponse(
     string Name, 
     string? Description, 
     decimal Price,
     string Category,
     string Brand,
-    ICollection<ProductSpecPartialResponse> Specs);
+    ICollection<ProductSpecSummary> Specs);
 
-public sealed record ProductSpecPartialResponse(string Type, string Value);
+internal sealed record ProductSpecSummary(string Type, string Value);
 
-public sealed class GetProductDetailsValidator : AbstractValidator<GetProductDetailsRequest>
+internal sealed class GetProductDetailsValidator : AbstractValidator<GetProductDetailsRequest>
 {
     public GetProductDetailsValidator()
     {
