@@ -38,8 +38,8 @@ internal sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasKey(c => c.Id);
         
         builder.HasOne<Customer>()
-            .WithMany(c => c.Addresses)
-            .HasForeignKey(a => a.CustomerId);
+            .WithOne(c => c.Address)
+            .HasForeignKey<Address>(c => c.CustomerId);
 
         builder.Property(c => c.City)
             .IsRequired()
