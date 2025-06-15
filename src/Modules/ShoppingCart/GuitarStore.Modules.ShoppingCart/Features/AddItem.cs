@@ -19,7 +19,7 @@ internal sealed class AddItem : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost("cart/add-item", async (AddItemRequest request, CartDbContext dbContext, 
+        builder.MapPost("/cart", async (AddItemRequest request, CartDbContext dbContext, 
                 IUserContext userContext, ICatalogService catalogService, CancellationToken ct) =>
         {
             var parsedRequestId = Guid.Parse(request.Id); 
@@ -47,9 +47,9 @@ internal sealed class AddItem : IEndpoint
 
             await dbContext.SaveChangesAsync(ct);
         
-            return Results.Ok($"{parsedRequestId}");
+            return Results.Ok($"{parsedRequestId} added.");
         })
-        .AddEndpointFilter<LoggingEndpointFilter<AddItemRequest>>()   
+        .AddEndpointFilter<LoggingEndpointFilter<AddItem>>()   
         .AddEndpointFilter<ValidationEndpointFilter<AddItemRequest>>()
         .WithName("AddItemIntoCart")
         .WithTags("Cart")
