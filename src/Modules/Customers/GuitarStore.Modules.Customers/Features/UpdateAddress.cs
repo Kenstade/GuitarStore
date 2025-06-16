@@ -6,6 +6,7 @@ using BuildingBlocks.Core.Validation;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Customers.Data;
+using GuitarStore.Modules.Customers.Errors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,13 +25,15 @@ internal sealed class UpdateAddress : IEndpoint
         {
             var userId = user.GetUserId();
 
-            var address = await dbContext.Addresses
-                .Where(a => a.CustomerId == userId)
+            var customer = await dbContext.Customers
+                .Include(c => c.Address)
+                .Where(a => a.Id == userId)
                 .FirstOrDefaultAsync(ct);
 
-            if (address is null) return Results.Problem(Error.NotFound("Address not found"));
+            if (customer is null) return Results.Problem(CustomerErrors.NotFound(userId));
+            if (customer.Address is null) return Results.Problem(Error.NotFound("Address not found."));
             
-            address.Update(request.City, request.Street, request.BuildingNumber, request.Apartment);
+            customer.UpdateAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
             
             await dbContext.SaveChangesAsync(ct);
 
