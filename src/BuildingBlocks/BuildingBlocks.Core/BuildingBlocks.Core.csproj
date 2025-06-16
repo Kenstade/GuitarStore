@@ -21,7 +21,8 @@
 	  <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
 	  <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
 	  <PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
-	  <PackageReference Include="MassTransit" Version="8.4.0" />
+	  <PackageReference Include="MassTransit" Version="8.4.1" />
+	  <PackageReference Include="MassTransit.Redis" Version="8.4.1" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
@@ -35,10 +36,6 @@
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Events\" />
 	</ItemGroup>
 
 </Project>
