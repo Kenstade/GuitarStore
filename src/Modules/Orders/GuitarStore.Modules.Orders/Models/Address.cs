@@ -1,9 +1,17 @@
-﻿namespace GuitarStore.Modules.Orders.Models;
+namespace GuitarStore.Modules.Orders.Models;
 
 internal sealed class Address
 {
-    public string City { get; set; } = string.Empty;
-    public string Street { get; set; } = string.Empty;
-    public string BuildingNumber { get; set; } = string.Empty;
-    public string Apartment { get; set; } = string.Empty;
+    public Address(string city, string street, string buildingNumber, string apartment)
+    {
+        City = city;
+        Street = street;
+        BuildingNumber = buildingNumber;
+        Apartment = apartment;
+    }
+    
+    public string City { get; set; }
+    public string Street { get; set; } 
+    public string BuildingNumber { get; set; }
+    public string Apartment { get; set; } 
 }
