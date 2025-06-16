@@ -16,7 +16,7 @@ namespace GuitarStore.Modules.Customers.Features;
 
 internal sealed record AddAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
 
-internal sealed class AddAddress : IEndpoint
+internal sealed class SetAddress : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -31,19 +31,18 @@ internal sealed class AddAddress : IEndpoint
                 .FirstOrDefaultAsync(ct);
 
             if (customer is null) return Results.Problem(CustomerErrors.NotFound(userId));
-
             if (customer.Address is not null) return Results.Problem(Error.Conflict("Address already exists."));
             
-            customer.AddAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
+            customer.SetAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
             await dbContext.SaveChangesAsync(ct);
 
             return Results.Ok();
         })
-        .AddEndpointFilter<LoggingEndpointFilter<AddAddress>>()
+        .AddEndpointFilter<LoggingEndpointFilter<SetAddress>>()
         .AddEndpointFilter<ValidationEndpointFilter<AddAddressRequest>>()
-        .WithName("AddAddress")
+        .WithName("SetAddress")
         .WithTags("Customers")
-        .RequireAuthorization(Constants.Permissions.AddAddress);
+        .RequireAuthorization(Constants.Permissions.SetAddress);
 
         return builder;
     }
