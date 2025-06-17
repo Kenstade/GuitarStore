@@ -15,6 +15,7 @@ internal sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options)
         modelBuilder.HasDefaultSchema(DefaultSchema);
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrdersDbContext).Assembly);
         
         base.OnModelCreating(modelBuilder);
