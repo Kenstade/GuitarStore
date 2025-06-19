@@ -11,6 +11,7 @@ internal sealed class Order : Aggregate<Guid>
     
     public Guid CustomerId { get; private set; }
     public Guid AddressId { get; private set; }
+    public Address Address { get; private set; } = null!;
     public decimal Total { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
@@ -38,6 +39,21 @@ internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.ToTable("orders")
             .HasKey(o => o.Id);
+        
+        builder.OwnsOne(o => o.Address, x =>
+        {
+            x.Property(c => c.City)
+                .HasMaxLength(100);
+
+            x.Property(c => c.Street)
+                .HasMaxLength(100);
+
+            x.Property(c => c.BuildingNumber)
+                .HasMaxLength(50);
+
+            x.Property(c => c.Apartment)
+                .HasMaxLength(100);
+        });
 
         builder.Property(p => p.OrderStatus)
             .HasMaxLength(25)
