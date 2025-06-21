@@ -22,6 +22,11 @@ internal sealed class OrderItem : Entity<int>
     public decimal Price { get; private set; }
     public int Quantity { get; private set; }
     public Guid OrderId { get; private set; }
+
+    public void AddUnits(int quantity)
+    {
+        Quantity += quantity;
+    }
 }
 
 internal sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
