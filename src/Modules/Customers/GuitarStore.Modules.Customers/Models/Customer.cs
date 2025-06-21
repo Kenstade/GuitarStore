@@ -1,4 +1,6 @@
 ﻿using BuildingBlocks.Core.Domain;
+using BuildingBlocks.Core.ErrorHandling;
+using GuitarStore.Modules.Customers.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -6,10 +8,12 @@ namespace GuitarStore.Modules.Customers.Models;
 
 internal sealed class Customer : Aggregate<Guid>
 {
+    private readonly List<Address> _addresses = [];
+    
     public string Email { get; private set; } = null!;
     public string? PhoneNumber { get; private set; }
     public string? FullName { get; private set; }
-    public Address? Address { get; private set; }
+    public IReadOnlyCollection<Address> Addresses => _addresses.AsReadOnly();
 
     public static Customer Create(Guid id, string email, string? phoneNumber = null, string? fullName = null)
     {
@@ -24,17 +28,21 @@ internal sealed class Customer : Aggregate<Guid>
         return customer;
     }
 
-    public void SetAddress(string city, string street, string buildingNumber, string apartment)
+    public void AddAddress(string city, string street, string buildingNumber, string apartment)
     {
-        Address = new Address(city, street, buildingNumber, apartment, Id);
+        _addresses.Add(new Address(city, street, buildingNumber, apartment, Id));
     }
 
-    public void UpdateAddress(string? city, string? street, string? buildingNumber, string? apartment)
+    public void UpdateAddress(Guid addressId, string? city, string? street, string? buildingNumber, string? apartment)
     {
-        Address!.City = city ?? Address.City;
-        Address.Street = street ?? Address.Street;
-        Address.BuildingNumber = buildingNumber ?? Address.BuildingNumber;
-        Address.Apartment = apartment ?? Address.Apartment;
+        var address = _addresses.FirstOrDefault(a => a.Id == addressId);
+        
+        if (address is null)
+        {
+            throw new ProblemDetailsException(AddressErrors.NotFound(addressId));
+        }
+
+        address.Update(city, street, buildingNumber, apartment);
     }
 }
 
