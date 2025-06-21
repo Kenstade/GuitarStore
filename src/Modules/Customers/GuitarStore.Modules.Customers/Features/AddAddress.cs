@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using BuildingBlocks.Core.ErrorHandling;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Core.Security.Authentication;
 using BuildingBlocks.Core.Validation;
@@ -16,7 +15,7 @@ namespace GuitarStore.Modules.Customers.Features;
 
 internal sealed record AddAddressRequest(string City, string Street, string BuildingNumber, string Apartment);
 
-internal sealed class SetAddress : IEndpoint
+internal sealed class AddAddress : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
@@ -27,18 +26,17 @@ internal sealed class SetAddress : IEndpoint
             
             var customer = await dbContext.Customers
                 .Where(c => c.Id == userId)
-                .Include(c => c.Address)
+                .Include(c => c.Addresses)
                 .FirstOrDefaultAsync(ct);
 
             if (customer is null) return Results.Problem(CustomerErrors.NotFound(userId));
-            if (customer.Address is not null) return Results.Problem(Error.Conflict("Address already exists."));
             
-            customer.SetAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
+            customer.AddAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
             await dbContext.SaveChangesAsync(ct);
 
             return Results.Ok();
         })
-        .AddEndpointFilter<LoggingEndpointFilter<SetAddress>>()
+        .AddEndpointFilter<LoggingEndpointFilter<AddAddress>>()
         .AddEndpointFilter<ValidationEndpointFilter<AddAddressRequest>>()
         .WithName("SetAddress")
         .WithTags("Customers")
