@@ -26,12 +26,14 @@ internal sealed class GetProfile : IEndpoint
                     c.Email,
                     c.PhoneNumber,
                     c.FullName,
-                    c.Address.City,
-                    c.Address.Street,
-                    c.Address.BuildingNumber,
-                    c.Address.Apartment
-                ))
-                .FirstOrDefaultAsync();
+                    c.Addresses.Select(a => new AddressSummary
+                    (
+                        a.City, 
+                        a.Street, 
+                        a.BuildingNumber, 
+                        a.Apartment
+                    )).ToList()
+                )).FirstOrDefaultAsync();
             
             return profile is not null 
                 ? Results.Ok(profile) 
@@ -46,11 +48,6 @@ internal sealed class GetProfile : IEndpoint
     }
 }
 
-internal sealed record GetProfileResponse(
-    string Email, 
-    string? PhoneNumber, 
-    string? FullName, 
-    string? City, 
-    string? Street, 
-    string? BuildingNumber, 
-    string? Apartment);
+internal sealed record GetProfileResponse( string Email, string? PhoneNumber, string? FullName, 
+    ICollection<AddressSummary> Addresses);
+internal sealed record AddressSummary(string City, string Street, string BuildingNumber, string Apartment);
