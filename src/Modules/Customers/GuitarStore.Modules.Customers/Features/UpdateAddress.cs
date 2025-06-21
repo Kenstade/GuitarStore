@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using BuildingBlocks.Core.ErrorHandling;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Core.Security.Authentication;
 using BuildingBlocks.Core.Validation;
@@ -9,31 +8,39 @@ using GuitarStore.Modules.Customers.Data;
 using GuitarStore.Modules.Customers.Errors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Customers.Features;
 
-internal sealed record UpdateAddressRequest(string? City, string? Street, string? BuildingNumber, string? Apartment);
+internal sealed record UpdateAddressRequest(
+    string AddressId,
+    string? City, 
+    string? Street, 
+    string? BuildingNumber, 
+    string? Apartment);
 
 internal sealed class UpdateAddress : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPut("/customers/address", async (UpdateAddressRequest request, CustomersDbContext dbContext, 
-                ClaimsPrincipal user, CancellationToken ct) =>
+        builder.MapPut("/customers/addresses/{addressId}", async (UpdateAddressRequest request, 
+            CustomersDbContext dbContext, ClaimsPrincipal user, CancellationToken ct) =>
         {
             var userId = user.GetUserId();
 
             var customer = await dbContext.Customers
-                .Include(c => c.Address)
-                .Where(a => a.Id == userId)
-                .FirstOrDefaultAsync(ct);
+                .Include(c => c.Addresses.Where(a => a.Id == Guid.Parse(request.AddressId)))
+                .FirstOrDefaultAsync(c => c.Id == userId, ct);
 
             if (customer is null) return Results.Problem(CustomerErrors.NotFound(userId));
-            if (customer.Address is null) return Results.Problem(Error.NotFound("Address not found."));
             
-            customer.UpdateAddress(request.City, request.Street, request.BuildingNumber, request.Apartment);
+            customer.UpdateAddress(
+                Guid.Parse(request.AddressId), 
+                request.City, request.Street, 
+                request.BuildingNumber, 
+                request.Apartment);
             
             await dbContext.SaveChangesAsync(ct);
 
@@ -53,6 +60,7 @@ internal sealed class UpdateAddressRequestValidator : AbstractValidator<UpdateAd
 {
     public UpdateAddressRequestValidator()
     {
+        RuleFor(p => p.AddressId).NotEmpty().Must(id => Guid.TryParse(id, out _)).WithMessage("Invalid addressId");
         RuleFor(x => x.City).MaximumLength(100);
         RuleFor(x => x.Street).MaximumLength(100);
         RuleFor(x => x.BuildingNumber).MaximumLength(50);
