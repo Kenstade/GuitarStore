@@ -38,9 +38,9 @@ internal sealed class AddAddress : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<AddAddress>>()
         .AddEndpointFilter<ValidationEndpointFilter<AddAddressRequest>>()
-        .WithName("SetAddress")
+        .WithName("AddAddress")
         .WithTags("Customers")
-        .RequireAuthorization(Constants.Permissions.SetAddress);
+        .RequireAuthorization(Constants.Permissions.AddAddress);
 
         return builder;
     }
