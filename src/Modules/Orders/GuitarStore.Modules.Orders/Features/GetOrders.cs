@@ -32,13 +32,15 @@ internal sealed class GetOrders : IEndpoint
                                 : Results.Ok("Your order list is empty");   
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetOrders>>()
-        .WithName("GetOrders")
         .WithTags("Orders")
+        .WithName("GetOrders")
+        .WithSummary("Get orders")
+        .WithDescription("Get current user's orders")
         .RequireAuthorization(Constants.Permissions.GetOrder);
 
         return builder;
     }
 }
 
-public sealed record GetOrdersResponse(string OrderStatus, ICollection<OrderItemSummaryResponse> Items);
-public sealed record OrderItemSummaryResponse(int Id, string? Image);
+internal sealed record GetOrdersResponse(string OrderStatus, ICollection<OrderItemSummaryResponse> Items);
+internal sealed record OrderItemSummaryResponse(int Id, string? Image);

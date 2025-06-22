@@ -13,14 +13,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.ShoppingCart.Features;
 
-public sealed record AddItemRequest(string Id);
+internal sealed record AddItemRequest(string Id);
 
 internal sealed class AddItem : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPost("/cart", async (AddItemRequest request, CartDbContext dbContext, 
-                IUserContext userContext, ICatalogService catalogService, CancellationToken ct) =>
+            IUserContext userContext, ICatalogService catalogService, CancellationToken ct) =>
         {
             var parsedRequestId = Guid.Parse(request.Id); 
             
@@ -51,15 +51,17 @@ internal sealed class AddItem : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<AddItem>>()   
         .AddEndpointFilter<ValidationEndpointFilter<AddItemRequest>>()
-        .WithName("AddItemIntoCart")
         .WithTags("Cart")
+        .WithName("AddItemToCart")
+        .WithSummary("Add item to cart")
+        .WithDescription("Add an item to the current user's shopping cart")
         .RequireAuthorization();
         
         return builder;
     }
 }
 
-public sealed class AddItemRequestValidator : AbstractValidator<AddItemRequest>
+internal sealed class AddItemRequestValidator : AbstractValidator<AddItemRequest>
 {
     public AddItemRequestValidator()
     {

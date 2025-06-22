@@ -27,8 +27,10 @@ internal sealed class CreateOrder : IEndpoint
             
             return Results.Ok($"Order '{order.Id}' placed.");
         })
-        .WithName("CreateOrder")
         .WithTags("Orders")
+        .WithName("CreateOrder")
+        .WithSummary("Checkout")
+        .WithDescription("Create a new order for the current user")
         .AddEndpointFilter<LoggingEndpointFilter<CreateOrder>>()
         .AddEndpointFilter<ValidationEndpointFilter<CreateOrderRequest>>()
         .RequireAuthorization(Constants.Permissions.CreateOrder);    

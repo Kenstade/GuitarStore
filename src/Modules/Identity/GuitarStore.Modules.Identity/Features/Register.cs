@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace GuitarStore.Modules.Identity.Features;
 
-public sealed record RegisterUserRequest(string Email, string Password);
+internal sealed record RegisterUserRequest(string Email, string Password);
 internal sealed class Register : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
@@ -38,15 +38,16 @@ internal sealed class Register : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<Register>>()
         .AddEndpointFilter<ValidationEndpointFilter<RegisterUserRequest>>()
-        .WithName("Register")
         .WithTags("Identity")
+        .WithName("Register")
+        .WithSummary("Create new user")
         .AllowAnonymous();
         
         return builder;
     }
 }
 
-public sealed class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
+internal sealed class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
 {
     public RegisterUserRequestValidator()
     {

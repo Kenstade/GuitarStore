@@ -25,7 +25,7 @@ internal sealed class UpdateAddress : IEndpoint
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPut("/customers/addresses", async (UpdateAddressRequest request, CustomersDbContext dbContext, 
-                ClaimsPrincipal user, CancellationToken ct) =>
+            ClaimsPrincipal user, CancellationToken ct) =>
         {
             var userId = user.GetUserId();
             
@@ -48,8 +48,10 @@ internal sealed class UpdateAddress : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<UpdateAddress>>()
         .AddEndpointFilter<ValidationEndpointFilter<UpdateAddressRequest>>()
-        .WithName("UpdateAddress")
         .WithTags("Customers")
+        .WithName("UpdateAddress")
+        .WithSummary("Update address by ID")
+        .WithDescription("Update existing address for the current user by ID")
         .RequireAuthorization(Constants.Permissions.UpdateAddress);
 
         return builder;

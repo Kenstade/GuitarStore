@@ -45,8 +45,9 @@ internal sealed class GetProductDetails : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetProductDetails>>()    
         .AddEndpointFilter<ValidationEndpointFilter<GetProductDetailsRequest>>()
-        .WithName("GetProductDetails")
         .WithTags("Catalog")
+        .WithName("GetProductDetails")
+        .WithSummary("Get product details by ID")
         .AllowAnonymous();
         
         return builder;

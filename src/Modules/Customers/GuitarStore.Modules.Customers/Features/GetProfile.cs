@@ -40,8 +40,10 @@ internal sealed class GetProfile : IEndpoint
                 : Results.Problem(CustomerErrors.NotFound(userId));
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetProfile>>()
-        .WithName("GetProfile")
         .WithTags("Customers")
+        .WithName("GetProfile")
+        .WithSummary("Get profile")
+        .WithDescription("Get the current user's profile")
         .RequireAuthorization(Constants.Permissions.GetProfile);
 
         return builder;

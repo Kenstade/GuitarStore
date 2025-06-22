@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using BuildingBlocks.Core.Logging;
+using BuildingBlocks.Core.Security.Authentication;
 using BuildingBlocks.Core.Validation;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
@@ -11,18 +13,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Orders.Features;
 
-public sealed record GetOrderDetailsRequest(string Id);
+internal sealed record GetOrderDetailsRequest(string Id);
 
 internal sealed class GetOrderDetails : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapGet("/orders/{id}", async ([AsParameters]GetOrderDetailsRequest request, OrdersDbContext dbContext, 
-            CancellationToken ct) =>
+            ClaimsPrincipal user, CancellationToken ct) =>
         {
             var order = await dbContext.Orders
                 .AsNoTracking()
-                .Where(o => o.Id == Guid.Parse(request.Id))
+                .Where(o => o.Id == Guid.Parse(request.Id) && o.CustomerId == user.GetUserId())
                 .Select(o => new GetOrderDetailsResponse
                 (
                     o.OrderStatus.ToString(),
@@ -45,15 +47,17 @@ internal sealed class GetOrderDetails : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetOrderDetails>>()
         .AddEndpointFilter<ValidationEndpointFilter<GetOrderDetailsRequest>>()
-        .WithName("GetOrderDetails")
         .WithTags("Orders")
+        .WithName("GetOrderDetails")
+        .WithSummary("Get order details")
+        .WithDescription("Get the current user's order by ID")
         .RequireAuthorization(Constants.Permissions.GetOrder);
 
         return builder;
     }
 }
 
-public sealed record GetOrderDetailsResponse(
+internal sealed record GetOrderDetailsResponse(
     string OrderStatus, 
     string City, 
     string Street, 
@@ -61,9 +65,9 @@ public sealed record GetOrderDetailsResponse(
     string Apartment, 
     ICollection<OrderItemSummary> Items);
 
-public sealed record OrderItemSummary(string Name, decimal Price, string? Image, int Quantity);
+internal sealed record OrderItemSummary(string Name, decimal Price, string? Image, int Quantity);
 
-public sealed class GetOrderDetailsRequestValidator : AbstractValidator<GetOrderDetailsRequest>
+internal sealed class GetOrderDetailsRequestValidator : AbstractValidator<GetOrderDetailsRequest>
 {
     public GetOrderDetailsRequestValidator()
     {

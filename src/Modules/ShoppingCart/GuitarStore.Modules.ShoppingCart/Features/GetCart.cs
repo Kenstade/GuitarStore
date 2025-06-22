@@ -35,14 +35,16 @@ internal sealed class GetCart : IEndpoint
             return cart == null ? Results.Ok("Your cart is empty") 
                                 : Results.Ok(cart);
         })
-        .AddEndpointFilter<LoggingEndpointFilter<GetCart>>()    
-        .WithName("GetCart")
+        .AddEndpointFilter<LoggingEndpointFilter<GetCart>>()   
         .WithTags("Cart")
+        .WithName("GetCart")
+        .WithSummary("Get cart")
+        .WithDescription("Get the current user's shopping cart")
         .RequireAuthorization();    
         
         return builder;
     }
 }
 
-public sealed record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);
-public sealed record CartItemPartialResponse(string Name, string? Image, decimal Price, int Quantity);
+internal sealed record GetCartResponse(decimal Total, ICollection<CartItemPartialResponse> Items);
+internal sealed record CartItemPartialResponse(string Name, string? Image, decimal Price, int Quantity);
