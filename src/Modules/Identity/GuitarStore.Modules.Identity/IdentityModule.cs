@@ -22,12 +22,12 @@ public static class IdentityModule
 
         services.AddKeyCloakIdentityProvider(configuration);
         
-        services.AddTransient<IIdentityProvider, IdentityProvider>(); //cqrs
+        services.AddTransient<IIdentityProvider, IdentityProvider>();
         
         services.AddPermissionAuthorization();
         services.AddQueryHandlers();
         
-        services.AddValidatorsFromAssembly(typeof(IdentityModule).Assembly);
+        services.AddValidatorsFromAssembly(typeof(IdentityModule).Assembly, includeInternalTypes: true);
         services.AddMinimalApiEndpoints(typeof(IdentityModule).Assembly);
         
         return services;
