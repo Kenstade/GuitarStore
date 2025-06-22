@@ -7,9 +7,9 @@ internal sealed class IdentityContext(DbContextOptions<IdentityContext> options)
 {
     public const string DefaultSchema = "identity";
     
-    public DbSet<User> Users { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Permission> Permissions => Set<Permission>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

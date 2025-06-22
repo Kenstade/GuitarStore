@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Core.Messaging.Outbox;
-using GuitarStore.Modules.Catalog.Models;
+﻿using GuitarStore.Modules.Catalog.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuitarStore.Modules.Catalog.Data;
@@ -7,11 +6,11 @@ internal sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> option
 {
     public const string DefaultSchema = "catalog";
 
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Brand> Brands { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<SpecificationType> SpecificationTypes { get; set; }
-    public DbSet<ProductSpecification> ProductSpecification { get; set; }
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<SpecificationType> SpecificationTypes => Set<SpecificationType>();
+    public DbSet<ProductSpecification> ProductSpecification => Set<ProductSpecification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

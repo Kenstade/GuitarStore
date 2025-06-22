@@ -7,8 +7,8 @@ internal sealed class CustomersDbContext(DbContextOptions<CustomersDbContext> op
 {
     public const string DefaultSchema = "customers";
     
-    public DbSet<Customer> Customers { get; set; }
-    public DbSet<Address> Addresses { get; set; }
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Address> Addresses => Set<Address>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(DefaultSchema);

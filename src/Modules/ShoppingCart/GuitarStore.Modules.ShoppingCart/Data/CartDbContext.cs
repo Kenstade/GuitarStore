@@ -6,8 +6,8 @@ internal sealed class CartDbContext(DbContextOptions<CartDbContext> options) : D
 {
     public const string DefaultSchema = "shopping_cart";
     
-    public DbSet<Cart> Carts { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Cart> Carts => Set<Cart>();
+    public DbSet<CartItem> CartItems => Set<CartItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
