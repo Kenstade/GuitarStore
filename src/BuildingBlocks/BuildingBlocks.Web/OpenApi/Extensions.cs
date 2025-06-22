@@ -15,6 +15,10 @@ public static class Extensions
         var scheme = new OpenApiSecurityScheme()
         {
             Type = SecuritySchemeType.OAuth2,
+            Name = "Authorization",
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
             Flows = new OpenApiOAuthFlows
             {
                 Implicit = new OpenApiOAuthFlow
@@ -28,39 +32,41 @@ public static class Extensions
                 }
             },
         };
-
-        var securityRequirement = new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "Keycloak",
-                        Type = ReferenceType.SecurityScheme
-                    },
-                    In = ParameterLocation.Header,
-                    Name = "Bearer",
-                    Scheme = "Bearer",
-                },
-                []
-            }
-        };
+        
         options.AddDocumentTransformer((document, context, cancellationToken) =>
         {
             document.Components ??= new OpenApiComponents();
             document.Components.SecuritySchemes.Add("Keycloak", scheme);
-            document.SecurityRequirements.Add(securityRequirement);
+            document.SecurityRequirements = new List<OpenApiSecurityRequirement>
+            {
+                new() { { scheme, new List<string>() } }
+            };
+            
             return Task.CompletedTask;
         });
+        
         options.AddOperationTransformer((operation, context, cancellationToken) =>
         {
             if (context.Description.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>().Any())
             {
-                operation.Security = [new OpenApiSecurityRequirement { [scheme] = [] }];
+                operation.Security = [new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Keycloak",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        []
+                    }
+                }];
             }
             return Task.CompletedTask;
         });
+        
         return options;
     }
 }
