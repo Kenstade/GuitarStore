@@ -8,7 +8,6 @@ using GuitarStore.Modules.Customers.Data;
 using GuitarStore.Modules.Customers.Errors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,11 +24,11 @@ internal sealed class UpdateAddress : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPut("/customers/addresses/{addressId}", async (UpdateAddressRequest request, 
-            CustomersDbContext dbContext, ClaimsPrincipal user, CancellationToken ct) =>
+        builder.MapPut("/customers/addresses", async (UpdateAddressRequest request, CustomersDbContext dbContext, 
+                ClaimsPrincipal user, CancellationToken ct) =>
         {
             var userId = user.GetUserId();
-
+            
             var customer = await dbContext.Customers
                 .Include(c => c.Addresses.Where(a => a.Id == Guid.Parse(request.AddressId)))
                 .FirstOrDefaultAsync(c => c.Id == userId, ct);
@@ -38,7 +37,8 @@ internal sealed class UpdateAddress : IEndpoint
             
             customer.UpdateAddress(
                 Guid.Parse(request.AddressId), 
-                request.City, request.Street, 
+                request.City, 
+                request.Street,  
                 request.BuildingNumber, 
                 request.Apartment);
             
