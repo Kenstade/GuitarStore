@@ -19,7 +19,7 @@ internal sealed class AddAddress : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost("customers/address", async (AddAddressRequest request, CustomersDbContext dbContext, 
+        builder.MapPost("customers/addresses", async (AddAddressRequest request, CustomersDbContext dbContext, 
             ClaimsPrincipal user, CancellationToken ct) =>
         {
             var userId = user.GetUserId();
