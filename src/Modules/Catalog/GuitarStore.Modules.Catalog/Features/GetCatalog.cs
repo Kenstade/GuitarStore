@@ -16,7 +16,7 @@ internal sealed class GetCatalog : IEndpoint
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, CatalogDbContext dbContext, 
-                CancellationToken ct) =>
+            CancellationToken ct) =>
         {
             var catalogQuery = dbContext.Products
                 .Include(p => p.Category)
@@ -45,8 +45,9 @@ internal sealed class GetCatalog : IEndpoint
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalog>>() 
         .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
-        .WithName("GetCatalog")
         .WithTags("Catalog")
+        .WithName("GetCatalog")
+        .WithSummary("Get catalog")
         .AllowAnonymous();
 
         return builder;
