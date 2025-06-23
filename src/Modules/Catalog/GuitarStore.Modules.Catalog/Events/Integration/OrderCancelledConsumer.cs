@@ -9,6 +9,7 @@ namespace GuitarStore.Modules.Catalog.Events.Integration;
 
 internal sealed class OrderCancelledConsumer(
     CatalogDbContext dbContext,
+    IBus bus,
     ILogger<OrderCancelledConsumer> logger)
     : IConsumer<OrderCancelledIntegrationEvent>
 {
@@ -29,6 +30,8 @@ internal sealed class OrderCancelledConsumer(
             
             product.RestoreStock(item.Quantity);
         }
+        
+        await bus.Publish(new ProductsStockRestoredIntegrationEvent(context.Message.CorrelationId)); 
 
         await dbContext.SaveChangesAsync();
     }
