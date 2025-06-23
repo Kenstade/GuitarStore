@@ -31,6 +31,7 @@ public static class CustomersModule
     public static IRegistrationConfigurator AddCustomersModuleConsumers(this IRegistrationConfigurator configurator)
     {
         configurator.AddConsumer<UserRegisteredConsumer>();
+        configurator.AddConsumer<OrderStatusChangedToAwaitingValidationConsumer>();
         
         return configurator;
     }
