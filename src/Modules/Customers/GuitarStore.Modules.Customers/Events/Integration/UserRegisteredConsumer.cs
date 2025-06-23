@@ -11,8 +11,8 @@ internal sealed class UserRegisteredConsumer(CustomersDbContext dbContext, ILogg
 {
     public async Task Consume(ConsumeContext<UserRegisteredIntegrationEvent> context)
     {
-        logger.LogInformation("Handling '{IntegrationEvent}' - '{IntegrationEventId}'.", 
-            context.Message.Id, nameof(UserRegisteredIntegrationEvent)); 
+        logger.LogInformation("Handling {Event}. EventId: {EventId}.", 
+            nameof(UserRegisteredIntegrationEvent), context.Message.Id);
         
         var customer = Customer.Create(context.Message.UserId, context.Message.Email);
         

@@ -13,8 +13,7 @@ internal sealed class UserRegisteredHandler(IBus bus, ILogger<UserRegisteredHand
 {
     public async Task Handle(UserRegistered domainEvent, CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("Handling '{DomainEvent}' - '{DomainEventId}'.", 
-            nameof(UserRegistered), domainEvent.Id);
+        logger.LogInformation("Handling {Event}. EventId: {EventId}.", nameof(UserRegistered), domainEvent.Id);
         
         await bus.Publish(new UserRegisteredIntegrationEvent(domainEvent.UserId, domainEvent.Email), cancellationToken);
     }
