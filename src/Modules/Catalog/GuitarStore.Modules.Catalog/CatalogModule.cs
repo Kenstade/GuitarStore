@@ -35,7 +35,7 @@ public static class CatalogModule
     public static IRegistrationConfigurator AddCatalogModuleConsumers(this IRegistrationConfigurator configurator)
     {
         configurator.AddConsumer<OrderStatusChangedToAwaitingValidationConsumer>();
-        configurator.AddConsumer<OrderStatusChangedToCancelledConsumer>();
+        configurator.AddConsumer<OrderCancelledConsumer>();
         
         return configurator;
     }
