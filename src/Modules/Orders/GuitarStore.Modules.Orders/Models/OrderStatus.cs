@@ -4,10 +4,9 @@ internal enum OrderStatus
 {
     Placed = 1,
     AwaitingValidation = 2,
-    Validated = 3,
-    AwaitingPayment = 4,
-    Paid = 5,
-    Shipped = 6,
-    Delivered = 7,
-    Cancelled = 8
+    AwaitingPayment = 5,
+    Paid = 6,
+    Shipped = 7,
+    Delivered = 8,
+    Cancelled = 9
 }
