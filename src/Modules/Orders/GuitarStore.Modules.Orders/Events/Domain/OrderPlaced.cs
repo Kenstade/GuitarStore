@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GuitarStore.Modules.Orders.Events.Domain;
 
-internal sealed record OrderPlaced(Guid OrderId, Guid CustomerId) : DomainEvent;
+internal sealed record OrderPlaced(Guid CorrelationId, Guid OrderId, Guid CustomerId) : DomainEvent;
 
 internal sealed class OrderPlacedHandler(
     IBus bus,
@@ -15,11 +15,11 @@ internal sealed class OrderPlacedHandler(
 {
     public async Task Handle(OrderPlaced domainEvent, CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("Handling '{DomainEvent}' - '{DomainEventId}'.",
-            nameof(OrderPlaced), domainEvent.Id);
+        logger.LogInformation("Handling {Event}. EventId: {EventId}, CorrelationId: {CorrelationId}.", 
+            nameof(OrderPlaced), domainEvent.Id, domainEvent.CorrelationId);
 
         await bus.Publish(
-            new OrderPlacedIntegrationEvent(domainEvent.OrderId, domainEvent.CustomerId), 
+            new OrderPlacedIntegrationEvent(domainEvent.CorrelationId, domainEvent.OrderId, domainEvent.CustomerId), 
                 cancellationToken);
     }
 }

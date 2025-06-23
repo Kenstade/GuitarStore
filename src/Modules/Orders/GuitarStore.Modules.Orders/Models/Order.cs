@@ -26,7 +26,7 @@ internal sealed class Order : Aggregate<Guid>
             OrderStatus = OrderStatus.Placed
         };
         
-        order.AddDomainEvent(new OrderPlaced(order.Id, order.CustomerId));
+        order.AddDomainEvent(new OrderPlaced(Guid.NewGuid(), order.Id, order.CustomerId));
         
         return order;
     }
