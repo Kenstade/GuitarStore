@@ -1,9 +1,13 @@
-﻿using BuildingBlocks.Core.EFCore;
+﻿using BuildingBlocks.Core.Caching;
+using BuildingBlocks.Core.EFCore;
 using BuildingBlocks.Core.Events;
+using BuildingBlocks.Core.Extensions;
 using BuildingBlocks.Web.MinimalApi;
 using FluentValidation;
 using GuitarStore.Modules.Orders.BackgroundJobs;
 using GuitarStore.Modules.Orders.Data;
+using GuitarStore.Modules.Orders.Events.CreateOrderSaga;
+using GuitarStore.Modules.Orders.Events.Integration;
 using GuitarStore.Modules.Orders.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +41,16 @@ public static class OrdersModule
     
     public static IRegistrationConfigurator AddOrdersModuleConsumers(this IRegistrationConfigurator configurator, IConfiguration configuration)
     {
+        var redisConnectionString = configuration.GetOptions<RedisOptions>(nameof(RedisOptions)).ConnectionString;
+        
+        configurator.AddConsumer<CartItemsReceivedConsumer>();
+        configurator.AddConsumer<OrderStockConfirmationFailedConsumer>();
+        configurator.AddConsumer<CustomerAddressConfirmedConsumer>();
+        configurator.AddConsumer<AddressConfirmationFailedConsumer>();
+        configurator.AddConsumer<OrderValidatedConsumer>();
+
+        configurator.AddSagaStateMachine<CreateOrderSaga, CreateOrderState>()
+            .InMemoryRepository();
             
         return configurator;
     }
