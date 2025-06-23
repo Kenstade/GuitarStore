@@ -10,7 +10,7 @@ internal static class ModuleExtensions
             configurationManager.AddJsonFile(file);
         }
         
-        foreach (var file in Directory.GetFiles(root,$"*.appsettings.{environment}.json",SearchOption.AllDirectories))
+        foreach (var file in Directory.GetFiles(root,$"*.appsettings.{environment}.json", SearchOption.AllDirectories))
         {
             configurationManager.AddJsonFile(file, true, true);
         }

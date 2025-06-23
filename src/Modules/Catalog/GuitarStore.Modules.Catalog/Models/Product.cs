@@ -1,6 +1,4 @@
 ﻿using BuildingBlocks.Core.Domain;
-using BuildingBlocks.Core.ErrorHandling;
-using GuitarStore.Modules.Catalog.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -91,7 +89,6 @@ internal sealed class Product : Aggregate<Guid>
     public void RestoreStock(int quantity)
     {
         if (quantity < 0) quantity *= -1;
-        
         AvailableStock += quantity;
     }
     
