@@ -1,7 +1,1 @@
-{
-  "Catalog": {
-    "HangfireOptions": {
-      "OutboxSchedule": "0/1 * * * * *"
-    }
-  }
-}
+
