@@ -31,6 +31,26 @@ internal sealed class Order : Aggregate<Guid>
         return order;
     }
 
+    public void AddItem(Guid productId, string name, string? image, decimal price, int quantity, Guid orderId)
+    {
+        var existingItem = _items.FirstOrDefault(i => i.ProductId == productId);
+        if (existingItem != null)
+        {
+            existingItem.AddUnits(quantity);
+        }
+        else
+        {
+            _items.Add(new OrderItem(productId, name, image, price, quantity, orderId));
+        }
+        
+        Total += price * quantity;
+    }
+
+    public void SetAwaitingValidationStatus(Guid correlationId)
+    {
+        OrderStatus = OrderStatus.AwaitingValidation;
+        AddDomainEvent(new OrderStatusChangedToAwaitingValidation(correlationId, Id));
+    }
 }
 
 internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
