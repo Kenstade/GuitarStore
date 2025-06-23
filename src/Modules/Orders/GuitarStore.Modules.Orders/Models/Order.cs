@@ -63,6 +63,12 @@ internal sealed class Order : Aggregate<Guid>
     {
         OrderStatus = OrderStatus.AwaitingPayment;
     }
+
+    public void SetCancelledStatus()
+    {
+        OrderStatus = OrderStatus.Cancelled;
+        AddDomainEvent(new OrderCancelled(Guid.NewGuid(), Id));
+    }
 }
 
 internal sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
