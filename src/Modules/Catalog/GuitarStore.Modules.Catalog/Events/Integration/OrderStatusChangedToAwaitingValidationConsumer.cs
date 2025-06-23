@@ -23,7 +23,7 @@ internal sealed class OrderStatusChangedToAwaitingValidationConsumer(
             .Where(p => productIds.Contains(p.Id))
             .ToListAsync();
         
-        var unconfirmedOrderStockItems = new List<UnconfirmedOrderStockItem>();
+        var unconfirmedOrderStockItems = new List<OrderItemSummary>();
 
         foreach (var item in context.Message.OrderItems)
         {
@@ -33,7 +33,7 @@ internal sealed class OrderStatusChangedToAwaitingValidationConsumer(
             {
                 logger.LogError("Product '{Id}' not found.", item.ProductId);
                 
-                unconfirmedOrderStockItems.Add(new UnconfirmedOrderStockItem(item.ProductId, item.Quantity));
+                unconfirmedOrderStockItems.Add(new OrderItemSummary(item.ProductId, item.Quantity));
 
                 continue;
             }
@@ -42,7 +42,7 @@ internal sealed class OrderStatusChangedToAwaitingValidationConsumer(
                 logger.LogError("Requested quantity({Quantity}) for product '{Id}' exceeds available stock({Stock}).", 
                     item.Quantity, item.ProductId, product.AvailableStock);
                 
-                unconfirmedOrderStockItems.Add(new UnconfirmedOrderStockItem(item.ProductId, item.Quantity));
+                unconfirmedOrderStockItems.Add(new OrderItemSummary(item.ProductId, item.Quantity));
 
                 continue;
             }
