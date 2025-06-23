@@ -15,13 +15,14 @@ internal sealed class OrderPlacedConsumer(
 {
     public async Task Consume(ConsumeContext<OrderPlacedIntegrationEvent> context)
     {
-        logger.LogInformation("Handling '{IntegrationEvent}' - '{IntegrationEventId}'.", 
-            nameof(OrderPlacedIntegrationEvent), context.Message.Id); 
+        logger.LogInformation("Handling {Event}. EventId: {EventId}, CorrelationId: {CorrelationId}.", 
+            nameof(OrderPlacedIntegrationEvent), context.Message.Id, context.Message.CorrelationId);
         
         var integrationEvent = await dbContext.Carts
             .Where(c => c.CustomerId == context.Message.CustomerId)
             .Select(c => new CartItemsReceivedIntegrationEvent
             (
+                context.Message.CorrelationId,
                 context.Message.OrderId,
                 c.Items.Select(i => new CartItemSummary
                 (
