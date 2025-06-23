@@ -46,10 +46,22 @@ internal sealed class Order : Aggregate<Guid>
         Total += price * quantity;
     }
 
+    public void AddAddress(Guid correlationId, string city, string street, string buildingNumber, string apartment)
+    {
+        Address = new Address(city, street, buildingNumber, apartment);
+        
+        AddDomainEvent(new CustomerAddressAddedToOrder(correlationId));
+    }
+
     public void SetAwaitingValidationStatus(Guid correlationId)
     {
         OrderStatus = OrderStatus.AwaitingValidation;
         AddDomainEvent(new OrderStatusChangedToAwaitingValidation(correlationId, Id));
+    }
+
+    public void SetAwaitingPaymentStatus()
+    {
+        OrderStatus = OrderStatus.AwaitingPayment;
     }
 }
 
