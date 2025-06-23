@@ -21,11 +21,8 @@ internal sealed class GetOrders : IEndpoint
                 .Select(o => new GetOrdersResponse
                 (
                     o.OrderStatus.ToString(),
-                    o.Items.Select(i => new OrderItemSummaryResponse
-                    (
-                        i.Id,
-                        i.Image
-                    )).ToList()
+                    o.Total,
+                    o.Items.Select(i => new OrderItemSummaryResponse(i.Image)).ToList()
                 )).ToListAsync(ct);
             
             return orders.Any() ? Results.Ok(orders)
@@ -42,5 +39,5 @@ internal sealed class GetOrders : IEndpoint
     }
 }
 
-internal sealed record GetOrdersResponse(string OrderStatus, ICollection<OrderItemSummaryResponse> Items);
-internal sealed record OrderItemSummaryResponse(int Id, string? Image);
+internal sealed record GetOrdersResponse(string OrderStatus, decimal Total, ICollection<OrderItemSummaryResponse> Items);
+internal sealed record OrderItemSummaryResponse(string? Image);
