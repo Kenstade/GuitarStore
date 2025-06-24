@@ -1,6 +1,6 @@
 services:
   api:
-    image: ${DOCKER_REGISTRY-}msuicstoreapi
+    image: ${DOCKER_REGISTRY-}musicstoreapi
     container_name: MusicStore.Api
     build:
       context: .
