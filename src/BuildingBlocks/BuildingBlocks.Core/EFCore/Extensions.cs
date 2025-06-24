@@ -20,7 +20,7 @@ public static class Extensions
         {
             services.AddDbContext<TContext>((sp,options) =>
             {
-                options.UseInMemoryDatabase("guitarstoredb")
+                options.UseInMemoryDatabase("musicstoredb")
                 .AddInterceptors(sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>());
             });
         }

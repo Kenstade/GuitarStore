@@ -1,19 +1,19 @@
 services:
   api:
-    image: ${DOCKER_REGISTRY-}guitarstoreapi
-    container_name: GuitarStore.Api
+    image: ${DOCKER_REGISTRY-}msuicstoreapi
+    container_name: MusicStore.Api
     build:
       context: .
-      dockerfile: src/Api/GuitarStore.Api/Dockerfile
+      dockerfile: src/Api/MusicStore.Api/Dockerfile
     ports:
       - "5000:8080"
       - "5050:8081"
       
   postgres:
-    container_name: GuitarStore.Postgres
+    container_name: MusicStore.Postgres
     image: postgres:latest
     environment:
-      POSTGRES_DB: "GuitarStoreDb"
+      POSTGRES_DB: "MusicStoreDb"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
     volumes:
@@ -22,14 +22,14 @@ services:
       - "5432:5432"
         
   redis:
-    container_name: GuitarStore.Redis
+    container_name: MusicStore.Redis
     image: redis:latest
     restart: always
     ports: 
       - '6379:6379'
         
   rabbitmq:
-    container_name: GuitarStore.RabbitMq
+    container_name: MusicStore.RabbitMq
     image: rabbitmq:management
     restart: on-failure
     ports:
@@ -41,7 +41,7 @@ services:
       - rabbitmq
         
   keycloak:
-    container_name: GuitarStore.Keycloak
+    container_name: MusicStore.Keycloak
     image: quay.io/keycloak/keycloak:latest
     environment:
       - KC_HEALTH_ENABLED=true

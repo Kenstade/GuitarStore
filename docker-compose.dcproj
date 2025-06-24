@@ -7,7 +7,7 @@
     <ProjectGuid>bbe8af5b-b792-4dd6-91c3-bca373b5218a</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>guitarstore.api</DockerServiceName>
+    <DockerServiceName>musicstore.api</DockerServiceName>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
