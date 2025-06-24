@@ -19,7 +19,7 @@ COPY ["src/Modules/Catalog/MusicStore.Modules.Catalog/MusicStore.Modules.Catalog
 COPY ["src/Modules/Customers/MusicStore.Modules.Customers/MusicStore.Modules.Customers.csproj", "src/Modules/MusicStore.Modules.Customers/"]
 COPY ["src/Modules/Identity/MusicStore.Modules.Identity/MusicStore.Modules.Identity.csproj", "src/Modules/MusicStore.Modules.Identity/"]
 COPY ["src/Modules/Orders/MusicStore.Modules.Orders/MusicStore.Modules.Orders.csproj", "src/Modules/MusicStore.Modules.Ordering/"]
-COPY ["src/Modules/ShoppingCart/MusicStore.Modules.ShoppingCarts/MusicStore.Modules.ShoppingCarts.csproj", "src/Modules/MusicStore.Modules.ShoppingCarts/"]
+COPY ["src/Modules/ShoppingCart/MusicStore.Modules.ShoppingCart/MusicStore.Modules.ShoppingCart.csproj", "src/Modules/MusicStore.Modules.ShoppingCart/"]
 RUN dotnet restore "./src/Api/MusicStore.Api/MusicStore.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Api/MusicStore.Api"

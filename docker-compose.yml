@@ -43,15 +43,16 @@ services:
   keycloak:
     container_name: MusicStore.Keycloak
     image: quay.io/keycloak/keycloak:latest
+    command: start-dev --import-realm
     environment:
       - KC_HEALTH_ENABLED=true
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-    restart: always
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files:/opt/keycloak/data/import
     ports:
       - "18080:8080"
-    command:
-      - start-dev
 
 networks:
   rabbitmq:
