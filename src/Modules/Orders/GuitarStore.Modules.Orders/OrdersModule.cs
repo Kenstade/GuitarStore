@@ -49,6 +49,9 @@ public static class OrdersModule
         configurator.AddConsumer<AddressConfirmationFailedConsumer>();
         configurator.AddConsumer<OrderValidatedConsumer>();
 
+        configurator.AddSagaStateMachine<CancelOrderSaga, CancelOrderState>()
+            .InMemoryRepository();
+        
         configurator.AddSagaStateMachine<CreateOrderSaga, CreateOrderState>()
             .InMemoryRepository();
             
