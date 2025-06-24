@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{F3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{374CF510-7F56-4F03-9139-F7E1A69D6BC7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCart", "ShoppingCart", "{D889A489-C0FC-4791-8443-C73D8F8B0620}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCarts", "ShoppingCarts", "{D889A489-C0FC-4791-8443-C73D8F8B0620}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Customers", "src\Modules\Customers\MusicStore.Modules.Customers\MusicStore.Modules.Customers.csproj", "{D1DB1D92-9C56-4310-94D4-39A462B528D7}"
 EndProject
@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Identity
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Orders", "src\Modules\Orders\MusicStore.Modules.Orders\MusicStore.Modules.Orders.csproj", "{17BA2BD3-99BC-4D19-BEC6-8BC1B9C4D1F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.ShoppingCart", "src\Modules\ShoppingCart\MusicStore.Modules.ShoppingCart\MusicStore.Modules.ShoppingCart.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.ShoppingCarts", "src\Modules\ShoppingCarts\MusicStore.Modules.ShoppingCarts\MusicStore.Modules.ShoppingCarts.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Catalog", "src\Modules\Catalog\MusicStore.Modules.Catalog\MusicStore.Modules.Catalog.csproj", "{61EBE22B-6E4E-47C0-B9C0-4B967ED9485C}"
 EndProject

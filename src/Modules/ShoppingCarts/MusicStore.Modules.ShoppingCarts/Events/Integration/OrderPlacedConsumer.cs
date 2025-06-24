@@ -3,12 +3,12 @@ using BuildingBlocks.Core.Messaging.IntegrationEvents.ShoppingCart;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MusicStore.Modules.ShoppingCart.Data;
+using MusicStore.Modules.ShoppingCarts.Data;
 
-namespace MusicStore.Modules.ShoppingCart.Events.Integration;
+namespace MusicStore.Modules.ShoppingCarts.Events.Integration;
 
 internal sealed class OrderPlacedConsumer(
-    CartDbContext dbContext, 
+    CartsDbContext dbContext, 
     IBus bus, 
     ILogger<OrderPlacedConsumer> logger) 
     : IConsumer<OrderPlacedIntegrationEvent>

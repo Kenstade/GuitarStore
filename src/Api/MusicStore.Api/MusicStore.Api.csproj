@@ -29,7 +29,7 @@
     <ProjectReference Include="..\..\Modules\Customers\MusicStore.Modules.Customers\MusicStore.Modules.Customers.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\MusicStore.Modules.Identity\MusicStore.Modules.Identity.csproj" />
     <ProjectReference Include="..\..\Modules\Orders\MusicStore.Modules.Orders\MusicStore.Modules.Orders.csproj" />
-    <ProjectReference Include="..\..\Modules\ShoppingCart\MusicStore.Modules.ShoppingCart\MusicStore.Modules.ShoppingCart.csproj" />
+    <ProjectReference Include="..\..\Modules\ShoppingCarts\MusicStore.Modules.ShoppingCarts\MusicStore.Modules.ShoppingCarts.csproj" />
   </ItemGroup>
 
 </Project>

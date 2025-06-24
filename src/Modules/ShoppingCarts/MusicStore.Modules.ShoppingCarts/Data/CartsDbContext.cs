@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MusicStore.Modules.ShoppingCart.Models;
+using MusicStore.Modules.ShoppingCarts.Models;
 
-namespace MusicStore.Modules.ShoppingCart.Data;
-internal sealed class CartDbContext(DbContextOptions<CartDbContext> options) : DbContext(options)
+namespace MusicStore.Modules.ShoppingCarts.Data;
+internal sealed class CartsDbContext(DbContextOptions<CartsDbContext> options) : DbContext(options)
 {
-    public const string DefaultSchema = "shopping_cart";
+    public const string DefaultSchema = "shopping_carts";
     
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
@@ -13,7 +13,7 @@ internal sealed class CartDbContext(DbContextOptions<CartDbContext> options) : D
     {
         modelBuilder.HasDefaultSchema(DefaultSchema);
             
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CartsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 }

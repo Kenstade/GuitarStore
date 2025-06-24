@@ -1,6 +1,6 @@
 using BuildingBlocks.Core.ErrorHandling;
 
-namespace MusicStore.Modules.ShoppingCart.Errors;
+namespace MusicStore.Modules.ShoppingCarts.Errors;
 
 public static class CartErrors
 {

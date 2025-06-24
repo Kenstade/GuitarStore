@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using MusicStore.Modules.ShoppingCart.Data;
+using MusicStore.Modules.ShoppingCarts.Data;
 
-namespace MusicStore.Modules.ShoppingCart.Features;
+namespace MusicStore.Modules.ShoppingCarts.Features;
 
 internal sealed class GetCart : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/cart", async (CartDbContext dbContext, IUserContext userContext, CancellationToken ct) =>
+        builder.MapGet("/cart", async (CartsDbContext dbContext, IUserContext userContext, CancellationToken ct) =>
         {
             var userId = userContext.GetUserId();
         

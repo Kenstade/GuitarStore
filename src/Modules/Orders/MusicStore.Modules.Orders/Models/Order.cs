@@ -11,7 +11,7 @@ internal sealed class Order : Aggregate<Guid>
     
     public Guid CustomerId { get; private set; }
     public Guid AddressId { get; private set; }
-    public Address Address { get; private set; } = null!;
+    public Address? Address { get; private set; }
     public decimal Total { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();

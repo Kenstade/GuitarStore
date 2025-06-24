@@ -1,5 +1,5 @@
 using MusicStore.Modules.Catalog;
-using MusicStore.Modules.ShoppingCart;
+using MusicStore.Modules.ShoppingCarts;
 using BuildingBlocks.Web.OpenApi;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.Dapper;
@@ -30,7 +30,7 @@ builder.Services.AddMessageBus(cfg => cfg
     .AddCatalogModuleConsumers()
     .AddOrdersModuleConsumers(builder.Configuration)
     .AddCustomersModuleConsumers()
-    .AddShoppingCartModuleConsumers());
+    .AddShoppingCartsModuleConsumers());
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
@@ -43,7 +43,7 @@ builder.Services.RegisterEfCoreInterceptors();
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
-    .AddShoppingCartModule(builder.Configuration)
+    .AddShoppingCartsModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration)
     .AddIdentityModule(builder.Configuration)
     .AddCustomersModule(builder.Configuration);
@@ -62,7 +62,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCatalogModule(builder.Configuration)
-   .UseShoppingCartModule()
+   .UseShoppingCartsModule()
    .UseOrdersModule(builder.Configuration)
    .UseIdentityModule(builder.Configuration)
    .UseCustomersModule();

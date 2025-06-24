@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using MusicStore.Modules.ShoppingCart.Data;
-using MusicStore.Modules.ShoppingCart.Errors;
+using MusicStore.Modules.ShoppingCarts.Data;
+using MusicStore.Modules.ShoppingCarts.Errors;
 
-namespace MusicStore.Modules.ShoppingCart.Features;
+namespace MusicStore.Modules.ShoppingCarts.Features;
 
 internal sealed record RemoveItemRequest(string Id);
 
@@ -19,7 +19,7 @@ internal sealed class RemoveItem : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete("/cart/{id}", async ([AsParameters]RemoveItemRequest request, CartDbContext dbContext,
+        builder.MapDelete("/cart/{id}", async ([AsParameters]RemoveItemRequest request, CartsDbContext dbContext,
             ClaimsPrincipal user, CancellationToken ct) =>
         {
             var parsedRequestId = Guid.Parse(request.Id);

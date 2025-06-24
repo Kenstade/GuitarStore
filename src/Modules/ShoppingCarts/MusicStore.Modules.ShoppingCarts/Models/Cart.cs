@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MusicStore.Modules.ShoppingCart.Models;
+namespace MusicStore.Modules.ShoppingCarts.Models;
 
 internal sealed class Cart : Aggregate<Guid>
 {

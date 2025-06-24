@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using MusicStore.Modules.ShoppingCart.Data;
-using MusicStore.Modules.ShoppingCart.Models;
+using MusicStore.Modules.ShoppingCarts.Data;
+using MusicStore.Modules.ShoppingCarts.Models;
 
-namespace MusicStore.Modules.ShoppingCart.Features;
+namespace MusicStore.Modules.ShoppingCarts.Features;
 
 internal sealed record AddItemRequest(string Id);
 
@@ -19,7 +19,7 @@ internal sealed class AddItem : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/cart", async (AddItemRequest request, CartDbContext dbContext, 
+        builder.MapPost("/cart", async (AddItemRequest request, CartsDbContext dbContext, 
             IUserContext userContext, ICatalogService catalogService, CancellationToken ct) =>
         {
             var parsedRequestId = Guid.Parse(request.Id); 
