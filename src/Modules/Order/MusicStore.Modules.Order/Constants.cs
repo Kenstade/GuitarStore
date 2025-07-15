@@ -2,7 +2,7 @@ namespace MusicStore.Modules.Order;
 
 public static class Constants
 {
-    public const string ModuleName = "Orders";
+    public const string ModuleName = "Order";
     public static class Permissions
     {
         public const string UpdateOrder = "orders:update";
