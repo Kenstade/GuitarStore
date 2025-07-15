@@ -1,11 +1,10 @@
-﻿using BuildingBlocks.Core.Caching;
+﻿using BuildingBlocks.Core.Dapper;
 using BuildingBlocks.Core.Logging;
 using BuildingBlocks.Web.MinimalApi;
+using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using MusicStore.Modules.Catalog.Data;
 
 namespace MusicStore.Modules.Catalog.Features;
 
@@ -15,36 +14,37 @@ internal sealed class GetCatalog : IEndpoint
 {
     public IEndpointRouteBuilder MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, CatalogDbContext dbContext, 
-            CancellationToken ct) =>
+        builder.MapGet("/catalog", async ([AsParameters] GetCatalogRequest request, 
+                IDbConnectionFactory dbConnectionFactory, CancellationToken ct) =>
         {
-            var catalogQuery = dbContext.Products
-                .Include(p => p.Category)
-                .Where(p => p.IsAvailable && (request.CategoryId == null || p.CategoryId == request.CategoryId))
-                .AsQueryable();
+            await using var connection = await dbConnectionFactory.OpenConnectionAsync();
+            
+            const string sql = 
+                $"""
+                 SELECT
+                 p.id as {nameof(ProductSummary.Id)},
+                 p.name as {nameof(ProductSummary.Name)},
+                 p.price as {nameof(ProductSummary.Price)},
+                 c.name as {nameof(ProductSummary.Category)}
+                 FROM catalog.products p
+                 JOIN catalog.categories c ON p.category_id = c.id
+                 WHERE p.is_available = true
+                 AND(@categoryId is null or c.id = @categoryId)
+                 ORDER BY p.name
+                 LIMIT @pageSize OFFSET (@pageNumber - 1) * @pageSize;
+                 """;
 
-            var products = await catalogQuery
-                .AsNoTrackingWithIdentityResolution()
-                .OrderBy(p => p.CreatedAt)
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(p => new ProductSummary
-                (
-                    p.Id,
-                    p.Name,
-                    p.Price,
-                    p.Category.Name
-                )).ToListAsync(ct);
+            var products = (await connection.QueryAsync<ProductSummary>(sql, new
+            {
+                request.CategoryId,
+                request.PageSize, 
+                request.PageNumber
+            })).ToList();
 
-            var total = await catalogQuery.AsNoTracking().CountAsync(ct);
-
-            var catalog = new GetCatalogResponse(products, total, request.PageNumber);
-
-            return catalog.Products.Any() ? Results.Ok(catalog)
-                                          : Results.Ok("Catalog is empty");
+            return products.Any() ? Results.Ok(new GetCatalogResponse(products, products.Count, request.PageNumber))
+                                  : Results.Ok("Catalog is empty");
         })
         .AddEndpointFilter<LoggingEndpointFilter<GetCatalog>>() 
-        .AddEndpointFilter<CachingEndpointFilter<GetCatalogRequest, GetCatalogResponse>>()
         .WithTags("Catalog")
         .WithName("GetCatalog")
         .WithSummary("Get catalog")
