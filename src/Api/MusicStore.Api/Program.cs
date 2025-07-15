@@ -1,5 +1,5 @@
 using MusicStore.Modules.Catalog;
-using MusicStore.Modules.ShoppingCarts;
+using MusicStore.Modules.ShoppingCart;
 using BuildingBlocks.Web.OpenApi;
 using BuildingBlocks.Core.Caching;
 using BuildingBlocks.Core.Dapper;
@@ -13,9 +13,9 @@ using BuildingBlocks.Core.Security;
 using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.MinimalApi;
 using MusicStore.Api.Extensions;
-using MusicStore.Modules.Customers;
+using MusicStore.Modules.Customer;
 using MusicStore.Modules.Identity;
-using MusicStore.Modules.Orders;
+using MusicStore.Modules.Order;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +29,8 @@ builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(conte
 builder.Services.AddMessageBus(cfg => cfg
     .AddCatalogModuleConsumers()
     .AddOrdersModuleConsumers(builder.Configuration)
-    .AddCustomersModuleConsumers()
-    .AddShoppingCartsModuleConsumers());
+    .AddCustomerModuleConsumers()
+    .AddShoppingCartModuleConsumers());
 
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddMonitoring(builder.Configuration);
@@ -43,10 +43,10 @@ builder.Services.RegisterEfCoreInterceptors();
 
 builder.Services
     .AddCatalogModule(builder.Configuration)
-    .AddShoppingCartsModule(builder.Configuration)
+    .AddShoppingCartModule(builder.Configuration)
     .AddOrdersModule(builder.Configuration)
     .AddIdentityModule(builder.Configuration)
-    .AddCustomersModule(builder.Configuration);
+    .AddCustomerModule(builder.Configuration);
 
 builder.Services.AddProblemDetails(options => options.AddCustomProblemDetails());
 
@@ -62,10 +62,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCatalogModule(builder.Configuration)
-   .UseShoppingCartsModule()
+   .UseShoppingCartModule()
    .UseOrdersModule(builder.Configuration)
    .UseIdentityModule(builder.Configuration)
-   .UseCustomersModule();
+   .UseCustomerModule();
 
 app.MapEndpoints();
 

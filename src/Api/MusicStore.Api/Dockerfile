@@ -16,10 +16,10 @@ COPY ["src/Api/MusicStore.Api/MusicStore.Api.csproj", "src/Api/MusicStore.Api/"]
 COPY ["src/BuildingBlocks/BuildingBlocks.Core/BuildingBlocks.Core.csproj", "src/BuildingBlocks/BuildingBlocks.Core/"]
 COPY ["src/BuildingBlocks/BuildingBlocks.Web/BuildingBlocks.Web.csproj", "src/BuildingBlocks/BuildingBlocks.Web/"]
 COPY ["src/Modules/Catalog/MusicStore.Modules.Catalog/MusicStore.Modules.Catalog.csproj", "src/Modules/MusicStore.Modules.Catalog/"]
-COPY ["src/Modules/Customers/MusicStore.Modules.Customers/MusicStore.Modules.Customers.csproj", "src/Modules/MusicStore.Modules.Customers/"]
+COPY ["src/Modules/Customer/MusicStore.Modules.Customer/MusicStore.Modules.Customer.csproj", "src/Modules/MusicStore.Modules.Customer/"]
 COPY ["src/Modules/Identity/MusicStore.Modules.Identity/MusicStore.Modules.Identity.csproj", "src/Modules/MusicStore.Modules.Identity/"]
-COPY ["src/Modules/Orders/MusicStore.Modules.Orders/MusicStore.Modules.Orders.csproj", "src/Modules/MusicStore.Modules.Ordering/"]
-COPY ["src/Modules/ShoppingCarts/MusicStore.Modules.ShoppingCarts/MusicStore.Modules.ShoppingCarts.csproj", "src/Modules/MusicStore.Modules.ShoppingCarts/"]
+COPY ["src/Modules/Order/MusicStore.Modules.Order/MusicStore.Modules.Order.csproj", "src/Modules/MusicStore.Modules.Order/"]
+COPY ["src/Modules/ShoppingCart/MusicStore.Modules.ShoppingCart/MusicStore.Modules.ShoppingCart.csproj", "src/Modules/MusicStore.Modules.ShoppingCart/"]
 RUN dotnet restore "./src/Api/MusicStore.Api/MusicStore.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Api/MusicStore.Api"

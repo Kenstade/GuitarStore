@@ -1,0 +1,7 @@
+{
+  "Order": {
+    "HangfireOptions": {
+      "OutboxSchedule": "0/5 * * * * *"
+    }
+  }
+}

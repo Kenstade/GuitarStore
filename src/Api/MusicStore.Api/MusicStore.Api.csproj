@@ -26,10 +26,10 @@
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Web\BuildingBlocks.Web.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\MusicStore.Modules.Catalog\MusicStore.Modules.Catalog.csproj" />
-    <ProjectReference Include="..\..\Modules\Customers\MusicStore.Modules.Customers\MusicStore.Modules.Customers.csproj" />
+    <ProjectReference Include="..\..\Modules\Customer\MusicStore.Modules.Customer\MusicStore.Modules.Customer.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\MusicStore.Modules.Identity\MusicStore.Modules.Identity.csproj" />
-    <ProjectReference Include="..\..\Modules\Orders\MusicStore.Modules.Orders\MusicStore.Modules.Orders.csproj" />
-    <ProjectReference Include="..\..\Modules\ShoppingCarts\MusicStore.Modules.ShoppingCarts\MusicStore.Modules.ShoppingCarts.csproj" />
+    <ProjectReference Include="..\..\Modules\Order\MusicStore.Modules.Order\MusicStore.Modules.Order.csproj" />
+    <ProjectReference Include="..\..\Modules\ShoppingCart\MusicStore.Modules.ShoppingCart\MusicStore.Modules.ShoppingCart.csproj" />
   </ItemGroup>
 
 </Project>

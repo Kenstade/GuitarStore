@@ -9,21 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{EEF8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{8622F46D-99D6-4E05-B2F8-52312AAF05D1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customers", "Customers", "{B13ECA2B-FA2C-4DD1-8539-9EA66F48F597}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customer", "Customer", "{B13ECA2B-FA2C-4DD1-8539-9EA66F48F597}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{F3777F7F-F342-4F3D-BFBC-04AEE618C263}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{374CF510-7F56-4F03-9139-F7E1A69D6BC7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{374CF510-7F56-4F03-9139-F7E1A69D6BC7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCarts", "ShoppingCarts", "{D889A489-C0FC-4791-8443-C73D8F8B0620}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCart", "ShoppingCart", "{D889A489-C0FC-4791-8443-C73D8F8B0620}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Customers", "src\Modules\Customers\MusicStore.Modules.Customers\MusicStore.Modules.Customers.csproj", "{D1DB1D92-9C56-4310-94D4-39A462B528D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Customer", "src\Modules\Customer\MusicStore.Modules.Customer\MusicStore.Modules.Customer.csproj", "{D1DB1D92-9C56-4310-94D4-39A462B528D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Identity", "src\Modules\Identity\MusicStore.Modules.Identity\MusicStore.Modules.Identity.csproj", "{561EAF2B-7889-44D0-8B27-198CA80D7950}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Orders", "src\Modules\Orders\MusicStore.Modules.Orders\MusicStore.Modules.Orders.csproj", "{17BA2BD3-99BC-4D19-BEC6-8BC1B9C4D1F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Order", "src\Modules\Order\MusicStore.Modules.Order\MusicStore.Modules.Order.csproj", "{17BA2BD3-99BC-4D19-BEC6-8BC1B9C4D1F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.ShoppingCarts", "src\Modules\ShoppingCarts\MusicStore.Modules.ShoppingCarts\MusicStore.Modules.ShoppingCarts.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.ShoppingCart", "src\Modules\ShoppingCart\MusicStore.Modules.ShoppingCart\MusicStore.Modules.ShoppingCart.csproj", "{7BD7F1D4-CD1F-4328-969F-BF8F835D717F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Catalog", "src\Modules\Catalog\MusicStore.Modules.Catalog\MusicStore.Modules.Catalog.csproj", "{61EBE22B-6E4E-47C0-B9C0-4B967ED9485C}"
 EndProject
@@ -40,6 +40,20 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BBE8AF5B-B792-4DD6-91C3-BCA373B5218A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Modules.Catalog.Contracts", "src\Modules\Catalog\MusicStore.Modules.Catalog.Contracts\MusicStore.Modules.Catalog.Contracts.csproj", "{851E60D3-F6B6-40B3-9B12-B117CAD64748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.ArchitectureTests", "tests\shared\MusicStore.ArchitectureTests.csproj", "{93B022A4-2223-411B-873F-85E6FB39F9AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FD33C72E-53FD-4C2D-B66A-577CB691B5A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{C5C701B6-FD23-4008-963C-727D80C28032}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{3A67A7F8-ADBB-4368-8593-9EE27F908088}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{F613E030-7E0F-4399-9B55-5123899CCA75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{B8146FE5-9BDB-4C10-97CB-060EE454F7F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCart", "ShoppingCart", "{42EE5D0B-A44A-42A5-91B6-40DFF3489C89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +105,14 @@ Global
 		{1BFBFC94-8A17-41B4-99C2-F41B080834C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BFBFC94-8A17-41B4-99C2-F41B080834C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BFBFC94-8A17-41B4-99C2-F41B080834C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B30E7B1F-01C8-45AD-9D3D-FEA89204D6A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B30E7B1F-01C8-45AD-9D3D-FEA89204D6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B30E7B1F-01C8-45AD-9D3D-FEA89204D6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B30E7B1F-01C8-45AD-9D3D-FEA89204D6A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93B022A4-2223-411B-873F-85E6FB39F9AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93B022A4-2223-411B-873F-85E6FB39F9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93B022A4-2223-411B-873F-85E6FB39F9AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93B022A4-2223-411B-873F-85E6FB39F9AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +135,11 @@ Global
 		{D889A489-C0FC-4791-8443-C73D8F8B0620} = {EEF8C8C5-6EB6-4D94-8370-C390B6C6FC3E}
 		{7BD7F1D4-CD1F-4328-969F-BF8F835D717F} = {D889A489-C0FC-4791-8443-C73D8F8B0620}
 		{851E60D3-F6B6-40B3-9B12-B117CAD64748} = {8622F46D-99D6-4E05-B2F8-52312AAF05D1}
+		{C5C701B6-FD23-4008-963C-727D80C28032} = {FD33C72E-53FD-4C2D-B66A-577CB691B5A8}
+		{3A67A7F8-ADBB-4368-8593-9EE27F908088} = {FD33C72E-53FD-4C2D-B66A-577CB691B5A8}
+		{93B022A4-2223-411B-873F-85E6FB39F9AC} = {3A67A7F8-ADBB-4368-8593-9EE27F908088}
+		{F613E030-7E0F-4399-9B55-5123899CCA75} = {C5C701B6-FD23-4008-963C-727D80C28032}
+		{B8146FE5-9BDB-4C10-97CB-060EE454F7F8} = {C5C701B6-FD23-4008-963C-727D80C28032}
+		{42EE5D0B-A44A-42A5-91B6-40DFF3489C89} = {C5C701B6-FD23-4008-963C-727D80C28032}
 	EndGlobalSection
 EndGlobal
